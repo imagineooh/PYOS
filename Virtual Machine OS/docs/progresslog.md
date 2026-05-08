@@ -3,3 +3,4 @@ AS  OF 8/05/2026
 - Can insert placeholder for folder or file in inode
 - Can update  RAM
 - Most bugs Fixed
+- added project on github
