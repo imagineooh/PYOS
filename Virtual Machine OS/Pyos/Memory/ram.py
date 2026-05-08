@@ -83,7 +83,7 @@ class RAM:
                 if self.data[adress]==0:
                     self.data[adress] = bin(value)
                 else:
-                    print(f"Data adress already taken, try 'force_write' method (unsafe) or 'free_index' method first. ...//")
+                    print(f"Data adress already taken, try 'force_write' method (unsafe) or 'free_index' method first. ...//") #TODO: Fix for file case
             else:
                 print(f"Data out of bounds for index {adress}. " \
                       "If you wish to force write the value to RAM (unsafe), use 'force_writee' method.")
