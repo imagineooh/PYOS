@@ -188,5 +188,4 @@ class RAM:
                 hashmap={file_name: 0}
                 self.data.insert(address, hashmap)
 
-    def write_words(self, adress:  int, value: str): #TODO fix encryption.py when I'm not tired af anymore
-        pass
+
