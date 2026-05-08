@@ -12,3 +12,7 @@ class FileSystem:
             self.inode_manager.add_inode(address, 'folder', folder_name)
             self.ram[address][1].append(folder_data)
 
+    def construct_file(self, file_name: str, file_data: list, address:int):
+        if self.ram[address]==0:
+            self.inode_manager.add_inode(address, 'file', file_name)
+            self.ram[address][1].append(file_data)
