@@ -1,0 +1,48 @@
+Virtual Machine OS/
+│
+├── Pyos/                        # Main package
+│   ├── __init__.py
+│   ├── __main__.py              # Entry point — runs the shell
+│   │
+│   ├── memory/                  
+│   │   ├── __init__.py
+│   │   └── ram.py
+│   │
+│   ├── process/                 # Process Manager
+│   │   ├── __init__.py
+│   │   ├── pcb.py               # ProcessControlBlock data structure
+│   │   ├── scheduler.py         # Ready queue, tick logic
+│   │   └── manager.py           # The main ProcessManager class
+│   │
+│   ├── fs/                      # File System
+│   │   ├── __init__.py
+│   │   ├── inode.py             # Inode structure
+│   │   ├── directory.py         # Directory tree logic
+│   │   └── filesystem.py        # Main FileSystem class
+│   │
+│   ├── shell/                   # Shell / REPL
+│   │   ├── __init__.py
+│   │   ├── repl.py              # Input loop and dispatcher
+│   │   ├── commands.py          # Individual command handlers
+│   │   └── context.py           # Session state (cwd, current user, etc.)
+│   │
+│   └── editor/                  # Vim-like editor
+│       ├── __init__.py
+│       ├── buffer.py            # Line buffer, cursor logic
+│       ├── modes.py             # Normal / Insert / Command mode
+│       └── editor.py            # Main Editor class
+│
+├── tests/
+│   ├── test_memory.py
+│   ├── test_process.py
+│   ├── test_fs.py
+│   └── test_shell.py
+│
+├── docs/
+│   └── ARCHITECTURE.md          
+│
+├── pyproject.toml               # Packaging config
+├── README.md
+├── CONTRIBUTING.md
+└── LICENSE
+
