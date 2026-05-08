@@ -89,13 +89,15 @@ class RAM:
                       "If you wish to force write the value to RAM (unsafe), use 'force_writee' method.")
                 self.backup[int(adress - len(self.data))] = bin(value)
 
-    def write(self, address: int, value):
+    def write(self, address: int, value, bypass:bool):
         if self.auth():
             if address < self.size:
                 if self.data[address]==0:
                     self.data[address] = value
-                else:
+                elif not bypass:
                     print(f"Data adress already taken, try 'force_write' method (unsafe) or 'free_index' method first. ...//")
+                elif bypass:
+                    print("Bypassing restriction for folder allocation")
             else:
                 print(f"Data out of bounds for index {address}. " \
                       "If you wish to force write the value to RAM (unsafe), use 'force_writee' method.")
