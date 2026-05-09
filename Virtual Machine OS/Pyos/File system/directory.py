@@ -18,11 +18,13 @@ class Directory:
             self.children.append(child)
 
     def add_empty_folder(self, foldername: str, folderdata: list,  address:int) -> None:
-        self.file_manager.construct_folder(foldername, folderdata, address)
+        self.file_manager.construct_empty_folder(foldername, folderdata, address)
 
     def add_file(self, file_name, file_data, address):
-        self.file_manager.construct_file(file_name,file_data, address)
+        self.file_manager.construct_single_file(file_name,file_data, address)
 
+    def add_folder(self, foldername: str, folderdata: list, address: int, firstfilename: str) -> None:
+        self.file_manager.construct_folder(foldername,folderdata, address, firstfilename)
 
     def add_inode(self, address: int, type_file:str, filename: str):
         self.inode_manager.add_inode(address, type_file, filename)
