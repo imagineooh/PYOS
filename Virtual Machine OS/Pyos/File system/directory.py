@@ -38,6 +38,6 @@ class Directory:
         self.file_manager.delete_data(address)
 
     def return_all_used_slots(self):
-        return list(self.file_manager.return_all_used_slots())
+        return self.file_manager.return_all_used_slots()
 
 

@@ -33,4 +33,5 @@ class FileSystem:
         self.inode_manager.delete_data(address)
 
     def return_all_used_slots(self):
-        return list(self.inode_manager.return_all_used_slots())
+        return self.inode_manager.return_all_used_slots()
+

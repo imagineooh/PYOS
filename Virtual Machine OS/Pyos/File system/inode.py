@@ -21,12 +21,7 @@ class Inode:
         return self.filename_index[name]
 
     def return_all_used_slots(self):
-        slots=[]
-        for i in self.filename_index.keys():
-            slots.append(i)
-        return slots
-
-
+        return list(self.filename_index.values())
 
     def edit_file(self, address:int, new_data: list, new_data_name: str):
         self.ram[address][1][new_data_name] = new_data
