@@ -11,10 +11,10 @@ class Inode:
                 self.ram.write(address, [(self.counter, type_file, filename), None], True)
 
         elif type_file=='folder' and self.ram[address]==0:
-            if self.ram.write(address, [(self.counter, type_file, filename), []], True)  != "Data adress already taken, try 'force_write' method (unsafe) or 'free_index' method first. ...//":
-                self.ram.write(address, [(self.counter, type_file, filename), []], True)
+            if self.ram.write(address, [(self.counter, type_file, filename), {}], True)  != "Data adress already taken, try 'force_write' method (unsafe) or 'free_index' method first. ...//":
+                self.ram.write(address, [(self.counter, type_file, filename), {}], True)
                 self.filename_index[filename]=address
-                print(self.filename_index)
+
         self.counter+=1
     def locate_object(self, name: str):
         return self.filename_index[name]
