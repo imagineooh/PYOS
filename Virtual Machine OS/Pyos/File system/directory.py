@@ -9,7 +9,7 @@ class Directory:
         self.ram.add_user('F', 'pas')
         self.file_manager=FileSystem(ram)
 
-    class TreeNode:
+    class Folder:
         def __init__(self, number, name):
             self.number =  number
             self.name = name
@@ -29,6 +29,9 @@ class Directory:
     def add_inode(self, address: int, type_file:str, filename: str):
         self.inode_manager.add_inode(address, type_file, filename)
 
+    def edit_file(self, filename, data, new_data_name):
+        address = self.file_manager.locate_object(filename)
+        self.file_manager.edit_file(address, data, new_data_name)
 
 
 

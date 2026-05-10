@@ -13,8 +13,8 @@ class FileSystem:
             self.ram[address][1].append(file_data)
 
     @staticmethod
-    def construct_file_for_folder(data: list, file_name: str) -> dict:
-        return {file_name: data}
+    def construct_file_for_folder(data: list, file_name: str) -> list:
+        return [file_name, data]
 
     def construct_empty_folder(self, folder_name: str, folder_data: list, address:int):
         if self.ram[address] == 0:
@@ -26,3 +26,8 @@ class FileSystem:
             self.inode_manager.add_inode(address, 'folder', folder_name)
             self.ram[address][1].append(self.construct_file_for_folder(folder_data, first_file_name))
 
+    def locate_object(self, name):
+        return self.inode_manager.locate_object(name)
+
+    def edit_file(self, address: int, new_data: list, new_data_name: str):
+        self.ram[address][1].append(self.construct_file_for_folder(new_data, new_data_name))
