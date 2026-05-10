@@ -27,4 +27,10 @@ class FileSystem:
         return self.inode_manager.locate_object(name)
 
     def edit_file(self, address: int, new_data: list, new_data_name: str):
-        self.ram[address][1][new_data_name]=new_data
+        self.inode_manager.edit_file(address,new_data,new_data_name)
+
+    def delete_data(self, address):
+        self.inode_manager.delete_data(address)
+
+    def return_all_used_slots(self):
+        return list(self.inode_manager.return_all_used_slots())

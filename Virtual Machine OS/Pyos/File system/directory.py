@@ -33,6 +33,11 @@ class Directory:
         address = self.file_manager.locate_object(filename)
         self.file_manager.edit_file(address, data, new_data_name)
 
+    def delete_folder_data(self, foldername:str):
+        address=self.file_manager.locate_object(foldername)
+        self.file_manager.delete_data(address)
 
+    def return_all_used_slots(self):
+        return list(self.file_manager.return_all_used_slots())
 
 
