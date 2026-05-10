@@ -17,6 +17,8 @@ pcb_manager.track_inactivity()
 directory_manager.delete_folder_data('test4')
 pcb_manager.track_inactivity()
 print(ram)
+pcb_manager.delete_inactive_slots()
+print(ram)
 
 
 

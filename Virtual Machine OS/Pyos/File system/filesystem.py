@@ -35,3 +35,5 @@ class FileSystem:
     def return_all_used_slots(self):
         return self.inode_manager.return_all_used_slots()
 
+    def delete_slots(self, address):
+        self.inode_manager.delete_slots(address)

@@ -40,4 +40,5 @@ class Directory:
     def return_all_used_slots(self):
         return self.file_manager.return_all_used_slots()
 
-
+    def delete_slots(self, address):
+        self.file_manager.delete_slots(address)

@@ -5,8 +5,6 @@ from directory import Directory
 class PCB:
     def __init__(self, ram, directory_manager):
         self.ram = ram
-        self.inode_manager = Inode(ram)
-        self.file_manager = FileSystem(ram)
         self.directory_manager = directory_manager
         self.used_slots=[]
         self.inactive_slots=[]
@@ -27,4 +25,8 @@ class PCB:
             print("All slots active")
         else:
             print(f'slots number {", ".join(str(x) for x in self.inactive_slots)} are inactive')
+
+    def delete_inactive_slots(self):
+        for i in range(len(self.inactive_slots)):
+            self.directory_manager.delete_slots(self.inactive_slots[i])
 

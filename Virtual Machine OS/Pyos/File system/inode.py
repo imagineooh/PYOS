@@ -29,3 +29,5 @@ class Inode:
     def delete_data(self, address):
         self.ram[address][1]=0
 
+    def delete_slots(self, address):
+        self.ram[address]=0
