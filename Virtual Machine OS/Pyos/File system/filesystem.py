@@ -44,3 +44,5 @@ class FileSystem:
     def read_file(self, address):
         return self.inode_manager.read_file(address)
 
+    def migrate_process_ram(self, address, filename):
+        self.inode_manager.migrate_process_ram(address, filename)

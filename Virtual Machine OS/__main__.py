@@ -17,13 +17,16 @@ directory_manager.add_folder('test4', [5,6,4,8], 2, 'file1')
 directory_manager.edit_file('test4', [51,3,4], 'file_test')
 pcb_manager.track_inactivity()
 print(ram)
+directory_manager.store_value('test4', 13)
+print(storage)
 directory_manager.delete_folder_data('test4')
 pcb_manager.track_inactivity()
 print(ram)
 pcb_manager.delete_inactive_slots()
 print(ram)
-directory_manager.store_value('test2', 1)
 print(storage)
+directory_manager.migrate_process_ram(1, 'test4')
+print(ram)
 
 
 

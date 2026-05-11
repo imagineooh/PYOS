@@ -35,9 +35,15 @@ class Inode:
     def delete_slots(self, address):
         self.ram[address]=0
 
-    def store_value(self, value_to_store, storage_address):
+    def store_value(self, value_to_store, storage_address): #equivalent of migrate_ram_process
         self.storage.store(value_to_store, storage_address)
 
     def read_file(self, address):
         return self.ram[address]
+
+    def migrate_process_ram(self, ram_address, filename):
+        address = self.storage.map_name_key[filename]
+        self.ram[ram_address]= self.storage[address]
+
+
 

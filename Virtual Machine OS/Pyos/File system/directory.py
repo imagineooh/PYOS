@@ -48,3 +48,5 @@ class Directory:
         to_store=self.file_manager.read_file(ram_address)
         self.file_manager.store_value(to_store, storage_address)
 
+    def migrate_process_ram(self, address, filename):
+        self.file_manager.migrate_process_ram(address, filename)
