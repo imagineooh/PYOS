@@ -41,7 +41,7 @@ class Inode:
     def read_file(self, address):
         return self.ram[address]
 
-    def migrate_process_ram(self, ram_address, filename):
+    def migrate_storage_ram(self, ram_address, filename):
         address = self.storage.map_name_key[filename]
         self.ram[ram_address]= self.storage[address]
 

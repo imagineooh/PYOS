@@ -25,7 +25,7 @@ print(ram)
 pcb_manager.delete_inactive_slots()
 print(ram)
 print(storage)
-directory_manager.migrate_process_ram(1, 'test4')
+directory_manager.migrate_storage_ram(1, 'test4')
 print(ram)
 
 
