@@ -1,8 +1,11 @@
+from storage import Storage
+
 class Inode:
-    def __init__(self, ram):
+    def __init__(self, ram, storage):
         self.ram = ram
         self.counter = 0
         self.filename_index={}
+        self.storage = storage
         self.ram.sign_in('F', 'pas')
         self.ram.add_user('F', 'pas')
     def add_inode(self, address: int, type_file:str, filename: str):
@@ -31,3 +34,10 @@ class Inode:
 
     def delete_slots(self, address):
         self.ram[address]=0
+
+    def store_value(self, value_to_store, storage_address):
+        self.storage.store(value_to_store, storage_address)
+
+    def read_file(self, address):
+        return self.ram[address]
+

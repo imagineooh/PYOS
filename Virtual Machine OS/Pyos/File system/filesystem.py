@@ -1,9 +1,9 @@
 from inode import Inode
 
 class FileSystem:
-    def __init__(self, ram):
+    def __init__(self, ram, storage):
         self.ram = ram
-        self.inode_manager =Inode(ram)
+        self.inode_manager =Inode(ram, storage)
         self.ram.sign_in('F', 'pas')
         self.ram.add_user('F', 'pas')
 
@@ -37,3 +37,10 @@ class FileSystem:
 
     def delete_slots(self, address):
         self.inode_manager.delete_slots(address)
+
+    def store_value(self, value_to_store, storage_address):
+        self.inode_manager.store_value(value_to_store, storage_address)
+
+    def read_file(self, address):
+        return self.inode_manager.read_file(address)
+

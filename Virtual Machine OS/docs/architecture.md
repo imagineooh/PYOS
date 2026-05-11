@@ -8,6 +8,7 @@ Virtual Machine OS/
 │   ├── memory/                  
 │   │   ├── __init__.py
 │   │   └── ram.py
+│   │   └── storage.py
 │   │
 │   ├── process/                 # Process Manager
 │   │   ├── __init__.py

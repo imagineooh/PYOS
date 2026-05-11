@@ -2,12 +2,12 @@ from inode import Inode
 from filesystem import FileSystem
 
 class Directory:
-    def __init__(self,  ram):
+    def __init__(self,  ram, storage):
         self.ram = ram
-        self.inode_manager=Inode(ram)
+        self.inode_manager=Inode(ram, storage)
         self.ram.sign_in('F', 'pas')
         self.ram.add_user('F', 'pas')
-        self.file_manager=FileSystem(ram)
+        self.file_manager=FileSystem(ram, storage)
 
     class Folder:
         def __init__(self, number, name):
@@ -42,3 +42,9 @@ class Directory:
 
     def delete_slots(self, address):
         self.file_manager.delete_slots(address)
+
+    def store_value(self, foldername, storage_address):
+        ram_address=self.file_manager.locate_object(foldername)
+        to_store=self.file_manager.read_file(ram_address)
+        self.file_manager.store_value(to_store, storage_address)
+

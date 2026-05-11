@@ -190,4 +190,7 @@ class RAM:
                 hashmap={file_name: 0}
                 self.data.insert(address, hashmap)
 
+    def return_size(self):
+        return len(self.data)
+
 
