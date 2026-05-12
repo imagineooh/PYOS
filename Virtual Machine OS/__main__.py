@@ -31,7 +31,7 @@ print(storage)
 directory_manager.migrate_storage_ram(1, 'test4')
 print(ram)
 print(scheduler_manager.schedule_process_all())
-
+print(scheduler_manager.process_to_run())
 
 
 
