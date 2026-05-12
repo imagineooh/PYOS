@@ -48,3 +48,7 @@ Virtual Machine OS/
 ├── CONTRIBUTING.md
 └── LICENSE
 ```
+
+## Low level orga
+# 11/05/2026
+RAM can only be modified by Inode (and sometimes PCB), and can be accessed (without modification) by filesystem. This gives a 2 degree security layer.
