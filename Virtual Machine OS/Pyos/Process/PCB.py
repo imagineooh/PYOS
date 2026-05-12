@@ -28,6 +28,7 @@ class PCB:
             print(f'slots number {", ".join(str(x) for x in self.inactive_slots)} are inactive')
 
     def delete_inactive_slots(self):
+        self.update_inactivity()
         for i in range(len(self.inactive_slots)):
             self.directory_manager.delete_slots(self.inactive_slots[i])
 
