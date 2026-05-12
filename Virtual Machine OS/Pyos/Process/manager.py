@@ -32,7 +32,8 @@ class Manager:
         return self.scheduler_manager.process_to_run()
 
     def run_slots(self):
-        pass
+        next_process_to_run=self.process_to_run()
+        self.directory_manager.delete_slots(next_process_to_run)
 
 
 

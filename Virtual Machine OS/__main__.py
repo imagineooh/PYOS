@@ -36,4 +36,5 @@ process_manager.process_to_run()
 process_manager.schedule_process_all()
 process_manager.delete_inactive_slots()
 print(ram)
-
+process_manager.run_slots()
+print(ram)
