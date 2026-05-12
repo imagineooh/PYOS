@@ -9,10 +9,11 @@ class PCB:
         self.used_slots=[]
         self.inactive_slots=[]
 
-    def track_used(self) -> None:
+    def track_used(self):
         self.used_slots=[]
         for key in self.directory_manager.return_all_used_slots():
             self.used_slots.append(key)
+        return self.used_slots
 
     def update_inactivity(self):
         for address in self.directory_manager.return_all_used_slots():
