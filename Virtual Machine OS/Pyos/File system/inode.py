@@ -45,5 +45,7 @@ class Inode:
         address = self.storage.map_name_key[filename]
         self.ram[ram_address]= self.storage[address]
 
+    def give_filename_index(self):
+        return self.filename_index
 
 

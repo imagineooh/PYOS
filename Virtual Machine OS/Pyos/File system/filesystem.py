@@ -46,3 +46,6 @@ class FileSystem:
 
     def migrate_storage_ram(self, address, filename):
         self.inode_manager.migrate_storage_ram(address, filename)
+
+    def give_filename_index(self):
+        return self.inode_manager.give_filename_index()

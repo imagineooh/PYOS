@@ -50,3 +50,6 @@ class Directory:
 
     def migrate_storage_ram(self, address, filename):
         self.file_manager.migrate_storage_ram(address, filename)
+
+    def give_filename_index(self):
+        return self.file_manager.give_filename_index()
