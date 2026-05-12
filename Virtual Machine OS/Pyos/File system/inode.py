@@ -19,6 +19,8 @@ class Inode:
                 self.filename_index[filename]=address
 
 
+
+
         self.counter+=1
     def locate_object(self, name: str):
         return self.filename_index[name]
@@ -34,6 +36,10 @@ class Inode:
 
     def delete_slots(self, address):
         self.ram[address]=0
+        for key, value in list(self.filename_index.items()):
+            if value == address:
+                del self.filename_index[key]
+
 
     def store_value(self, value_to_store, storage_address): #equivalent of migrate_ram_process
         self.storage.store(value_to_store, storage_address)
@@ -44,8 +50,9 @@ class Inode:
     def migrate_storage_ram(self, ram_address, filename):
         address = self.storage.map_name_key[filename]
         self.ram[ram_address]= self.storage[address]
+        self.filename_index[filename]=ram_address
 
     def give_filename_index(self):
-        return self.filename_index
+        return self.filename_index.values()
 
 
