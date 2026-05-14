@@ -1,3 +1,5 @@
+from Tools.scripts.fixnotice import process
+
 from manager import Manager
 from ram import RAM
 from filesystem import FileSystem
@@ -38,3 +40,5 @@ process_manager.delete_inactive_slots()
 print(ram)
 process_manager.run_slots()
 print(ram)
+process_manager.allocate_area(4, 13, 'TestArea')
+process_manager.allocate_area(2, 11, 'TestArea2')

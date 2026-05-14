@@ -1,13 +1,10 @@
-from inode import Inode
-from filesystem import FileSystem
-from directory import Directory
-
 class PCB:
     def __init__(self, ram, directory_manager):
         self.ram = ram
         self.directory_manager = directory_manager
         self.used_slots=[]
         self.inactive_slots=[]
+        self.allocated_areas={}
 
     def track_used(self):
         self.used_slots=[]
@@ -32,3 +29,6 @@ class PCB:
         for i in range(len(self.inactive_slots)):
             self.directory_manager.delete_slots(self.inactive_slots[i])
 
+    def area_allocation(self, area: set, area_name: str): #TODO: compare set and list for area
+        self.allocated_areas[area_name]=area
+        print(self.allocated_areas)
