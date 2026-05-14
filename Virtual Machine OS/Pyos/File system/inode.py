@@ -50,6 +50,9 @@ class Inode:
     def migrate_storage_ram(self, ram_address, filename):
         address = self.storage.map_name_key[filename]
         self.ram[ram_address]= self.storage[address]
+        edit_tuple=list(self.ram[ram_address][0])
+        edit_tuple[0]=ram_address
+        self.ram[address]=[tuple(edit_tuple), self.ram[ram_address][1]]
         self.filename_index[filename]=ram_address
 
     def give_filename_index(self):
