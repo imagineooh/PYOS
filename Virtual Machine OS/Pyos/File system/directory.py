@@ -36,12 +36,14 @@ class Directory:
     def delete_folder_data(self, foldername:str):
         address=self.file_manager.locate_object(foldername)
         self.file_manager.delete_data(address)
+        self.update_PID()
 
     def return_all_used_slots(self):
         return self.file_manager.return_all_used_slots()
 
     def delete_slots(self, address):
         self.file_manager.delete_slots(address)
+        self.update_PID()
 
     def store_value(self, foldername, storage_address):
         ram_address=self.file_manager.locate_object(foldername)
@@ -50,6 +52,10 @@ class Directory:
 
     def migrate_storage_ram(self, address, filename):
         self.file_manager.migrate_storage_ram(address, filename)
+        self.update_PID()
 
     def give_filename_index(self):
         return self.file_manager.give_filename_index()
+
+    def update_PID(self):
+        self.inode_manager.update_PID()

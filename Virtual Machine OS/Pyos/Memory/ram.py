@@ -194,3 +194,5 @@ class RAM:
         return len(self.data)
 
 
+    def len_RAM(self):
+        return len(self.data)

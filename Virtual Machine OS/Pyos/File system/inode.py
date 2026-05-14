@@ -10,12 +10,12 @@ class Inode:
         self.ram.add_user('F', 'pas')
     def add_inode(self, address: int, type_file:str, filename: str):
         if type_file=='file' and self.ram[address]==0:
-            if self.ram.write(address, [(self.counter, type_file, filename), None], True) != "Data adress already taken, try 'force_write' method (unsafe) or 'free_index' method first. ...//":
-                self.ram.write(address, [(self.counter, type_file, filename), None], True)
+            if self.ram.write(address, [[self.counter, type_file, filename], None], True) != "Data adress already taken, try 'force_write' method (unsafe) or 'free_index' method first. ...//":
+                self.ram.write(address, [[self.counter, type_file, filename], None], True)
                 self.filename_index[filename] = address
         elif type_file=='folder' and self.ram[address]==0:
-            if self.ram.write(address, [(self.counter, type_file, filename), {}], True)  != "Data adress already taken, try 'force_write' method (unsafe) or 'free_index' method first. ...//":
-                self.ram.write(address, [(self.counter, type_file, filename), {}], True)
+            if self.ram.write(address, [[self.counter, type_file, filename], {}], True)  != "Data adress already taken, try 'force_write' method (unsafe) or 'free_index' method first. ...//":
+                self.ram.write(address, [[self.counter, type_file, filename], {}], True)
                 self.filename_index[filename]=address
 
 
@@ -49,13 +49,19 @@ class Inode:
 
     def migrate_storage_ram(self, ram_address, filename):
         address = self.storage.map_name_key[filename]
-        self.ram[ram_address]= self.storage[address]
+        self.ram[ram_address] = self.storage[address]
         edit_tuple=list(self.ram[ram_address][0])
         edit_tuple[0]=ram_address
-        self.ram[address]=[tuple(edit_tuple), self.ram[ram_address][1]]
+        self.ram[ram_address]=[edit_tuple, self.ram[ram_address][1]]
         self.filename_index[filename]=ram_address
 
     def give_filename_index(self):
         return self.filename_index.values()
 
+    def update_PID(self):
+        for i in range(self.ram.len_RAM()):
+            if self.ram[i]!=0:
+                if self.ram[i][0][0]!=i:
+                    self.ram[i][0][0]=i
+                    self.filename_index[self.ram[i][0][2]]=i
 
