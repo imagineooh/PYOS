@@ -76,5 +76,14 @@ class Inode:
         for k in range(len(temp)):
             self.ram[k] = temp[k]
 
-
+    def percent_used(self):
+        counter=0
+        for i in range(self.ram.len_RAM()):
+            if self.ram[i]!=0:
+                counter+=1
+        percent_usage=(100*counter)/self.ram.len_RAM()
+        print(f'Ram used at {percent_usage}% ({counter} slots used for {self.ram.len_RAM()} slots)')
+        first_str='-'*round(percent_usage/10)
+        second_str='.'*round((100-counter)/10)
+        print(f"[{first_str}{second_str}]")
 

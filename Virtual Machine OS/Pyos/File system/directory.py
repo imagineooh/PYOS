@@ -63,3 +63,6 @@ class Directory:
     def reestablish_PID(self): #very slow
         print("This method is slow, and could be unsafe")
         self.inode_manager.reestablish_pid()
+
+    def percent_used(self):
+        self.inode_manager.percent_used()
