@@ -65,3 +65,16 @@ class Inode:
                     self.ram[i][0][0]=i
                     self.filename_index[self.ram[i][0][2]]=i
 
+    def reestablish_pid(self):
+        temp=[0]*self.ram.len_RAM()
+        for i in range(self.ram.len_RAM()):
+            if self.ram[i]!=0:
+                if self.ram[i][0][0]!=i:
+                    temp[self.ram[i][0][0]]=self.ram[i]
+                else:
+                    temp[self.ram[i][0][0]]=self.ram[i]
+        for k in range(len(temp)):
+            self.ram[k] = temp[k]
+
+
+

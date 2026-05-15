@@ -59,3 +59,7 @@ class Directory:
 
     def update_PID(self):
         self.inode_manager.update_PID()
+
+    def reestablish_PID(self): #very slow
+        print("This method is slow, and could be unsafe")
+        self.inode_manager.reestablish_pid()
