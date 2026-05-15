@@ -83,7 +83,7 @@ class Inode:
                 counter+=1
         percent_usage=(100*counter)/self.ram.len_RAM()
         print(f'Ram used at {percent_usage}% ({counter} slots used for {self.ram.len_RAM()} slots)')
-        first_str='-'*round(percent_usage/10)
-        second_str='.'*round((100-counter)/10)
+        first_str='-'*round(percent_usage/5)
+        second_str='.'*round((100-counter)/5)
         print(f"[{first_str}{second_str}]")
 
