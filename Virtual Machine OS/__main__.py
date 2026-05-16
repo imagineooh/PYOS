@@ -1,5 +1,3 @@
-from Tools.scripts.fixnotice import process
-
 from manager import Manager
 from ram import RAM
 from filesystem import FileSystem
