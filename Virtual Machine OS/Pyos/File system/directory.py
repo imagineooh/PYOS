@@ -19,6 +19,7 @@ class Directory:
 
     def add_empty_folder(self, foldername: str, folderdata: list,  address:int) -> None:
         self.file_manager.construct_empty_folder(foldername, folderdata, address)
+        self.update_PID()
 
     def add_file(self, file_name, file_data, address):
         self.file_manager.construct_single_file(file_name,file_data, address)
