@@ -19,24 +19,41 @@ class TameShell(Cmd):
         self.process_manager = Manager(ram, storage)
 
     def do_mkdir(self, arg):
+        """Add a basic populated folder with no first file name"""
         args=arg.split()
         foldername=str(args[0])
         folderdata=list(args[1].split(","))
         address=int(args[2])
         self.directory_manager.add_empty_folder(foldername, folderdata, address)
-        print(ram)
+
 
     def do_mkdirfull(self, arg):
+        """Add a populated folder with given first file name"""
         args = arg.split()
         foldername = str(args[0])
         folderdata = list(args[1].split(","))
         address = int(args[2])
         firstfilename = str(args[3])
         self.directory_manager.add_folder(foldername, folderdata, address, firstfilename)
-        print(ram)
+
 
     def do_exit(self, arg):
+        """exit the terminal"""
         print("Leaving the TameOS virtual kernel. See you soon!")
         return True
+
+    def do_lsram(self, arg):
+        """Print RAM data to terminal"""
+        print(ram)
+
+    def do_touchfull(self, arg):
+        """Add a populated file to RAM
+Syntax: touchfull file_name file_data address"""
+        args = arg.split()
+        file_name = str(args[0])
+        file_data = list(args[1].split(","))
+        address = int(args[2])
+        self.directory_manager.add_file(file_name, file_data, address)
+
 TameShell(ram, storage).cmdloop()
 
