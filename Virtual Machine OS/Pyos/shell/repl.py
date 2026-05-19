@@ -24,7 +24,11 @@ class TameShell():
             "end" : self.end,
             "lsram": lambda:print(ram),
         }
-
+        self.conversion_table={
+            str:lambda x:str(x),
+            int : lambda x: int(x),
+            list : lambda x: [i if i.isdigit() else i for i in x.split(",")]
+        }
     def end(self):
         print("Quitting TameOS. See you soon!")
         return True
@@ -34,21 +38,15 @@ class TameShell():
         keyword = str(args[0])
         if keyword in self.commands_dict:
             func = self.commands_dict[keyword]
+            sig=inspect.signature(func)
+            params=list(sig.parameters.values())
+            user_args=args[1:]
 
             call_args = []
-            if len(args) > 1:
-                call_args.append(args[1])
-            if len(args) > 2:
-                call_args.append(args[2].split(","))
-            if len(args) > 3:
-                call_args.append(int(args[3]))
-
-            """for i in range(len(call_args)):
+            for i in range(len(sig.parameters.values())):
                 param_name=list(inspect.signature(func).parameters.keys())[i]
-                call_args[i]=inspect.signature(func).parameters[param_name].annotation(call_args[i])
-
-            for i in range(1, len(args)):
-                call_args.append(args[i])"""
+                type=inspect.signature(func).parameters[param_name].annotation
+                call_args.append(self.conversion_table[type](user_args[i]))
 
             try:
                 sig = inspect.signature(func)
