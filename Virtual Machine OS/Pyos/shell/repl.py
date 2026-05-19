@@ -14,7 +14,6 @@ class TameShell():
     prompt = f"C://TameOS/user:{username}/terminal: "
 
     def __init__(self,ram, storage):
-        super().__init__()
         self.storage = storage
         self.ram=ram
         self.directory_manager=Directory(ram, storage)

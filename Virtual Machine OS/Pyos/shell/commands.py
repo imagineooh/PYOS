@@ -5,7 +5,10 @@ def help(command:str=None):
         "lsram": "Prints ram"
     }
     if command is not None:
-        print(commands_help[command])
+        if command in commands_help:
+            print(commands_help[command])
+        else:
+            print("Command might not exist, or no documentation is given for it")
     else:
         print('For specific help on a command, type help <command>')
         print(f"Documented commands: {', '.join(x for x in list(commands_help.keys()))}")
