@@ -43,6 +43,12 @@ class TameShell():
             if len(args) > 3:
                 call_args.append(int(args[3]))
 
+            """for i in range(len(call_args)):
+                param_name=list(inspect.signature(func).parameters.keys())[i]
+                call_args[i]=inspect.signature(func).parameters[param_name].annotation(call_args[i])
+
+            for i in range(1, len(args)):
+                call_args.append(args[i])"""
 
             try:
                 sig = inspect.signature(func)
