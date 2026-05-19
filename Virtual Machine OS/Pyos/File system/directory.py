@@ -26,6 +26,7 @@ class Directory:
 
     def add_folder(self, foldername: str, folderdata: list, address: int, firstfilename: str) -> None:
         self.file_manager.construct_folder(foldername,folderdata, address, firstfilename)
+        self.update_PID()
 
     def add_inode(self, address: int, type_file:str, filename: str):
         self.inode_manager.add_inode(address, type_file, filename)
