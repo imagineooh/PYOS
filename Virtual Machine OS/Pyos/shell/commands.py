@@ -1,23 +1,13 @@
-from manager import Manager
-from ram import RAM
-from directory import Directory
-from storage import Storage
-
-class Commands(dict):
-    def __init__(self,ram, storage):
-        self.storage = storage
-        self.ram=ram
-        self.directory_manager=Directory(ram, storage)
-        self.process_manager = Manager(ram, storage)
-
-    def __getitem__(self, key):
-        val = dict.__getitem__(self, key)
-        print('GET', key)
-        return val
-
-    def __setitem__(self, key, val):
-        print('SET', key, val)
-        dict.__setitem__(self, key, val)
-
+def help(command:str=None):
+    commands_help = {
+        "mkdir": "Adds a single folder with no first file name",
+        "mkdirfull": "Adds a single file with first file name",
+        "lsram": "Prints ram"
+    }
+    if command is not None:
+        print(commands_help[command])
+    else:
+        print('For specific help on a command, type help <command>')
+        print(f"Documented commands: {', '.join(x for x in list(commands_help.keys()))}")
 
 

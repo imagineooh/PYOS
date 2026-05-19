@@ -1,15 +1,16 @@
-from cmd import Cmd
 from manager import Manager
 from ram import RAM
 from directory import Directory
 from storage import Storage
 import inspect
+from commands import help
 
 ram=RAM(16)
 storage=Storage(ram)
 class TameShell():
     username = 'flav'
-    intro = "Welcome to TameOS! Type help or ? to list commands.\n"
+    intro = "Welcome to TameOS! Type help <command> to get help on a command.\n"
+    print(intro)
     prompt = f"C://TameOS/user:{username}/terminal: "
 
     def __init__(self,ram, storage):
@@ -23,6 +24,7 @@ class TameShell():
             "mkdirfull" : self.directory_manager.add_folder,
             "end" : self.end,
             "lsram": lambda:print(ram),
+            "help": help
         }
         self.conversion_table={
             str:lambda x:str(x),
@@ -42,12 +44,14 @@ class TameShell():
             params=list(sig.parameters.values())
             user_args=args[1:]
 
-            call_args = []
-            for i in range(len(sig.parameters.values())):
-                param_name=list(inspect.signature(func).parameters.keys())[i]
-                type=inspect.signature(func).parameters[param_name].annotation
-                call_args.append(self.conversion_table[type](user_args[i]))
-
+            if len(args)>1:
+                call_args = []
+                for i in range(len(sig.parameters.values())):
+                    param_name=list(inspect.signature(func).parameters.keys())[i]
+                    type=inspect.signature(func).parameters[param_name].annotation
+                    call_args.append(self.conversion_table[type](user_args[i]))
+            else:
+                call_args=[]
             try:
                 sig = inspect.signature(func)
                 bound = sig.bind_partial(*call_args)
