@@ -3,6 +3,7 @@ from manager import Manager
 from ram import RAM
 from directory import Directory
 from storage import Storage
+import inspect
 
 ram=RAM(16)
 storage=Storage(ram)
@@ -21,47 +22,48 @@ class TameShell(Cmd):
             "mkdir" : self.directory_manager.add_empty_folder,
             "mkdirfull" : self.directory_manager.add_folder,
             "end" : self.end,
+            "lsram": lambda:print(ram),
         }
 
     def end(self):
         return 1
 
-    def do_mkdir(self, arg):
-        """Add a basic populated folder with no first file name"""
-        args=arg.split()
-        foldername=str(args[0])
-        folderdata=list(args[1].split(","))
-        address=int(args[2])
-        self.directory_manager.add_empty_folder(foldername, folderdata, address)
-
-
-    def do_mkdirfull(self, arg):
-        """Add a populated folder with given first file name"""
+    def default(self,arg):
         args = arg.split()
-        foldername = str(args[0])
-        folderdata = list(args[1].split(","))
-        address = int(args[2])
-        firstfilename = str(args[3])
-        self.directory_manager.add_folder(foldername, folderdata, address, firstfilename)
+        keyword = str(args[0])
+        func = self.commands_dict[keyword]
+
+        call_args = []
+        if len(args) > 1:
+            call_args.append(args[1])
+        if len(args) > 2:
+            call_args.append(args[2].split(","))
+        if len(args) > 3:
+            call_args.append(int(args[3]))
 
 
-    def do_exit(self, arg):
-        """exit the terminal"""
-        print("Leaving the TameOS virtual kernel. See you soon!")
-        return True
+        try:
+            sig = inspect.signature(func)
+            bound = sig.bind_partial(*call_args)
+            bound.apply_defaults()
+            return func(*bound.args, **bound.kwargs)
+        except TypeError as e:
+            print(f"Arg error {e}")
+            return None
 
-    def do_lsram(self, arg):
-        """Print RAM data to terminal"""
-        print(ram)
+shell = TameShell(ram, storage)
+shell.preloop()
 
-    def do_touchfull(self, arg):
-        """Add a populated file to RAM
-Syntax: touchfull file_name file_data address"""
-        args = arg.split()
-        file_name = str(args[0])
-        file_data = list(args[1].split(","))
-        address = int(args[2])
-        self.directory_manager.add_file(file_name, file_data, address)
+line=print(shell.intro)
+while True:
+    try:
+        line = input(shell.prompt)
+        stop = shell.onecmd(line)
+        shell.postcmd(stop, line)
+        if stop:
+            break
+    except EOFError:
+        break
 
-TameShell(ram, storage).cmdloop()
+shell.postloop()
 
