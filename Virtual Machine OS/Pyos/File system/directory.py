@@ -47,12 +47,12 @@ class Directory:
         self.file_manager.delete_slots(address)
         self.update_PID()
 
-    def store_value(self, foldername, storage_address):
+    def store_value(self, foldername: str, storage_address: int):
         ram_address=self.file_manager.locate_object(foldername)
         to_store=self.file_manager.read_file(ram_address)
         self.file_manager.store_value(to_store, storage_address)
 
-    def migrate_storage_ram(self, address, filename):
+    def migrate_storage_ram(self, address: int, filename:str):
         self.file_manager.migrate_storage_ram(address, filename)
         self.update_PID()
 

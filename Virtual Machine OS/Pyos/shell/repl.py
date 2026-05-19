@@ -4,6 +4,7 @@ from directory import Directory
 from storage import Storage
 import inspect
 from commands import help
+from PCB import PCB
 
 ram=RAM(16)
 storage=Storage(ram)
@@ -17,14 +18,27 @@ class TameShell():
         self.storage = storage
         self.ram=ram
         self.directory_manager=Directory(ram, storage)
-        self.process_manager = Manager(ram, storage)
+        self.process_manager = Manager(ram, self.directory_manager)
+        self.pcb_manager = PCB(ram, self.directory_manager)
         self.commands_dict={
             "mkdir" : self.directory_manager.add_empty_folder,
-            "mkdirfull" : self.directory_manager.add_folder,
+            "mkfolder" : self.directory_manager.add_folder,
             "end" : self.end,
             "lsram": lambda:print(ram),
-            "help": help
-        }
+            "help": help,
+            "mod":self.directory_manager.edit_file,
+            "write": self.directory_manager.store_value,
+            "ramstage":self.directory_manager.migrate_storage_ram,
+            "df":self.directory_manager.percent_used,
+            "pidasync":self.directory_manager.update_PID,
+            "idlescan":self.pcb_manager.track_inactivity,
+            "purge":self.process_manager.delete_inactive_slots,
+            "next":self.process_manager.process_to_run,
+            "sched":self.process_manager.schedule_process_all,
+            "exec":self.process_manager.run_slots,
+            "malloc":self.process_manager.allocate_area,
+            "lsdisk":lambda:print(storage)
+        } #TODO check all commands for type hints
         self.conversion_table={
             str:lambda x:str(x),
             int : lambda x: int(x),
