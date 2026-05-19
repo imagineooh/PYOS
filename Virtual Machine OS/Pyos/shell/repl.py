@@ -17,6 +17,14 @@ class TameShell(Cmd):
         self.ram=ram
         self.directory_manager=Directory(ram, storage)
         self.process_manager = Manager(ram, storage)
+        self.commands_dict={
+            "mkdir" : self.directory_manager.add_empty_folder,
+            "mkdirfull" : self.directory_manager.add_folder,
+            "end" : self.end,
+        }
+
+    def end(self):
+        return 1
 
     def do_mkdir(self, arg):
         """Add a basic populated folder with no first file name"""
