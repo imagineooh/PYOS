@@ -38,7 +38,7 @@ class TameShell():
             "exec":self.process_manager.run_slots,
             "malloc":self.process_manager.allocate_area,
             "lsdisk":lambda:print(storage)
-        } #TODO check all commands for type hints
+        }
         self.conversion_table={
             str:lambda x:str(x),
             int : lambda x: int(x),

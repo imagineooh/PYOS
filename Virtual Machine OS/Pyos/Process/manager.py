@@ -35,7 +35,7 @@ class Manager:
         next_process_to_run=self.process_to_run()
         self.directory_manager.delete_slots(next_process_to_run)
 
-    def allocate_area(self, start, end, area_name):
+    def allocate_area(self, start: int, end: int, area_name: str):
         area_list = []      #acts like set but is mutable to start (TODO: implement exclusion cases for set)
         for i in range(start, end+1):
             area_list.append(i)
