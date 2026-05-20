@@ -31,7 +31,7 @@ class Directory:
     def add_inode(self, address: int, type_file:str, filename: str):
         self.inode_manager.add_inode(address, type_file, filename)
 
-    def edit_file(self, filename, data, new_data_name):
+    def edit_file(self, filename: str, data: list, new_data_name:str):
         address = self.file_manager.locate_object(filename)
         self.file_manager.edit_file(address, data, new_data_name)
 
