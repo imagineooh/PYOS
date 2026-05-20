@@ -1,5 +1,6 @@
 from scheduler import Scheduler
 from PCB import PCB
+from pathlib import Path
 
 class Manager:
     def __init__(self, ram, directory_manager):
@@ -31,9 +32,20 @@ class Manager:
         print(self.scheduler_manager.process_to_run())
         return self.scheduler_manager.process_to_run()
 
-    def run_slots(self, process_name:str = None):
+    def execute_path(self, path:str, extension:str):
+        file_path = Path(f"C:/Users/pasca/Downloads/{path}{extension}")
+        print(file_path)
+        if file_path.exists():
+            with open(file_path, 'r') as file:
+                content=file.read()
+                print(content)
+        else:
+            print("Could not find path in host OS")
+
+    def run_slots(self,process_extensions:str, process_name:str = None):
         if process_name is None:
             next_process_to_run=self.process_to_run()
+            self.execute_path(process_name, process_extensions)
             self.directory_manager.delete_slots(next_process_to_run)
         else:
             address = self.directory_manager.locate_object(process_name)
