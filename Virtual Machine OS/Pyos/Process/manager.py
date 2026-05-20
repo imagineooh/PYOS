@@ -42,13 +42,27 @@ class Manager:
         else:
             print("Could not find path in host OS")
 
-    def run_slots(self,process_extensions:str, process_name:str = None):
+    def migrate_host_ram(self, path:str, extension:str, filename:str, address:int):
+        file_path = Path(f"C:/Users/pasca/Downloads/{path}{extension}")
+        if file_path.exists():
+            with open(file_path, 'r') as file:
+                content = list(file.read())
+                content=[bin(ord(x))[2:] for x in content]
+            self.directory_manager.add_folder(filename, content, address, path)
+
+
+    def run_slots(self,process_extensions:str = 'txt', process_name:str = None):
         if process_name is None:
             next_process_to_run=self.process_to_run()
-            self.execute_path(process_name, process_extensions)
+            if process_extensions =='.txt':
+                decrypt=[]
+                data = list(self.ram[next_process_to_run][1].values())[0]
+                for i in range(len(data)):
+                    decrypt.append(chr(int(data[i], 2)))
+                print("".join(x for x in decrypt))
             self.directory_manager.delete_slots(next_process_to_run)
         else:
-            address = self.directory_manager.locate_object(process_name)
+            address = self.directory_manager.locate_object(process_name) #TODO manage extensions for None process_name
             self.directory_manager.delete_slots(address)
 
     def allocate_area(self, start: int, end: int, area_name: str):

@@ -40,6 +40,7 @@ class TameShell():
             "lsdisk":lambda:print(storage),
             "deldata":self.directory_manager.delete_folder_data,
             "hostex":self.process_manager.execute_path,
+            "hostmig":self.process_manager.migrate_host_ram,
         }
         self.conversion_table={
             str:lambda x:str(x),
@@ -61,7 +62,7 @@ class TameShell():
 
             if len(args)>1:
                 call_args = []
-                for i in range(len(sig.parameters.values())):
+                for i in range(len(user_args)): #note to self: sig.parameters.values() contains even optional parameters
                     param_name=list(inspect.signature(func).parameters.keys())[i]
                     type=inspect.signature(func).parameters[param_name].annotation
                     call_args.append(self.conversion_table[type](user_args[i]))
