@@ -37,7 +37,8 @@ class TameShell():
             "sched":self.process_manager.schedule_process_all,
             "exec":self.process_manager.run_slots,
             "malloc":self.process_manager.allocate_area,
-            "lsdisk":lambda:print(storage)
+            "lsdisk":lambda:print(storage),
+            "deldata":self.directory_manager.delete_folder_data,
         }
         self.conversion_table={
             str:lambda x:str(x),

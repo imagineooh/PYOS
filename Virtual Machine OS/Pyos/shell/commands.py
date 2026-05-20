@@ -15,7 +15,8 @@ def help(command:str=None):
         "sched": "schedules next processess to run",
         "exec": "executes next process to run",
         "malloc": "allocates RAM area to object",
-        "lsdisk": 'Prints Disk '
+        "lsdisk": 'Prints Disk ',
+        "deldata": "deletes the data for a folder, but keeps the folder as inactive in ram."
     }
     if command is not None:
         if command in commands_help:
