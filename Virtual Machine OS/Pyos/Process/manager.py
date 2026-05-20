@@ -31,9 +31,13 @@ class Manager:
         print(self.scheduler_manager.process_to_run())
         return self.scheduler_manager.process_to_run()
 
-    def run_slots(self):
-        next_process_to_run=self.process_to_run()
-        self.directory_manager.delete_slots(next_process_to_run)
+    def run_slots(self, process_name:str = None):
+        if process_name is None:
+            next_process_to_run=self.process_to_run()
+            self.directory_manager.delete_slots(next_process_to_run)
+        else:
+            address = self.directory_manager.locate_object(process_name)
+            self.directory_manager.delete_slots(address)
 
     def allocate_area(self, start: int, end: int, area_name: str):
         area_list = []      #acts like set but is mutable to start (TODO: implement exclusion cases for set)

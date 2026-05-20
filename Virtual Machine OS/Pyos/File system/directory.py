@@ -35,6 +35,9 @@ class Directory:
         address = self.file_manager.locate_object(filename)
         self.file_manager.edit_file(address, data, new_data_name)
 
+    def locate_object(self, filename) ->int:
+        return self.file_manager.locate_object(filename)
+
     def delete_folder_data(self, foldername:str):
         address=self.file_manager.locate_object(foldername)
         self.file_manager.delete_data(address)
