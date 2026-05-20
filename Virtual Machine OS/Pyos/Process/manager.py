@@ -51,18 +51,19 @@ class Manager:
             self.directory_manager.add_folder(filename, content, address, path)
 
 
-    def run_slots(self,process_extensions:str = 'txt', process_name:str = None):
-        if process_name is None:
-            next_process_to_run=self.process_to_run()
-            if process_extensions =='.txt':
+    def run_slots(self,file_name:str = None, process_extensions:str = 'txt', process_name:str = None):
+        if process_name is not None:
+            next_process_to_run=self.directory_manager.locate_object(process_name)
+            print(next_process_to_run)
+            if process_extensions =='.txt': #TODO fix for no file_name extensions
                 decrypt=[]
-                data = list(self.ram[next_process_to_run][1].values())[0]
+                data = list(self.ram[next_process_to_run][1][file_name])
                 for i in range(len(data)):
                     decrypt.append(chr(int(data[i], 2)))
                 print("".join(x for x in decrypt))
             self.directory_manager.delete_slots(next_process_to_run)
         else:
-            address = self.directory_manager.locate_object(process_name) #TODO manage extensions for None process_name
+            address = self.process_to_run() #TODO manage extensions for None process_name
             self.directory_manager.delete_slots(address)
 
     def allocate_area(self, start: int, end: int, area_name: str):

@@ -16,7 +16,9 @@ def help(command:str=None):
         "exec": "executes next process to run",
         "malloc": "allocates RAM area to object",
         "lsdisk": 'Prints Disk ',
-        "deldata": "deletes the data for a folder, but keeps the folder as inactive in ram."
+        "deldata": "deletes the data for a folder, but keeps the folder as inactive in ram.",
+        "hostex":"executes path from the host os",
+        "hostmig":"migrates objects from host os to ram"
     }
     if command is not None:
         if command in commands_help:
