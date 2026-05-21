@@ -1,6 +1,9 @@
+from sys import byteorder
+
 from scheduler import Scheduler
 from PCB import PCB
 from pathlib import Path
+import pyaudio
 
 class Manager:
     def __init__(self, ram, directory_manager):
@@ -52,8 +55,8 @@ class Manager:
             elif extension=='.wav':
                 with open(file_path, 'rb') as file:
                     content = bytearray(file.read())
-                    content=[bin(x)[2:] for x in content]
-                    #content = memoryview(content)
+                    #content=[bin(x)[2:] for x in content]
+                    content = memoryview(content)
             self.directory_manager.add_folder(filename, content, address, path)
 
 
@@ -68,7 +71,24 @@ class Manager:
                     decrypt.append(chr(int(data[i], 2)))
                 print("".join(x for x in decrypt))
             if process_extensions=='.wav':
-                print("file extension not supported yet")
+                data = list(self.ram[next_process_to_run][1][file_name])
+                sample_rate=int.from_bytes(data[24:28], byteorder='little')
+                audio_data=bytearray(data[44:])
+                p=pyaudio.PyAudio()
+                if int.from_bytes(data[34:36], byteorder='little')==16: #from bytes defaults to big_endian, so we have to specify byteorder as 'little' for it to work
+                    format = pyaudio.paInt16
+                else:
+                    format = pyaudio.paInt8
+                channels=int.from_bytes(data[22:24], byteorder='little')
+                rate=sample_rate
+                stream = p.open(
+                    format=format,
+                    channels=channels,
+                    rate=rate,
+                    output=True,
+                    frames_per_buffer=1024,
+                )
+                stream.write(bytes(audio_data))
             self.directory_manager.delete_slots(next_process_to_run)
         else:
             address = self.process_to_run() #TODO manage extensions for None process_name
