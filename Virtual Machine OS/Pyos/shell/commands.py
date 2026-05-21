@@ -13,7 +13,7 @@ def help(command:str=None):
         "purge": "Deletes inactive slots in ram",
         "next": "returns index of next process to run",
         "sched": "schedules next processess to run",
-        "exec": "executes next process to run",
+        "exec": "executes next process to run. Has blueprint (file_name, process_extensions, process_name)",
         "malloc": "allocates RAM area to object",
         "lsdisk": 'Prints Disk ',
         "deldata": "deletes the data for a folder, but keeps the folder as inactive in ram.",
