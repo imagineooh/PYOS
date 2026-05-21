@@ -5,24 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5949f82d-a08a-4cef-92e2-b0831dec1421" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/PYOS.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/material_theme_project_new.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Virtual Machine OS/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Virtual Machine OS/.idea/Virtual Machine OS.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Virtual Machine OS/Pyos/File system/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Virtual Machine OS/Pyos/File system/directory.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Virtual Machine OS/Pyos/File system/filesystem.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Virtual Machine OS/Pyos/File system/inode.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Virtual Machine OS/Pyos/Memory/ram.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Virtual Machine OS/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Virtual Machine OS/__main__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Virtual Machine OS/docs/architecture.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Virtual Machine OS/docs/progresslog.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/PYOS.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/PYOS.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/material_theme_project_new.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/material_theme_project_new.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,27 +24,39 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 6
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "imagineooh"
+  }
 }]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/imagineooh/PYOS.git",
+    "accountId": "a2fce826-a5cc-4d78-9787-0fa74269886e"
+  }
+}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
   <component name="ProjectId" id="3DPDp6rVFrUJ6bsxhoAIF7z8Kwp" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.__main__.executor": "Run",
-    "Python.directory.executor": "Run",
-    "Python.filesystem.executor": "Run",
-    "Python.inode.executor": "Run",
-    "Python.ram.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "last_opened_file_path": "C:/Users/pasca/PycharmProjects/PYOS"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.__main__.executor&quot;: &quot;Run&quot;,
+    &quot;Python.directory.executor&quot;: &quot;Run&quot;,
+    &quot;Python.filesystem.executor&quot;: &quot;Run&quot;,
+    &quot;Python.inode.executor&quot;: &quot;Run&quot;,
+    &quot;Python.ram.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/pasca/PycharmProjects/PYOS&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\pasca\PycharmProjects\PYOS" />

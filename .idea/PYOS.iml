@@ -5,6 +5,8 @@
       <sourceFolder url="file://$MODULE_DIR$/Virtual Machine OS/Pyos" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Virtual Machine OS/Pyos/File system" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Virtual Machine OS/Pyos/Memory" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Virtual Machine OS/Pyos/Process" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Virtual Machine OS/Pyos/shell" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/.venv" />
     </content>
     <orderEntry type="inheritedJdk" />
