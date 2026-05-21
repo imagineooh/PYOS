@@ -45,9 +45,15 @@ class Manager:
     def migrate_host_ram(self, path:str, extension:str, filename:str, address:int):
         file_path = Path(f"C:/Users/pasca/Downloads/{path}{extension}")
         if file_path.exists():
-            with open(file_path, 'r') as file:
-                content = list(file.read())
-                content=[bin(ord(x))[2:] for x in content]
+            if extension=='.txt':
+                with open(file_path, 'r') as file:
+                    content = list(file.read())
+                    content=[bin(ord(x))[2:] for x in content]
+            elif extension=='.wav':
+                with open(file_path, 'rb') as file:
+                    content = bytearray(file.read())
+                    content=[bin(x)[2:] for x in content]
+                    #content = memoryview(content)
             self.directory_manager.add_folder(filename, content, address, path)
 
 
