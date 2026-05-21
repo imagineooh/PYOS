@@ -61,6 +61,8 @@ class Manager:
                 for i in range(len(data)):
                     decrypt.append(chr(int(data[i], 2)))
                 print("".join(x for x in decrypt))
+            if process_extensions=='.wav':
+                print("file extension not supported yet")
             self.directory_manager.delete_slots(next_process_to_run)
         else:
             address = self.process_to_run() #TODO manage extensions for None process_name
