@@ -1,9 +1,8 @@
-from sys import byteorder
-
 from scheduler import Scheduler
 from PCB import PCB
 from pathlib import Path
 import pyaudio
+import keyboard
 
 class Manager:
     def __init__(self, ram, directory_manager):
@@ -57,7 +56,9 @@ class Manager:
                     content = bytearray(file.read())
                     #content=[bin(x)[2:] for x in content]
                     content = memoryview(content)
-            self.directory_manager.add_folder(filename, content, address, path)
+                    packaging_info = content[0:44]
+                    raw_bytes = content[44:]
+            self.directory_manager.add_folder(filename, [packaging_info, raw_bytes], address, path)
 
 
     def run_slots(self,file_name:str = None, process_extensions:str = 'txt', process_name:str = None):
@@ -71,15 +72,15 @@ class Manager:
                     decrypt.append(chr(int(data[i], 2)))
                 print("".join(x for x in decrypt))
             if process_extensions=='.wav':
-                data = list(self.ram[next_process_to_run][1][file_name])
-                sample_rate=int.from_bytes(data[24:28], byteorder='little')
-                audio_data=bytearray(data[44:])
+                packaging_info = list(self.ram[next_process_to_run][1][file_name][0])
+                sample_rate=int.from_bytes(packaging_info[24:28], byteorder='little')
+                audio_data=bytearray(self.ram[next_process_to_run][1][file_name][1])
                 p=pyaudio.PyAudio()
-                if int.from_bytes(data[34:36], byteorder='little')==16: #from bytes defaults to big_endian, so we have to specify byteorder as 'little' for it to work
+                if int.from_bytes(packaging_info[34:36], byteorder='little')==16: #from bytes defaults to big_endian, so we have to specify byteorder as 'little' for it to work
                     format = pyaudio.paInt16
                 else:
                     format = pyaudio.paInt8
-                channels=int.from_bytes(data[22:24], byteorder='little')
+                channels=int.from_bytes(packaging_info[22:24], byteorder='little')
                 rate=sample_rate
                 stream = p.open(
                     format=format,
@@ -88,7 +89,14 @@ class Manager:
                     output=True,
                     frames_per_buffer=1024,
                 )
-                stream.write(bytes(audio_data))
+                done=False
+                chunk=0
+                chunk_offset=4096
+                while not done and chunk<len(audio_data):
+                    stream.write(bytes(audio_data[chunk:(chunk+chunk_offset)]))
+                    if keyboard.is_pressed('q'): #audio should stop playing
+                        done=True
+                    chunk+=chunk_offset
             self.directory_manager.delete_slots(next_process_to_run)
         else:
             address = self.process_to_run() #TODO manage extensions for None process_name
