@@ -93,7 +93,7 @@ class Manager:
                 chunk=0
                 chunk_offset=4096
                 while not done and chunk<len(audio_data):
-                    if chunk + chunk_offset<len(audio_data)
+                    if chunk + chunk_offset<len(audio_data):
                         stream.write(bytes(audio_data[chunk:(chunk+chunk_offset)]))
                     else:
                         stream.write(bytes(audio_data[chunk:]))
