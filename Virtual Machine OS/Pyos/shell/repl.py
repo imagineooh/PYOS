@@ -59,6 +59,8 @@ class TameShell():
             sig=inspect.signature(func)
             params=list(sig.parameters.values())
             user_args=args[1:]
+            if len(args)==1 and len(sig.parameters.values())>0:
+                print(str(inspect.signature(func).parameters))
 
             if len(args)>1:
                 call_args = []
@@ -73,8 +75,8 @@ class TameShell():
                 bound = sig.bind_partial(*call_args)
                 bound.apply_defaults()
                 return func(*bound.args, **bound.kwargs)
-            except TypeError as e:
-                print(f"Arg error {e}")
+            except (TypeError, IndexError) as e: #FIX HERE FOR RUNTIME ERRORS
+                print(f"Inputed Arg Error {e} after input '{''.join(args)}'")
                 return None
 
     def loop(self):
