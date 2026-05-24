@@ -108,6 +108,10 @@ class Manager:
                         done=True
                     chunk+=chunk_offset
             self.directory_manager.delete_slots(next_process_to_run)
+        elif process_extensions=='.exe':
+            import subprocess
+            sub_path=f"{file_name.strip()}{process_extensions.strip()}"#TODO look into PATH
+            subprocess.Popen(sub_path, shell=True)
         else:
             address = self.process_to_run() #TODO manage extensions for None process_name
             self.directory_manager.delete_slots(address)

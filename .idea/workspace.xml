@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5949f82d-a08a-4cef-92e2-b0831dec1421" name="Changes" comment="Merge remote-tracking branch 'origin/master'&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml">
+    <list default="true" id="5949f82d-a08a-4cef-92e2-b0831dec1421" name="Changes" comment="FEAT TypeError supported in runtime in repl.py, giving keyword agument solo now gives full function annotation WITH type hints">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Virtual Machine OS/Pyos/shell/repl.py" beforeDir="false" afterPath="$PROJECT_DIR$/Virtual Machine OS/Pyos/shell/repl.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Virtual Machine OS/Pyos/Process/manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/Virtual Machine OS/Pyos/Process/manager.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -133,7 +133,15 @@
       <option name="project" value="LOCAL" />
       <updated>1779644804580</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="FEAT TypeError supported in runtime in repl.py, giving keyword agument solo now gives full function annotation WITH type hints">
+      <option name="closed" value="true" />
+      <created>1779647258740</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1779647258740</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -153,6 +161,7 @@
     <MESSAGE value="FEAT MAJOR: can now run audio files" />
     <MESSAGE value="REVERT FIX FEATPREP: reverted to 22/05 commit, fixed add_folder issue, prepared for reading .exe extension files" />
     <MESSAGE value="Merge remote-tracking branch 'origin/master'&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml" />
-    <option name="LAST_COMMIT_MESSAGE" value="Merge remote-tracking branch 'origin/master'&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml" />
+    <MESSAGE value="FEAT TypeError supported in runtime in repl.py, giving keyword agument solo now gives full function annotation WITH type hints" />
+    <option name="LAST_COMMIT_MESSAGE" value="FEAT TypeError supported in runtime in repl.py, giving keyword agument solo now gives full function annotation WITH type hints" />
   </component>
 </project>
