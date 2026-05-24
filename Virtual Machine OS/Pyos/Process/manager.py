@@ -51,15 +51,22 @@ class Manager:
                 with open(file_path, 'r') as file:
                     content = list(file.read())
                     content=[bin(ord(x))[2:] for x in content]
+                self.directory_manager.add_folder(filename, content, address, path)
             elif extension=='.wav':
                 with open(file_path, 'rb') as file:
                     content = bytearray(file.read())
                     #content=[bin(x)[2:] for x in content]
                     content = memoryview(content)
-                    packaging_info = content[0:44]
+                    packaging_info = content[:44]
                     raw_bytes = content[44:]
-            self.directory_manager.add_folder(filename, [packaging_info, raw_bytes], address, path)
-
+                self.directory_manager.add_folder(filename, [packaging_info, raw_bytes], address, path)
+            elif extension=='.exe':
+                with open(file_path, 'rb') as file:
+                    content=bytearray(file.read())
+                    content=memoryview(content)
+                    packaging_info=content[:64]
+                    raw_bytes=content[:64]
+                self.directory_manager.add_folder(filename, [packaging_info, raw_bytes], address, path)
 
     def run_slots(self,file_name:str = None, process_extensions:str = 'txt', process_name:str = None):
         if process_name is not None:
