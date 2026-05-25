@@ -27,3 +27,7 @@ class Storage:
             self.location_index[storage_address]=value_to_store
             self.map_name_key[value_to_store[0][2]]=storage_address
 
+    def storage_len(self):
+        return len(self.data)
+
+    #TODO HARD add equivalent of PID for storage

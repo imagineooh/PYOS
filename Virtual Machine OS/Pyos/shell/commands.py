@@ -18,7 +18,8 @@ def help(command:str=None):
         "lsdisk": 'Prints Disk ',
         "deldata": "deletes the data for a folder, but keeps the folder as inactive in ram.",
         "hostex":"executes path from the host os",
-        "hostmig":"migrates objects from host os to ram"
+        "hostmig":"migrates objects from host os to ram",
+        "comem":"Enables or Disables auto communication between RAM and Disk, if enabled, finished ram processes will automatically be written to Disk"
     }
     if command is not None:
         if command in commands_help:

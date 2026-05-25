@@ -41,6 +41,7 @@ class TameShell():
             "deldata":self.directory_manager.delete_folder_data,
             "hostex":self.process_manager.execute_path,
             "hostmig":self.process_manager.migrate_host_ram,
+            "comem":self.process_manager.auto_migration_status,
         }
         self.conversion_table={
             str:lambda x:str(x),

@@ -10,6 +10,15 @@ class Manager:
         self.directory_manager = directory_manager
         self.scheduler_manager = Scheduler(ram, directory_manager)
         self.pcb_manager = PCB(ram, directory_manager)
+        self.auto_migrate=True
+
+    def auto_migration_status(self, status:str):
+        if status=='enable':
+            self.auto_migrate=True
+        elif status=='disable':
+            self.auto_migrate=False
+        else:
+            print("Unknown command for auto_migrate")
 
     def track_inactivity(self):
         self.pcb_manager.track_inactivity()
@@ -68,7 +77,7 @@ class Manager:
                     raw_bytes=content[:64]
                 self.directory_manager.add_folder(filename, [packaging_info, raw_bytes], address, path)
 
-    def run_slots(self,file_name:str = None, process_extensions:str = 'txt', process_name:str = None):
+    def run_slots(self,process_name:str = None, file_name:str = None, process_extensions:str = 'txt', disk_address:int = None):
         if process_name is not None:
             next_process_to_run=self.directory_manager.locate_object(process_name)
             print(next_process_to_run)
@@ -78,7 +87,7 @@ class Manager:
                 for i in range(len(data)):
                     decrypt.append(chr(int(data[i], 2)))
                 print("".join(x for x in decrypt))
-            if process_extensions=='.wav':
+            elif process_extensions=='.wav':
                 packaging_info = list(self.ram[next_process_to_run][1][file_name][0])
                 sample_rate=int.from_bytes(packaging_info[24:28], byteorder='little')
                 audio_data=bytearray(self.ram[next_process_to_run][1][file_name][1])
@@ -107,11 +116,18 @@ class Manager:
                     if keyboard.is_pressed('q'): #audio should stop playing
                         done=True
                     chunk+=chunk_offset
-            self.directory_manager.delete_slots(next_process_to_run)
-        elif process_extensions=='.exe':
-            import subprocess
-            sub_path=f"{file_name.strip()}{process_extensions.strip()}"#TODO look into PATH
-            subprocess.Popen(sub_path, shell=True)
+            elif process_extensions=='.exe':
+                import subprocess
+                sub_path=f"{file_name.strip()}{process_extensions.strip()}"#TODO look into PATH
+                subprocess.Popen(sub_path, shell=True)
+
+            if self.auto_migrate:
+                if not disk_address:
+                    free_space: list[int] = self.directory_manager.free_disk_space()
+                    self.directory_manager.store_value(process_name,free_space[0])
+                elif disk_address:
+                    self.directory_manager.store_value(process_name,disk_address)
+
         else:
             address = self.process_to_run() #TODO manage extensions for None process_name
             self.directory_manager.delete_slots(address)

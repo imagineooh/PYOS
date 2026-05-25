@@ -41,6 +41,13 @@ class Inode:
     def store_value(self, value_to_store, storage_address): #equivalent of migrate_ram_process
         self.storage.store(value_to_store, storage_address)
 
+    def locate_free_disk(self):
+        free_area=[]
+        for i in range(self.storage.storage_len()):
+            if self.storage[i]==0:
+                free_area.append(i)
+        return free_area
+
     def read_file(self, address):
         return self.ram[address]
 

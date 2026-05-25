@@ -55,6 +55,10 @@ class Directory:
         to_store=self.file_manager.read_file(ram_address)
         self.file_manager.store_value(to_store, storage_address)
 
+    def free_disk_space(self): #TODO review possible 3ring failure here
+        free_space=self.inode_manager.locate_free_disk()
+        return free_space
+
     def migrate_storage_ram(self, address: int, filename:str):
         self.file_manager.migrate_storage_ram(address, filename)
         self.update_PID()
