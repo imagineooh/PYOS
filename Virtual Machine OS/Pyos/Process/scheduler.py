@@ -31,10 +31,12 @@ class Scheduler:
         for i in range(self.ram.len_RAM()):
             if self.ram[i]!=0:
                 index = self.ram[i][0][0]
-                if self.ram[i][1]==0:
+                if self.ram[i][1]!=0:
                     self.status[index]=[0]
-                    self.status[index].append(scheduled.index(self.ram[i][0]))
+                    self.status[index].append(scheduled.index(index))
                 else:
-                    self.status[index]=[1]
+                    self.status[index]=[-1]
         return self.status
 
+    def mark_as_active(self, address:int):
+        self.status[address]=[1,-1]

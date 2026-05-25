@@ -43,7 +43,8 @@ class TameShell():
             "hostex":self.process_manager.execute_path,
             "hostmig":self.process_manager.migrate_host_ram,
             "comem":self.process_manager.auto_migration_status,
-            "popstat":self.process_manager.populate_status,
+            "refpopstat":self.process_manager.populate_status,
+            "popstat": self.process_manager.output_pop
         }
         self.conversion_table={
             str:lambda x:str(x),

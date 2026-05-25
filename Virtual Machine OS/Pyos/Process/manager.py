@@ -133,6 +133,7 @@ class Manager:
                 elif disk_address:
                     self.directory_manager.store_value(process_name,disk_address)
                     self.directory_manager.delete_slots(next_process_to_run)
+            self.scheduler_manager.mark_as_active(next_process_to_run)
         else:
             address = self.process_to_run() #TODO manage extensions for None process_name
             self.directory_manager.delete_slots(address)
@@ -145,7 +146,11 @@ class Manager:
 
 
     def populate_status(self):
+        print(self.scheduler_manager.populate_status())
         return self.scheduler_manager.populate_status()
+
+    def output_pop(self):
+        print(self.scheduler_manager.status)
 
     def loop_status(self):
         while self.populate_status():
