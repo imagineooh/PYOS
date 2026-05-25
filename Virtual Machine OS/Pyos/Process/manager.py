@@ -7,10 +7,14 @@ import keyboard
 class Manager:
     def __init__(self, ram, directory_manager):
         self.ram = ram
+        self.start_signal = False
         self.directory_manager = directory_manager
         self.scheduler_manager = Scheduler(ram, directory_manager)
         self.pcb_manager = PCB(ram, directory_manager)
         self.auto_migrate=True
+
+    def start_scheduling(self):
+        self.start_signal=True
 
     def auto_migration_status(self, status:str):
         if status=='enable':
@@ -144,6 +148,7 @@ class Manager:
         return self.scheduler_manager.populate_status()
 
     def loop_status(self):
-        while True:
-            self.populate_status()
+            while self.populate_status():
+                print("running")
+                self.populate_status()
 

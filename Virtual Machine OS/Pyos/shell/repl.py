@@ -20,6 +20,7 @@ class TameShell():
         self.directory_manager=Directory(ram, storage)
         self.process_manager = Manager(ram, self.directory_manager)
         self.pcb_manager = PCB(ram, self.directory_manager)
+        self.process_manager.start_scheduling()
         self.commands_dict={
             "mkdir" : self.directory_manager.add_empty_folder,
             "mkfolder" : self.directory_manager.add_folder,
