@@ -1,6 +1,3 @@
-from operator import index
-
-
 class Scheduler:
     def __init__(self, ram, directory_manager):
         self.ram = ram
