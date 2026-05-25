@@ -76,7 +76,7 @@ class TameShell():
                 bound = sig.bind_partial(*call_args)
                 bound.apply_defaults()
                 return func(*bound.args, **bound.kwargs)
-            except (TypeError, IndexError, KeyError) as e: #FIX HERE FOR RUNTIME ERRORS
+            except (TypeError, IndexError, KeyError, ValueError) as e: #FIX HERE FOR RUNTIME ERRORS
                 print(f"Inputed Arg Error {e} after input '{''.join(args)}'")
                 return None
 

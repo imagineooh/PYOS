@@ -125,9 +125,10 @@ class Manager:
                 if not disk_address:
                     free_space: list[int] = self.directory_manager.free_disk_space()
                     self.directory_manager.store_value(process_name,free_space[0])
+                    self.directory_manager.delete_slots(next_process_to_run)
                 elif disk_address:
                     self.directory_manager.store_value(process_name,disk_address)
-
+                    self.directory_manager.delete_slots(next_process_to_run)
         else:
             address = self.process_to_run() #TODO manage extensions for None process_name
             self.directory_manager.delete_slots(address)
