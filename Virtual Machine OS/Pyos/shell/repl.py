@@ -5,16 +5,24 @@ from storage import Storage
 import inspect
 from commands import help
 from PCB import PCB
+from context import Context
 
 ram=RAM(16)
 storage=Storage(ram)
 class TameShell():
-    username = 'flav'
     intro = "Welcome to TameOS! Type help <command> to get help on a command.\n"
     print(intro)
-    prompt = f"C://TameOS/user:{username}/terminal: "
 
     def __init__(self,ram, storage):
+        self.username = input('Username: ')
+        self.password=input('Password: ')
+        self.context_manager = Context()
+        self.authenticated = True
+        if not self.context_manager.login(self.username, self.password):
+            print('Invalid credentials')
+            self.authenticated = False
+            return
+        self.prompt = f"C://TameOS/user:{self.username}/terminal: "
         self.storage = storage
         self.ram=ram
         self.directory_manager=Directory(ram, storage)
@@ -51,6 +59,7 @@ class TameShell():
             int : lambda x: int(x),
             list : lambda x: [i if i.isdigit() else i for i in x.split(",")]
         }
+
     def end(self):
         print("Quitting TameOS. See you soon, and remember to Let It Happen!")
         return -1
@@ -84,9 +93,11 @@ class TameShell():
                 return None
 
     def loop(self):
+        if not self.authenticated:
+            return
         while True:
             try:
-                arg = input(TameShell.prompt)
+                arg = input(self.prompt)
                 if self.default(arg)==-1:
                     break
             except EOFError:
