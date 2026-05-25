@@ -148,7 +148,7 @@ class Manager:
         return self.scheduler_manager.populate_status()
 
     def loop_status(self):
-            while self.populate_status():
-                print("running")
-                self.populate_status()
+        while self.populate_status():
+            print("running")
+            self.populate_status()
 
