@@ -42,6 +42,7 @@ class TameShell():
             "hostex":self.process_manager.execute_path,
             "hostmig":self.process_manager.migrate_host_ram,
             "comem":self.process_manager.auto_migration_status,
+            "popstat":self.process_manager.populate_status,
         }
         self.conversion_table={
             str:lambda x:str(x),
@@ -50,7 +51,7 @@ class TameShell():
         }
     def end(self):
         print("Quitting TameOS. See you soon, and remember to Let It Happen!")
-        return True
+        return -1
 
     def default(self,arg):
         args = arg.split()
@@ -84,7 +85,7 @@ class TameShell():
         while True:
             try:
                 arg = input(TameShell.prompt)
-                if self.default(arg):
+                if self.default(arg)==-1:
                     break
             except EOFError:
                 break

@@ -140,6 +140,10 @@ class Manager:
         self.pcb_manager.area_allocation(set(area_list), area_name)
 
 
+    def populate_status(self):
+        return self.scheduler_manager.populate_status()
 
-
+    def loop_status(self):
+        while True:
+            self.populate_status()
 

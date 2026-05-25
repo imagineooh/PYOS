@@ -1,4 +1,4 @@
-from manager import Manager
+'''from manager import Manager
 from ram import RAM
 from filesystem import FileSystem
 from directory import Directory
@@ -47,4 +47,12 @@ directory_manager.update_PID()
 print(ram)
 directory_manager.reestablish_PID()
 print(ram)
-directory_manager.percent_used()
+directory_manager.percent_used()'''
+
+from repl import TameShell
+from ram import RAM
+from storage import Storage
+ram=RAM(16)
+storage=Storage(ram)
+shell = TameShell(ram, storage)
+shell.loop()

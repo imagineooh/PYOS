@@ -1,3 +1,6 @@
+from operator import index
+
+
 class Scheduler:
     def __init__(self, ram, directory_manager):
         self.ram = ram
@@ -5,6 +8,7 @@ class Scheduler:
         self.schedule_processes = []
         self.ready_queue = []
         self.waiting_queue = []
+        self.status={}
 
     def schedule_process_all(self):
         processes = list(self.directory_manager.give_filename_index())
@@ -25,4 +29,15 @@ class Scheduler:
     def delete_ready_value(self):
         self.ready_queue.pop(0)
 
+    def populate_status(self):
+        scheduled=self.schedule_process_all()
+        for i in range(self.ram.len_RAM()):
+            if self.ram[i]!=0:
+                index = self.ram[i][0][0]
+                if self.ram[i][1]==0:
+                    self.status[index]=[0]
+                    self.status[index].append(scheduled.index(self.ram[i][0]))
+                else:
+                    self.status[index]=[1]
+        return self.status
 
