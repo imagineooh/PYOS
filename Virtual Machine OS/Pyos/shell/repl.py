@@ -49,7 +49,7 @@ class TameShell():
             list : lambda x: [i if i.isdigit() else i for i in x.split(",")]
         }
     def end(self):
-        print("Quitting TameOS. See you soon!")
+        print("Quitting TameOS. See you soon, and remember to Let It Happen!")
         return True
 
     def default(self,arg):
@@ -61,13 +61,13 @@ class TameShell():
             params=list(sig.parameters.values())
             user_args=args[1:]
             if len(args)==1 and len(sig.parameters.values())>0:
-                print(str(inspect.signature(func).parameters))
+                print(sig)
 
             if len(args)>1:
                 call_args = []
                 for i in range(len(user_args)): #note to self: sig.parameters.values() contains even optional parameters
-                    param_name=list(inspect.signature(func).parameters.keys())[i]
-                    type=inspect.signature(func).parameters[param_name].annotation
+                    param_name=list(sig.parameters.keys())[i]
+                    type=sig.parameters[param_name].annotation
                     call_args.append(self.conversion_table[type](user_args[i]))
             else:
                 call_args=[]

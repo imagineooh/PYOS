@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5949f82d-a08a-4cef-92e2-b0831dec1421" name="Changes" comment="FEAT added automigration feature (controlled by user) to write process to disk after being executed in ram if enabled" />
+    <list default="true" id="5949f82d-a08a-4cef-92e2-b0831dec1421" name="Changes" comment="FIX when a process is ram it deletes from ram (accidentally removed feat in last commit cd66139)">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -36,6 +38,9 @@
     &quot;accountId&quot;: &quot;a2fce826-a5cc-4d78-9787-0fa74269886e&quot;
   }
 }</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 6
 }</component>
@@ -178,7 +183,23 @@
       <option name="project" value="LOCAL" />
       <updated>1779700059345</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="FEAT added automigration feature (controlled by user) to write process to disk after being executed in ram if enabled">
+      <option name="closed" value="true" />
+      <created>1779700095890</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1779700095890</updated>
+    </task>
+    <task id="LOCAL-00014" summary="FIX when a process is ram it deletes from ram (accidentally removed feat in last commit cd66139)">
+      <option name="closed" value="true" />
+      <created>1779700616200</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1779700616200</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -202,6 +223,7 @@
     <MESSAGE value="PREPFEAT opening .exe files" />
     <MESSAGE value="FIXFEAT added KeyError case to repl.py" />
     <MESSAGE value="FEAT added automigration feature (controlled by user) to write process to disk after being executed in ram if enabled" />
-    <option name="LAST_COMMIT_MESSAGE" value="FEAT added automigration feature (controlled by user) to write process to disk after being executed in ram if enabled" />
+    <MESSAGE value="FIX when a process is ram it deletes from ram (accidentally removed feat in last commit cd66139)" />
+    <option name="LAST_COMMIT_MESSAGE" value="FIX when a process is ram it deletes from ram (accidentally removed feat in last commit cd66139)" />
   </component>
 </project>
