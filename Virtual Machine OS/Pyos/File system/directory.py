@@ -2,12 +2,12 @@ from inode import Inode
 from filesystem import FileSystem
 
 class Directory:
-    def __init__(self,  ram, storage):
+    def __init__(self,  ram, storage, inode):
         self.ram = ram
-        self.inode_manager=Inode(ram, storage)
+        self.inode_manager=inode
         self.ram.sign_in('F', 'pas')
         self.ram.add_user('F', 'pas')
-        self.file_manager=FileSystem(ram, storage)
+        self.file_manager=FileSystem(ram, storage, self.inode_manager)
 
     class Folder:
         def __init__(self, number, name):
@@ -75,3 +75,6 @@ class Directory:
 
     def percent_used(self):
         self.inode_manager.percent_used()
+
+    def is_in(self):
+        self.inode_manager.signin()

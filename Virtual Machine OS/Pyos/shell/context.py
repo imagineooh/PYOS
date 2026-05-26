@@ -3,10 +3,10 @@ class Context:
         self.users={
             "flav":"CACA",
         }
+        self.signed_in=False
 
     def fetch(self):
         return self.users
-
 
     def login(self, username:str, password:str):
         if username in self.users:
@@ -18,3 +18,9 @@ class Context:
                 return False
         else:
             print("Invalid Username")
+    def signin(self):
+        self.signed_in = True
+
+    def is_in(self):
+        if self.signed_in:
+            return True

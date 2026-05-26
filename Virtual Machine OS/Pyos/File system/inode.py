@@ -1,4 +1,6 @@
+from context import Context
 from storage import Storage
+
 
 class Inode:
     def __init__(self, ram, storage):
@@ -6,16 +8,21 @@ class Inode:
         self.counter = 0
         self.filename_index={}
         self.storage = storage
+        self.authorisation=False
         self.ram.sign_in('F', 'pas')
         self.ram.add_user('F', 'pas')
+    def signin(self):
+        self.authorisation=True
     def add_inode(self, address: int, type_file:str, filename: str):
         if type_file=='file' and self.ram[address]==0:
-            if self.ram.write(address, [[self.counter, type_file, filename], []], True) != "Data adress already taken, try 'force_write' method (unsafe) or 'free_index' method first. ...//":
-                self.ram.write(address, [[self.counter, type_file, filename], []], True)
+            print(self.authorisation)
+            if self.ram.write(address, [[self.counter, type_file, filename], []], self.authorisation) != "Data adress already taken, try 'force_write' method (unsafe) or 'free_index' method first. ...//":
+                self.ram.write(address, [[self.counter, type_file, filename], []], self.authorisation)
                 self.filename_index[filename] = address
         elif type_file=='folder' and self.ram[address]==0:
-            if self.ram.write(address, [[self.counter, type_file, filename], {}], True)  != "Data adress already taken, try 'force_write' method (unsafe) or 'free_index' method first. ...//":
-                self.ram.write(address, [[self.counter, type_file, filename], {}], True)
+            print(self.authorisation)
+            if self.ram.write(address, [[self.counter, type_file, filename], {}], self.authorisation)  != "Data adress already taken, try 'force_write' method (unsafe) or 'free_index' method first. ...//":
+                self.ram.write(address, [[self.counter, type_file, filename], {}], self.authorisation)
                 self.filename_index[filename]=address
         self.counter+=1
 

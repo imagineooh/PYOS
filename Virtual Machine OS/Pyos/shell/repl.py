@@ -6,6 +6,7 @@ import inspect
 from commands import help
 from PCB import PCB
 from context import Context
+from inode import Inode
 
 ram=RAM(16)
 storage=Storage(ram)
@@ -25,10 +26,13 @@ class TameShell():
         self.prompt = f"C://TameOS/user:{self.username}/terminal: "
         self.storage = storage
         self.ram=ram
-        self.directory_manager=Directory(ram, storage)
+        self.inode=Inode(ram, storage)
+        self.directory_manager=Directory(ram, storage, self.inode)
         self.process_manager = Manager(ram, self.directory_manager)
         self.pcb_manager = PCB(ram, self.directory_manager)
         self.process_manager.start_scheduling()
+        if self.authenticated:
+            self.inode.signin()
         self.commands_dict={
             "mkdir" : self.directory_manager.add_empty_folder,
             "mkfolder" : self.directory_manager.add_folder,
