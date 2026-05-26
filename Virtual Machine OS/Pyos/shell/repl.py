@@ -31,7 +31,7 @@ class TameShell():
         self.process_manager = Manager(ram, self.directory_manager)
         self.pcb_manager = PCB(ram, self.directory_manager)
         self.process_manager.start_scheduling()
-        if self.authenticated:
+        if self.authenticated and self.context_manager.fetch_auth(self.username)==1:
             self.inode.signin()
         self.commands_dict={
             "mkdir" : self.directory_manager.add_empty_folder,

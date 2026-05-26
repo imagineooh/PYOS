@@ -4,13 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5949f82d-a08a-4cef-92e2-b0831dec1421" name="Changes" comment="FEAT ADD authentication to TameOS">
+    <list default="true" id="5949f82d-a08a-4cef-92e2-b0831dec1421" name="Changes" comment="FEAT authentication to bypass allocation in ram, FIX dependency injection throughout">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Virtual Machine OS/Pyos/File system/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/Virtual Machine OS/Pyos/File system/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Virtual Machine OS/Pyos/File system/directory.py" beforeDir="false" afterPath="$PROJECT_DIR$/Virtual Machine OS/Pyos/File system/directory.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Virtual Machine OS/Pyos/File system/inode.py" beforeDir="false" afterPath="$PROJECT_DIR$/Virtual Machine OS/Pyos/File system/inode.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Virtual Machine OS/Pyos/shell/context.py" beforeDir="false" afterPath="$PROJECT_DIR$/Virtual Machine OS/Pyos/shell/context.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Virtual Machine OS/Pyos/shell/repl.py" beforeDir="false" afterPath="$PROJECT_DIR$/Virtual Machine OS/Pyos/shell/repl.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -261,7 +257,15 @@
       <option name="project" value="LOCAL" />
       <updated>1779726260488</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="FEAT authentication to bypass allocation in ram, FIX dependency injection throughout">
+      <option name="closed" value="true" />
+      <created>1779800915175</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1779800915175</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -299,6 +303,7 @@
     <MESSAGE value="FIX SUPERDUPERMINOR indent one to left" />
     <MESSAGE value="FEATFIX population status now works for inactive, waiting and active slots!" />
     <MESSAGE value="FEAT ADD authentication to TameOS" />
-    <option name="LAST_COMMIT_MESSAGE" value="FEAT ADD authentication to TameOS" />
+    <MESSAGE value="FEAT authentication to bypass allocation in ram, FIX dependency injection throughout" />
+    <option name="LAST_COMMIT_MESSAGE" value="FEAT authentication to bypass allocation in ram, FIX dependency injection throughout" />
   </component>
 </project>

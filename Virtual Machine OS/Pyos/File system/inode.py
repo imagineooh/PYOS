@@ -15,12 +15,10 @@ class Inode:
         self.authorisation=True
     def add_inode(self, address: int, type_file:str, filename: str):
         if type_file=='file' and self.ram[address]==0:
-            print(self.authorisation)
             if self.ram.write(address, [[self.counter, type_file, filename], []], self.authorisation) != "Data adress already taken, try 'force_write' method (unsafe) or 'free_index' method first. ...//":
                 self.ram.write(address, [[self.counter, type_file, filename], []], self.authorisation)
                 self.filename_index[filename] = address
         elif type_file=='folder' and self.ram[address]==0:
-            print(self.authorisation)
             if self.ram.write(address, [[self.counter, type_file, filename], {}], self.authorisation)  != "Data adress already taken, try 'force_write' method (unsafe) or 'free_index' method first. ...//":
                 self.ram.write(address, [[self.counter, type_file, filename], {}], self.authorisation)
                 self.filename_index[filename]=address
