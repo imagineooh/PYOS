@@ -78,3 +78,6 @@ class Directory:
 
     def is_in(self):
         self.inode_manager.signin()
+
+    def pointermult(self, pointer:list):
+        print(self.inode_manager.point_to_mutiple(pointer))

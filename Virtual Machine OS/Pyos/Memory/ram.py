@@ -94,10 +94,11 @@ class RAM:
             if address < self.size:
                 if self.data[address]==0:
                     self.data[address] = value
-                elif not bypass:
-                    print(f"Data adress already taken, try 'force_write' method (unsafe) or 'free_index' method first. ...//")
-                elif bypass:
-                    print("Bypassing restriction for folder allocation")
+                else:
+                    if not bypass:
+                        print(f"Data adress already taken, try 'force_write' method (unsafe) or 'free_index' method first. ...//")
+                    elif bypass:
+                        print("Bypassing restriction for folder allocation")
             else:
                 print(f"Data out of bounds for index {address}. " \
                       "If you wish to force write the value to RAM (unsafe), use 'force_writee' method.")
