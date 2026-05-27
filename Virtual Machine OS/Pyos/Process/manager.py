@@ -64,7 +64,7 @@ class Manager:
                 with open(file_path, 'r') as file:
                     content = list(file.read())
                     content=[bin(ord(x))[2:] for x in content]
-                self.directory_manager.add_folder(filename, content, address, path)
+                self.directory_manager.add_folder(filename, [str(bin(0)[2:]),content], address, path)
             elif extension=='.wav':
                 with open(file_path, 'rb') as file:
                     content = bytearray(file.read())
@@ -72,7 +72,7 @@ class Manager:
                     content = memoryview(content)
                     packaging_info = content[:44]
                     raw_bytes = content[44:]
-                self.directory_manager.add_folder(filename, [packaging_info, raw_bytes], address, path)
+                self.directory_manager.add_folder(filename, [packaging_info, raw_bytes, str(bin(1)[2:])], address, path)
             elif extension=='.exe':
                 with open(file_path, 'rb') as file:
                     content=bytearray(file.read())
@@ -80,14 +80,20 @@ class Manager:
                     packaging_info=content[:64]
                     raw_bytes=content[:64]
                 self.directory_manager.add_folder(filename, [packaging_info, raw_bytes], address, path)
-
+    """
+    PACKAGING TYPE FOR TXT:
+    extension, data
+    
+    PACKAGING TYPE FOR WAV/
+    Packaging, data, extension
+    """
     def run_slots(self,process_name:str = None, file_name:str = None, process_extensions:str = 'txt', disk_address:int = None):
         if process_name is not None:
             next_process_to_run=self.directory_manager.locate_object(process_name)
             print(next_process_to_run)
             if process_extensions =='.txt': #TODO fix for no file_name extensions
                 decrypt=[]
-                data = list(self.ram[next_process_to_run][1][file_name])
+                data = list(self.ram[next_process_to_run][1][file_name][1])
                 for i in range(len(data)):
                     decrypt.append(chr(int(data[i], 2)))
                 print("".join(x for x in decrypt))
