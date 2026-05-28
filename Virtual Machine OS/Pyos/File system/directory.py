@@ -8,6 +8,7 @@ class Directory:
         self.ram.sign_in('F', 'pas')
         self.ram.add_user('F', 'pas')
         self.file_manager=FileSystem(ram, storage, self.inode_manager)
+        self.pointers=[]
 
     class Folder:
         def __init__(self, number, name):
@@ -80,4 +81,7 @@ class Directory:
         self.inode_manager.signin()
 
     def pointermult(self, pointer:list):
-        print(self.inode_manager.point_to_mutiple(pointer))
+        pointers=self.inode_manager.point_to_mutiple(pointer)
+        print(pointers)
+        self.pointers=pointers
+        return pointers

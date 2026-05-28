@@ -57,7 +57,8 @@ class TameShell():
             "comem":self.process_manager.auto_migration_status,
             "refpopstat":self.process_manager.populate_status,
             "popstat": self.process_manager.output_pop,
-            "ptmany":self.directory_manager.pointermult
+            "ptmany":self.directory_manager.pointermult,
+            "ptexec":self.process_manager.exec_pointers
         }
         self.conversion_table={
             str:lambda x:str(x),
@@ -93,7 +94,7 @@ class TameShell():
                 bound = sig.bind_partial(*call_args)
                 bound.apply_defaults()
                 return func(*bound.args, **bound.kwargs)
-            except (TypeError, IndexError, KeyError, ValueError) as e: #FIX HERE FOR RUNTIME ERRORS
+            except () as e: #FIX HERE FOR RUNTIME ERRORS TypeError, IndexError, KeyError, ValueError
                 print(f"Inputed Arg Error {e} after input '{''.join(args)}'")
                 return None
 

@@ -4,8 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5949f82d-a08a-4cef-92e2-b0831dec1421" name="Changes" comment="FEAT added extension to packaging in migrate host ram (manager.py)">
+    <list default="true" id="5949f82d-a08a-4cef-92e2-b0831dec1421" name="Changes" comment="DOC ptmany">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Virtual Machine OS/Pyos/File system/directory.py" beforeDir="false" afterPath="$PROJECT_DIR$/Virtual Machine OS/Pyos/File system/directory.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Virtual Machine OS/Pyos/Process/manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/Virtual Machine OS/Pyos/Process/manager.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Virtual Machine OS/Pyos/shell/repl.py" beforeDir="false" afterPath="$PROJECT_DIR$/Virtual Machine OS/Pyos/shell/repl.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -289,7 +292,15 @@
       <option name="project" value="LOCAL" />
       <updated>1779905794399</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="DOC ptmany">
+      <option name="closed" value="true" />
+      <created>1779970498809</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1779970498809</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -331,6 +342,7 @@
     <MESSAGE value="FEAT now has privileged or unpriviledged status for users" />
     <MESSAGE value="FEAT added ptmany function to point to multiple instances of ram, instead of simply printing out ram" />
     <MESSAGE value="FEAT added extension to packaging in migrate host ram (manager.py)" />
-    <option name="LAST_COMMIT_MESSAGE" value="FEAT added extension to packaging in migrate host ram (manager.py)" />
+    <MESSAGE value="DOC ptmany" />
+    <option name="LAST_COMMIT_MESSAGE" value="DOC ptmany" />
   </component>
 </project>

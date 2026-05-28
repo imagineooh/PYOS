@@ -56,6 +56,45 @@ class Manager:
                 print(content)
         else:
             print("Could not find path in host OS")
+    def exec_txt(self, file_name, process_name):
+        next_process_to_run = self.directory_manager.locate_object(process_name)
+        decrypt = []
+        data = list(self.ram[next_process_to_run][1][file_name][0])
+        for i in range(len(data)):
+            decrypt.append(chr(int(data[i], 2)))
+        print("".join(x for x in decrypt))
+
+    def exec_wav(self, file_name, process_name):
+        next_process_to_run = self.directory_manager.locate_object(process_name)
+        packaging_info = list(self.ram[next_process_to_run][1][file_name][0])
+        sample_rate = int.from_bytes(packaging_info[24:28], byteorder='little')
+        audio_data = bytearray(self.ram[next_process_to_run][1][file_name][1])
+        p = pyaudio.PyAudio()
+        if int.from_bytes(packaging_info[34:36],
+                          byteorder='little') == 16:  # from bytes defaults to big_endian, so we have to specify byteorder as 'little' for it to work
+            format = pyaudio.paInt16
+        else:
+            format = pyaudio.paInt8
+        channels = int.from_bytes(packaging_info[22:24], byteorder='little')
+        rate = sample_rate
+        stream = p.open(
+            format=format,
+            channels=channels,
+            rate=rate,
+            output=True,
+            frames_per_buffer=1024,
+        )
+        done = False
+        chunk = 0
+        chunk_offset = 4096
+        while not done and chunk < len(audio_data):
+            if chunk + chunk_offset < len(audio_data):
+                stream.write(bytes(audio_data[chunk:(chunk + chunk_offset)]))
+            else:
+                stream.write(bytes(audio_data[chunk:]))
+            if keyboard.is_pressed('q'):  # audio should stop playing
+                done = True
+            chunk += chunk_offset
 
     def migrate_host_ram(self, path:str, extension:str, filename:str, address:int):
         file_path = Path(f"C:/Users/pasca/Downloads/{path}{extension}")
@@ -64,7 +103,7 @@ class Manager:
                 with open(file_path, 'r') as file:
                     content = list(file.read())
                     content=[bin(ord(x))[2:] for x in content]
-                self.directory_manager.add_folder(filename, [str(bin(0)[2:]),content], address, path)
+                self.directory_manager.add_folder(filename, [content, str(bin(0)[2:])], address, path)
             elif extension=='.wav':
                 with open(file_path, 'rb') as file:
                     content = bytearray(file.read())
@@ -92,45 +131,13 @@ class Manager:
             next_process_to_run=self.directory_manager.locate_object(process_name)
             print(next_process_to_run)
             if process_extensions =='.txt': #TODO fix for no file_name extensions
-                decrypt=[]
-                data = list(self.ram[next_process_to_run][1][file_name][1])
-                for i in range(len(data)):
-                    decrypt.append(chr(int(data[i], 2)))
-                print("".join(x for x in decrypt))
+                self.exec_txt(file_name, process_name)
             elif process_extensions=='.wav':
-                packaging_info = list(self.ram[next_process_to_run][1][file_name][0])
-                sample_rate=int.from_bytes(packaging_info[24:28], byteorder='little')
-                audio_data=bytearray(self.ram[next_process_to_run][1][file_name][1])
-                p=pyaudio.PyAudio()
-                if int.from_bytes(packaging_info[34:36], byteorder='little')==16: #from bytes defaults to big_endian, so we have to specify byteorder as 'little' for it to work
-                    format = pyaudio.paInt16
-                else:
-                    format = pyaudio.paInt8
-                channels=int.from_bytes(packaging_info[22:24], byteorder='little')
-                rate=sample_rate
-                stream = p.open(
-                    format=format,
-                    channels=channels,
-                    rate=rate,
-                    output=True,
-                    frames_per_buffer=1024,
-                )
-                done=False
-                chunk=0
-                chunk_offset=4096
-                while not done and chunk<len(audio_data):
-                    if chunk + chunk_offset<len(audio_data):
-                        stream.write(bytes(audio_data[chunk:(chunk+chunk_offset)]))
-                    else:
-                        stream.write(bytes(audio_data[chunk:]))
-                    if keyboard.is_pressed('q'): #audio should stop playing
-                        done=True
-                    chunk+=chunk_offset
+                self.exec_wav(file_name, process_name)
             elif process_extensions=='.exe':
                 import subprocess
                 sub_path=f"{file_name.strip()}{process_extensions.strip()}"#TODO look into PATH
                 subprocess.Popen(sub_path, shell=True)
-
             if self.auto_migrate:
                 if not disk_address:
                     free_space: list[int] = self.directory_manager.free_disk_space()
@@ -163,3 +170,29 @@ class Manager:
             print("running")
             self.populate_status()
 
+    def exec_pointers(self, disk_address:int=None):
+        pointers=list(list(self.directory_manager.pointers.values()))
+        print(pointers)
+        for i, v in enumerate(pointers):
+            index_ram=pointers[i][0][0]
+            ProcessName = self.ram[index_ram][0][2]
+            if v!=0:
+                DictLen=len(list(self.ram[index_ram][1].values()))-1
+                data = list(self.ram[index_ram][1].values())[DictLen][0]
+                extension=list(self.ram[index_ram][1].values())[DictLen][1]
+                print(data)
+                headers=list(self.ram[index_ram][1].keys())
+                for j,k in enumerate(headers):
+                    if extension==str(bin(0))[2:]:
+                        self.exec_txt(k,ProcessName)
+                    elif extension==str(bin(1))[2:]:
+                        self.exec_wav(k, ProcessName)
+            if self.auto_migrate:
+                if not disk_address:
+                    free_space: list[int] = self.directory_manager.free_disk_space()
+                    self.directory_manager.store_value(ProcessName,free_space[0])
+                    self.directory_manager.delete_slots(index_ram)
+                elif disk_address:
+                    self.directory_manager.store_value(ProcessName,disk_address)
+                    self.directory_manager.delete_slots(index_ram)
+            self.scheduler_manager.mark_as_active(index_ram)
