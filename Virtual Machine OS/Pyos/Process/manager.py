@@ -185,8 +185,10 @@ class Manager:
                 for j,k in enumerate(headers):
                     if extension==str(bin(0))[2:]:
                         self.exec_txt(k,ProcessName)
-                    elif extension==str(bin(1))[2:]:
+                    elif extension==str(bin(1))[2:]: #TODO fix (could be because bin(1)[2:] cannot be verified)
                         self.exec_wav(k, ProcessName)
+                    else:
+                        print("File not executable")
             if self.auto_migrate:
                 if not disk_address:
                     free_space: list[int] = self.directory_manager.free_disk_space()

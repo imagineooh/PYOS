@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5949f82d-a08a-4cef-92e2-b0831dec1421" name="Changes" comment="FEAT MAJOR ptexec runs all pointers in system, and differentiates based off of type in manager.py">
+    <list default="true" id="5949f82d-a08a-4cef-92e2-b0831dec1421" name="Changes" comment="FIX readded error handling to repl.py">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Virtual Machine OS/Pyos/Process/manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/Virtual Machine OS/Pyos/Process/manager.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -305,7 +306,15 @@
       <option name="project" value="LOCAL" />
       <updated>1779986947239</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="FIX readded error handling to repl.py">
+      <option name="closed" value="true" />
+      <created>1780036700267</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1780036700267</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -349,6 +358,7 @@
     <MESSAGE value="FEAT added extension to packaging in migrate host ram (manager.py)" />
     <MESSAGE value="DOC ptmany" />
     <MESSAGE value="FEAT MAJOR ptexec runs all pointers in system, and differentiates based off of type in manager.py" />
-    <option name="LAST_COMMIT_MESSAGE" value="FEAT MAJOR ptexec runs all pointers in system, and differentiates based off of type in manager.py" />
+    <MESSAGE value="FIX readded error handling to repl.py" />
+    <option name="LAST_COMMIT_MESSAGE" value="FIX readded error handling to repl.py" />
   </component>
 </project>
