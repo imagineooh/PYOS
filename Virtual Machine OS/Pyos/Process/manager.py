@@ -97,6 +97,7 @@ class Manager:
             chunk += chunk_offset
 
     def migrate_host_ram(self, path:str, extension:str, filename:str, address:int):
+        #file_path = next(Path("C:\\").rglob(f"{filename}{extension}"), None) #As of now this does not work yet... Too slow
         file_path = Path(f"C:/Users/pasca/Downloads/{path}{extension}")
         if file_path.exists():
             if extension=='.txt':
@@ -120,8 +121,8 @@ class Manager:
                     raw_bytes=content[:64]
                 self.directory_manager.add_folder(filename, [packaging_info, raw_bytes], address, path)
     """
-    PACKAGING TYPE FOR TXT:
-    extension, data
+    PACKAGING TYPE FOR TXT/
+    data, extension
     
     PACKAGING TYPE FOR WAV/
     Packaging, data, extension
