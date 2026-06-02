@@ -178,14 +178,14 @@ class Manager:
             ProcessName = self.ram[index_ram][0][2]
             if v!=0:
                 DictLen=len(list(self.ram[index_ram][1].values()))-1
-                data = list(self.ram[index_ram][1].values())[DictLen][0]
-                extension=list(self.ram[index_ram][1].values())[DictLen][1]
+                data = list(self.ram[index_ram][1].values())[DictLen][-2]
+                extension=list(self.ram[index_ram][1].values())[DictLen][-1]
                 print(data)
                 headers=list(self.ram[index_ram][1].keys())
                 for j,k in enumerate(headers):
                     if extension==str(bin(0))[2:]:
                         self.exec_txt(k,ProcessName)
-                    elif extension==str(bin(1))[2:]: #TODO fix (could be because bin(1)[2:] cannot be verified)
+                    elif extension==str(bin(1))[2:]: #DONE
                         self.exec_wav(k, ProcessName)
                     else:
                         print("File not executable")
