@@ -3,6 +3,7 @@ from PCB import PCB
 from pathlib import Path
 import pyaudio
 import keyboard
+import threading
 
 class Manager:
     def __init__(self, ram, directory_manager):
@@ -185,9 +186,11 @@ class Manager:
                 headers=list(self.ram[index_ram][1].keys())
                 for j,k in enumerate(headers):
                     if extension==str(bin(0))[2:]:
-                        self.exec_txt(k,ProcessName)
+                        t1 = threading.Thread(target=self.exec_txt, args=(k,ProcessName))
+                        t1.start()
                     elif extension==str(bin(1))[2:]: #DONE
-                        self.exec_wav(k, ProcessName)
+                        t1 = threading.Thread(target=self.exec_wav, args=(k, ProcessName))
+                        t1.start()
                     else:
                         print("File not executable")
             if self.auto_migrate:
