@@ -97,9 +97,18 @@ class Manager:
                 done = True
             chunk += chunk_offset
 
-    def migrate_host_ram(self, path:str, extension:str, filename:str, address:int):
+    def exec_exe(self, file_path):
+        import subprocess  # TODO look into PATH
+        subprocess.Popen(file_path, shell=False)
+
+    def migrate_host_ram(self, path:str, extension:str, filename:str, address:int, file_location:str = None):
         #file_path = next(Path("C:\\").rglob(f"{filename}{extension}"), None) #As of now this does not work yet... Too slow
-        file_path = Path(f"C:/Users/pasca/Downloads/{path}{extension}")
+        if file_location is None:
+            file_path = Path(f"C:/Users/pasca/Downloads/{path}{extension}")
+        elif file_location=="stand":
+            file_path=Path(f"C://Windows/{path}{extension}")
+        else:
+            file_path = Path(f"C:/Users/pasca/{file_location}/{path}{extension}")
         if file_path.exists():
             if extension=='.txt':
                 with open(file_path, 'r') as file:
@@ -120,7 +129,7 @@ class Manager:
                     content=memoryview(content)
                     packaging_info=content[:64]
                     raw_bytes=content[:64]
-                self.directory_manager.add_folder(filename, [packaging_info, raw_bytes], address, path)
+                self.directory_manager.add_folder(filename, [file_path, packaging_info, raw_bytes, str(bin(2)[2:])], address, path)
     """
     PACKAGING TYPE FOR TXT/
     data, extension
@@ -137,9 +146,8 @@ class Manager:
             elif process_extensions=='.wav':
                 self.exec_wav(file_name, process_name)
             elif process_extensions=='.exe':
-                import subprocess
-                sub_path=f"{file_name.strip()}{process_extensions.strip()}"#TODO look into PATH
-                subprocess.Popen(sub_path, shell=True)
+                #self.exec_exe(file_path=fil)
+                pass
             if self.auto_migrate:
                 if not disk_address:
                     free_space: list[int] = self.directory_manager.free_disk_space()
@@ -190,6 +198,9 @@ class Manager:
                         t1.start()
                     elif extension==str(bin(1))[2:]: #DONE
                         t1 = threading.Thread(target=self.exec_wav, args=(k, ProcessName))
+                        t1.start()
+                    elif extension==str(bin(2))[2:]: #DONE
+                        t1 = threading.Thread(target=self.exec_exe, args=(list(self.ram[index_ram][1].values())[DictLen][-4], ))
                         t1.start()
                     else:
                         print("File not executable")

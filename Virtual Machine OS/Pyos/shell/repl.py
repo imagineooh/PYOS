@@ -70,9 +70,18 @@ class TameShell():
         print("Quitting TameOS. See you soon, and remember to Let It Happen!")
         return -1
 
+    def get_closest_command(self, command):
+        CommandsSplit=list(self.commands_dict.keys())
+        for i in range(len(CommandsSplit)):
+            if CommandsSplit[i][:2]==command[:2]:
+                return list(self.commands_dict.keys())[i]
     def default(self,arg):
         args = arg.split()
+        if not args:
+            return
         keyword = str(args[0])
+        if keyword not in list(self.commands_dict.keys()):
+            print(f"Command not found. Did you mean {self.get_closest_command(keyword)}?")
         if keyword in self.commands_dict:
             func = self.commands_dict[keyword]
             sig=inspect.signature(func)
