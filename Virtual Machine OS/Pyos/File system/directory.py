@@ -60,7 +60,7 @@ class Directory:
         free_space=self.inode_manager.locate_free_disk()
         return free_space
 
-    def migrate_storage_ram(self, address: int, filename:str):
+    def migrate_storage_ram(self, filename:str, address: int):
         self.file_manager.migrate_storage_ram(address, filename)
         self.update_PID()
 
