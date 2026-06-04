@@ -72,9 +72,11 @@ class TameShell():
 
     def get_closest_command(self, command):
         CommandsSplit=list(self.commands_dict.keys())
+        closest=[]
         for i in range(len(CommandsSplit)):
             if CommandsSplit[i][:2]==command[:2]:
-                return list(self.commands_dict.keys())[i]
+                closest.append(list(self.commands_dict.keys())[i])
+        return ", ".join(x for x in closest)
     def default(self,arg):
         args = arg.split()
         if not args:
