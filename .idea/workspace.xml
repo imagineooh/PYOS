@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5949f82d-a08a-4cef-92e2-b0831dec1421" name="Changes" comment="FEAT ULTRAMAJOR You can now run .exe files from the system (relies on Windows for now). In repl.py, there are now suggestions after wrong inputs. Thank you everyone that helped me to get here! So so grateful.">
+    <list default="true" id="5949f82d-a08a-4cef-92e2-b0831dec1421" name="Changes" comment="FEAT minor now gives out all possible matching commands in case of command typo">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Virtual Machine OS/Pyos/shell/repl.py" beforeDir="false" afterPath="$PROJECT_DIR$/Virtual Machine OS/Pyos/shell/repl.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Virtual Machine OS/Pyos/Process/manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/Virtual Machine OS/Pyos/Process/manager.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Virtual Machine OS/Pyos/Process/scheduler.py" beforeDir="false" afterPath="$PROJECT_DIR$/Virtual Machine OS/Pyos/Process/scheduler.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -362,7 +363,15 @@
       <option name="project" value="LOCAL" />
       <updated>1780507875734</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="FEAT minor now gives out all possible matching commands in case of command typo">
+      <option name="closed" value="true" />
+      <created>1780585893094</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1780585893094</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -383,7 +392,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Merge remote-tracking branch 'origin/master'&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml" />
     <MESSAGE value="FEAT TypeError supported in runtime in repl.py, giving keyword agument solo now gives full function annotation WITH type hints" />
     <MESSAGE value="PREPFEAT opening .exe files" />
     <MESSAGE value="FIXFEAT added KeyError case to repl.py" />
@@ -408,6 +416,7 @@
     <MESSAGE value="FEATPREP preparing to access full host os Directory too lookup a file" />
     <MESSAGE value="FEAT MAJOR added threading to exec multiple pointers for multiprocessing" />
     <MESSAGE value="FEAT ULTRAMAJOR You can now run .exe files from the system (relies on Windows for now). In repl.py, there are now suggestions after wrong inputs. Thank you everyone that helped me to get here! So so grateful." />
-    <option name="LAST_COMMIT_MESSAGE" value="FEAT ULTRAMAJOR You can now run .exe files from the system (relies on Windows for now). In repl.py, there are now suggestions after wrong inputs. Thank you everyone that helped me to get here! So so grateful." />
+    <MESSAGE value="FEAT minor now gives out all possible matching commands in case of command typo" />
+    <option name="LAST_COMMIT_MESSAGE" value="FEAT minor now gives out all possible matching commands in case of command typo" />
   </component>
 </project>

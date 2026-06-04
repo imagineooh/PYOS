@@ -40,3 +40,6 @@ class Scheduler:
 
     def mark_as_active(self, address:int):
         self.status[address]=[1,-1]
+
+    def mark_as_inactive(self, address:int):
+        self.status[address]=[0]

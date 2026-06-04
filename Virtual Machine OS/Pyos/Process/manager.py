@@ -63,7 +63,9 @@ class Manager:
         data = list(self.ram[next_process_to_run][1][file_name][0])
         for i in range(len(data)):
             decrypt.append(chr(int(data[i], 2)))
+        self.scheduler_manager.mark_as_active(next_process_to_run)
         print("".join(x for x in decrypt))
+        self.scheduler_manager.mark_as_inactive(next_process_to_run)
 
     def exec_wav(self, file_name, process_name):
         next_process_to_run = self.directory_manager.locate_object(process_name)
@@ -88,17 +90,20 @@ class Manager:
         done = False
         chunk = 0
         chunk_offset = 4096
+        self.scheduler_manager.mark_as_active(next_process_to_run)
         while not done and chunk < len(audio_data):
             if chunk + chunk_offset < len(audio_data):
                 stream.write(bytes(audio_data[chunk:(chunk + chunk_offset)]))
             else:
                 stream.write(bytes(audio_data[chunk:]))
             if keyboard.is_pressed('q'):  # audio should stop playing
+                self.scheduler_manager.mark_as_inactive(next_process_to_run)
                 done = True
             chunk += chunk_offset
 
-    def exec_exe(self, file_path):
+    def exec_exe(self, file_path, address:int):
         import subprocess  # TODO look into PATH
+        self.scheduler_manager.mark_as_active(address)
         subprocess.Popen(file_path, shell=False)
 
     def migrate_host_ram(self, path:str, extension:str, filename:str, address:int, file_location:str = None):
@@ -200,7 +205,7 @@ class Manager:
                         t1 = threading.Thread(target=self.exec_wav, args=(k, ProcessName))
                         t1.start()
                     elif extension==str(bin(2))[2:]: #DONE
-                        t1 = threading.Thread(target=self.exec_exe, args=(list(self.ram[index_ram][1].values())[DictLen][-4], ))
+                        t1 = threading.Thread(target=self.exec_exe, args=(list(self.ram[index_ram][1].values())[DictLen][-4], index_ram))
                         t1.start()
                     else:
                         print("File not executable")
