@@ -66,6 +66,7 @@ class Inode:
         edit_tuple[0]=ram_address
         self.ram[ram_address]=[edit_tuple, self.ram[ram_address][1]]
         self.filename_index[filename]=ram_address
+        self.storage[address]=0
 
     def give_filename_index(self):
         return self.filename_index.values()
