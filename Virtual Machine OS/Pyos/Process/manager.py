@@ -65,6 +65,7 @@ class Manager:
             decrypt.append(chr(int(data[i], 2)))
         self.scheduler_manager.mark_as_active(next_process_to_run)
         print("".join(x for x in decrypt))
+        print()
         self.scheduler_manager.mark_as_inactive(next_process_to_run)
 
     def exec_wav(self, file_name, process_name):
@@ -104,8 +105,9 @@ class Manager:
     def exec_exe(self, file_path, address:int, subfile_name:str=False):
         import subprocess  # TODO look into PATH
         self.scheduler_manager.mark_as_active(address)
+        download_dir = Path.home() / "Downloads"
         if subfile_name:
-            subprocess.Popen([file_path, subfile_name], shell=False)
+            subprocess.Popen([file_path, download_dir], shell=False, cwd=str(download_dir))
         else:
             subprocess.Popen(file_path, shell=False)
 
@@ -188,6 +190,7 @@ class Manager:
             print("running")
             self.populate_status()
 
+
     def exec_pointers(self, subfile_name:str = None, disk_address:int=None,):
         pointers=list(list(self.directory_manager.pointers.values()))
         print(pointers)
@@ -208,16 +211,25 @@ class Manager:
                         t1 = threading.Thread(target=self.exec_wav, args=(k, ProcessName))
                         t1.start()
                     elif extension==str(bin(2))[2:]: #DONE
-                        if subfile_name:
-                            t1 = threading.Thread(target=self.exec_exe,
-                                                  args=(list(self.ram[index_ram][1].values())[DictLen][-4], index_ram, subfile_name))
-                            t1.start()
-                        else:
+                        if not subfile_name:
                             t1 = threading.Thread(target=self.exec_exe,
                                                   args=(list(self.ram[index_ram][1].values())[DictLen][-4], index_ram))
                             t1.start()
-                            t1.join(timeout=1)
-                            self.migrate_host_ram(subfile_name, '.txt', 'opened_file', index_ram)
+                        else:
+                            def fetcher(subfile_name, index_ram):
+                                self.migrate_host_ram(subfile_name, '.txt', 'opened_file', index_ram)
+                            def run_and_notif(func, callback, subfile_name, index_ram, args):
+                                try:
+                                    process = func(*args)
+                                    if process:
+                                        process.wait()
+                                finally:
+                                    print("Thread executed")
+                            t1 = threading.Thread(target=run_and_notif, args=(self.exec_exe, self.migrate_host_ram, subfile_name, index_ram, (list(self.ram[index_ram][1].values())[DictLen][-4], index_ram, subfile_name) ))
+                            tfetcher = threading.Thread(target=fetcher, args=(subfile_name, index_ram))
+                            t1.start()
+                            tfetcher.start()
+
                     else:
                         print("File not executable")
             if self.auto_migrate:
