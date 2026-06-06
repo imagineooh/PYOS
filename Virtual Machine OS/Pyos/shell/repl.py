@@ -7,6 +7,7 @@ from commands import help
 from PCB import PCB
 from context import Context
 from inode import Inode
+from system import System, OverclockError
 
 ram=RAM(16)
 storage=Storage(ram)
@@ -33,6 +34,8 @@ class TameShell():
         self.process_manager.start_scheduling()
         if self.authenticated and self.context_manager.fetch_auth(self.username)==1:
             self.inode.signin()
+        self.system_manager=System(50)
+        self.system_manager.run_diagnostic()
         self.commands_dict={
             "mkdir" : self.directory_manager.add_empty_folder,
             "mkfolder" : self.directory_manager.add_folder,
@@ -105,9 +108,19 @@ class TameShell():
                 bound = sig.bind_partial(*call_args)
                 bound.apply_defaults()
                 return func(*bound.args, **bound.kwargs)
-            except (TypeError, IndexError, KeyError, ValueError, AttributeError) as e: #FIX HERE FOR RUNTIME ERRORS
+            except (TypeError,
+                    IndexError,
+                    KeyError,
+                    ValueError,
+                    AttributeError,) as e: #FIX HERE FOR RUNTIME ERRORS
                 print(f"Inputed Arg Error {e} after input '{''.join(args)}'")
                 return None
+            except OverclockError as e:
+                print(f"Cpu usage spiked and caused an overclock."
+                      f"Current threads: {self.system_manager.running_threads}"
+                      f"Current Cpu usage: {self.system_manager.cpu_usage}")
+                return None
+
 
     def loop(self):
         if not self.authenticated:
