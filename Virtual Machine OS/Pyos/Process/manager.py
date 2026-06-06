@@ -218,14 +218,7 @@ class Manager:
                         else:
                             def fetcher(subfile_name, index_ram):
                                 self.migrate_host_ram(subfile_name, '.txt', 'opened_file', index_ram)
-                            def run_and_notif(func, callback, subfile_name, index_ram, args):
-                                try:
-                                    process = func(*args)
-                                    if process:
-                                        process.wait()
-                                finally:
-                                    print("Thread executed")
-                            t1 = threading.Thread(target=run_and_notif, args=(self.exec_exe, self.migrate_host_ram, subfile_name, index_ram, (list(self.ram[index_ram][1].values())[DictLen][-4], index_ram, subfile_name) ))
+                            t1 = threading.Thread(target=self.exec_exe,args=(list(self.ram[index_ram][1].values())[DictLen][-4], index_ram, subfile_name))
                             tfetcher = threading.Thread(target=fetcher, args=(subfile_name, index_ram))
                             t1.start()
                             tfetcher.start()

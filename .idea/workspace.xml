@@ -4,8 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5949f82d-a08a-4cef-92e2-b0831dec1421" name="Changes" comment="FIX ULTRAMINOR indentation error">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="5949f82d-a08a-4cef-92e2-b0831dec1421" name="Changes" comment="FEAT can now load previous and loading files in memory TO BE CHECKED">
       <change beforePath="$PROJECT_DIR$/Virtual Machine OS/Pyos/Process/manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/Virtual Machine OS/Pyos/Process/manager.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -410,7 +409,15 @@
       <option name="project" value="LOCAL" />
       <updated>1780741620610</updated>
     </task>
-    <option name="localTasksCounter" value="41" />
+    <task id="LOCAL-00041" summary="FEAT can now load previous and loading files in memory TO BE CHECKED">
+      <option name="closed" value="true" />
+      <created>1780746254087</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1780746254087</updated>
+    </task>
+    <option name="localTasksCounter" value="42" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -431,7 +438,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="FIX MINOR reformated everything to sig, and print sig in case of single keyword with missings args" />
     <MESSAGE value="FEAT PREPFEAT added status checking with priorityqueue embedded, preparing for looping it in repl or main" />
     <MESSAGE value="FIX VERYMINOR removed unused import statement" />
     <MESSAGE value="PREPFEAT ADVANCED preparing for loop, looking into multithreading" />
@@ -456,6 +462,7 @@
     <MESSAGE value="FIX FEAT when ramstage files temp dissapear from disk before going to ram so two copies of same element don't coexist" />
     <MESSAGE value="FEAT FEATPREP MEDIUM added opening files with new filenames, not blank, prepared for saving them automatically in RAM (comput. ticket #001)" />
     <MESSAGE value="FIX ULTRAMINOR indentation error" />
-    <option name="LAST_COMMIT_MESSAGE" value="FIX ULTRAMINOR indentation error" />
+    <MESSAGE value="FEAT can now load previous and loading files in memory TO BE CHECKED" />
+    <option name="LAST_COMMIT_MESSAGE" value="FEAT can now load previous and loading files in memory TO BE CHECKED" />
   </component>
 </project>
