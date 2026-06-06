@@ -106,9 +106,8 @@ class Manager:
         import subprocess  # TODO look into PATH
         self.scheduler_manager.mark_as_active(address)
         download_dir = Path.home() / "Downloads"
-        #file_path.touch(exist_ok=True)
         if subfile_name:
-            subprocess.Popen([file_path, download_dir], shell=False, cwd=str(download_dir))
+            subprocess.Popen([file_path, subfile_name], shell=False, cwd=str(download_dir))
         else:
             subprocess.Popen(file_path, shell=False)
 
