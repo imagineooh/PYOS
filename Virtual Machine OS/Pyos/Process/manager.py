@@ -101,10 +101,13 @@ class Manager:
                 done = True
             chunk += chunk_offset
 
-    def exec_exe(self, file_path, address:int):
+    def exec_exe(self, file_path, address:int, subfile_name:str=False):
         import subprocess  # TODO look into PATH
         self.scheduler_manager.mark_as_active(address)
-        subprocess.Popen(file_path, shell=False)
+        if subfile_name:
+            subprocess.Popen([file_path, subfile_name], shell=False)
+        else:
+                subprocess.Popen(file_path, shell=False)
 
     def migrate_host_ram(self, path:str, extension:str, filename:str, address:int, file_location:str = None):
         #file_path = next(Path("C:\\").rglob(f"{filename}{extension}"), None) #As of now this does not work yet... Too slow
@@ -185,7 +188,7 @@ class Manager:
             print("running")
             self.populate_status()
 
-    def exec_pointers(self, disk_address:int=None):
+    def exec_pointers(self, subfile_name:str = None, disk_address:int=None,):
         pointers=list(list(self.directory_manager.pointers.values()))
         print(pointers)
         for i, v in enumerate(pointers):
@@ -205,8 +208,16 @@ class Manager:
                         t1 = threading.Thread(target=self.exec_wav, args=(k, ProcessName))
                         t1.start()
                     elif extension==str(bin(2))[2:]: #DONE
-                        t1 = threading.Thread(target=self.exec_exe, args=(list(self.ram[index_ram][1].values())[DictLen][-4], index_ram))
-                        t1.start()
+                        if subfile_name:
+                            t1 = threading.Thread(target=self.exec_exe,
+                                                  args=(list(self.ram[index_ram][1].values())[DictLen][-4], index_ram, subfile_name))
+                            t1.start()
+                        else:
+                            t1 = threading.Thread(target=self.exec_exe,
+                                                  args=(list(self.ram[index_ram][1].values())[DictLen][-4], index_ram))
+                            t1.start()
+                            t1.join(timeout=1)
+                            self.migrate_host_ram(subfile_name, '.txt', 'opened_file', index_ram)
                     else:
                         print("File not executable")
             if self.auto_migrate:
