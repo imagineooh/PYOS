@@ -107,7 +107,7 @@ class Manager:
         if subfile_name:
             subprocess.Popen([file_path, subfile_name], shell=False)
         else:
-                subprocess.Popen(file_path, shell=False)
+            subprocess.Popen(file_path, shell=False)
 
     def migrate_host_ram(self, path:str, extension:str, filename:str, address:int, file_location:str = None):
         #file_path = next(Path("C:\\").rglob(f"{filename}{extension}"), None) #As of now this does not work yet... Too slow
