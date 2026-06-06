@@ -222,7 +222,6 @@ class Manager:
                             tfetcher = threading.Thread(target=fetcher, args=(subfile_name, index_ram))
                             t1.start()
                             tfetcher.start()
-
                     else:
                         print("File not executable")
             if self.auto_migrate:
