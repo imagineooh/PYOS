@@ -8,6 +8,7 @@ from PCB import PCB
 from context import Context
 from inode import Inode
 from system import System, OverclockError
+import sys
 
 ram=RAM(16)
 storage=Storage(ram)
@@ -29,12 +30,12 @@ class TameShell():
         self.ram=ram
         self.inode=Inode(ram, storage)
         self.directory_manager=Directory(ram, storage, self.inode)
-        self.process_manager = Manager(ram, self.directory_manager)
+        self.system_manager = System(50)
+        self.process_manager = Manager(ram, self.directory_manager, self.system_manager)
         self.pcb_manager = PCB(ram, self.directory_manager)
         self.process_manager.start_scheduling()
         if self.authenticated and self.context_manager.fetch_auth(self.username)==1:
             self.inode.signin()
-        self.system_manager=System(50)
         self.system_manager.run_diagnostic()
         self.directory_manager.check_for_duplicates()
         self.commands_dict={
@@ -72,7 +73,8 @@ class TameShell():
 
     def end(self):
         print("Quitting TameOS. See you soon, and remember to Let It Happen!")
-        return -1
+        sys.exit(0)
+
 
     def get_closest_command(self, command):
         CommandsSplit=list(self.commands_dict.keys())

@@ -4,15 +4,17 @@ from pathlib import Path
 import pyaudio
 import keyboard
 import threading
+from time import sleep
 
 class Manager:
-    def __init__(self, ram, directory_manager):
+    def __init__(self, ram, directory_manager, system):
         self.ram = ram
         self.start_signal = False
         self.directory_manager = directory_manager
         self.scheduler_manager = Scheduler(ram, directory_manager)
         self.pcb_manager = PCB(ram, directory_manager)
         self.auto_migrate=True
+        self.system_monitor = system
 
     def start_scheduling(self):
         self.start_signal=True
@@ -205,23 +207,49 @@ class Manager:
                 headers=list(self.ram[index_ram][1].keys())
                 for j,k in enumerate(headers):
                     if extension==str(bin(0))[2:]:
+                        self.system_monitor.create_thread_id("0x002")
                         t1 = threading.Thread(target=self.exec_txt, args=(k,ProcessName))
                         t1.start()
+                        sleep(0.1)
                     elif extension==str(bin(1))[2:]: #DONE
+                        self.system_monitor.create_thread_id("0x003")
                         t1 = threading.Thread(target=self.exec_wav, args=(k, ProcessName))
                         t1.start()
+                        sleep(0.1)
                     elif extension==str(bin(2))[2:]: #DONE
                         if not subfile_name:
+                            self.system_monitor.create_thread_id("0x004")
                             t1 = threading.Thread(target=self.exec_exe,
                                                   args=(list(self.ram[index_ram][1].values())[DictLen][-4], index_ram))
                             t1.start()
                         else:
-                            def fetcher(subfile_name, index_ram):
+                            self.system_monitor.create_thread_id("0x005")
+                            """
+                            How a thread T works:
+                            create thread t
+                            to set an event, create an event variable and set it with threading.Event()
+                            set the event with.set
+                            you can now pause, clear or whatever you want!
+                            """
+                            t1_pause_event = threading.Event()
+                            t1_pause_event.set()
+                            tfetcher_pause_event = threading.Event()
+                            tfetcher_pause_event.set()
+                            def fetcher(subfile_name, index_ram, pause_event):
+                                pause_event.wait()
                                 self.migrate_host_ram(subfile_name, '.txt', 'opened_file', index_ram)
-                            t1 = threading.Thread(target=self.exec_exe,args=(list(self.ram[index_ram][1].values())[DictLen][-4], index_ram, subfile_name))
-                            tfetcher = threading.Thread(target=fetcher, args=(subfile_name, index_ram))
+                            t1 = threading.Thread(target=self.exec_exe,
+                                                  args=(list(self.ram[index_ram][1].values())[DictLen][-4], index_ram, subfile_name))
+                            tfetcher = threading.Thread(target=fetcher, args=(subfile_name, index_ram, tfetcher_pause_event))
                             t1.start()
                             tfetcher.start()
+                            sleep(0.1)
+                            if self.system_monitor.thread_id["0x005"]==0:
+                                t1_pause_event.clear()
+                                tfetcher_pause_event.clear()
+                            else:
+                                t1_pause_event.set()
+                                tfetcher_pause_event.set()
                     else:
                         print("File not executable")
             if self.auto_migrate:
