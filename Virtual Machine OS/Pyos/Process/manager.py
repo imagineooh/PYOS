@@ -244,7 +244,7 @@ class Manager:
                             t1.start()
                             tfetcher.start()
                             sleep(0.1)
-                            if self.system_monitor.thread_id["0x005"]==0:
+                            if self.system_monitor.thread_id["0x005"]!=0:
                                 t1_pause_event.clear()
                                 tfetcher_pause_event.clear()
                             else:
