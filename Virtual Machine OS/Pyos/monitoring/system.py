@@ -9,6 +9,7 @@ class System:
         self.running_threads=0
         self.max_power=max_power
         self.thread_id={}
+        print(f"{threading.active_count()} active threads at init")
 
     def get_cpu(self, bootcode):
         if bootcode!='f00135b':

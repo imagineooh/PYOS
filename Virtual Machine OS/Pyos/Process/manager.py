@@ -104,10 +104,12 @@ class Manager:
                 done = True
             chunk += chunk_offset
 
-    def exec_exe(self, file_path, address:int, subfile_name:str=False):
+    def exec_exe(self, file_path, address:int, pause_event = None, subfile_name:str=False):
         import subprocess  # TODO look into PATH
         self.scheduler_manager.mark_as_active(address)
         download_dir = Path.home() / "Downloads"
+        if pause_event:
+            pause_event.wait()
         if subfile_name:
             subprocess.Popen([file_path, subfile_name], shell=False, cwd=str(download_dir))
         else:
@@ -239,7 +241,7 @@ class Manager:
                                 pause_event.wait()
                                 self.migrate_host_ram(subfile_name, '.txt', 'opened_file', index_ram)
                             t1 = threading.Thread(target=self.exec_exe,
-                                                  args=(list(self.ram[index_ram][1].values())[DictLen][-4], index_ram, subfile_name))
+                                                  args=(list(self.ram[index_ram][1].values())[DictLen][-4], index_ram, t1_pause_event, subfile_name))
                             tfetcher = threading.Thread(target=fetcher, args=(subfile_name, index_ram, tfetcher_pause_event))
                             t1.start()
                             tfetcher.start()
