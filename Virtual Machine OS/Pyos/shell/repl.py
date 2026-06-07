@@ -36,6 +36,7 @@ class TameShell():
             self.inode.signin()
         self.system_manager=System(50)
         self.system_manager.run_diagnostic()
+        self.directory_manager.check_for_duplicates()
         self.commands_dict={
             "mkdir" : self.directory_manager.add_empty_folder,
             "mkfolder" : self.directory_manager.add_folder,

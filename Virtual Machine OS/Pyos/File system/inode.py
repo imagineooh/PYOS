@@ -108,3 +108,8 @@ class Inode:
             if int(val)<self.ram.len_RAM():
                 self.pointers[f"@{i}"]=self.ram[int(val)]
         return self.pointers
+
+    def file_exists(self, filename:str):
+        if filename in self.filename_index.keys():
+            return True
+        return False

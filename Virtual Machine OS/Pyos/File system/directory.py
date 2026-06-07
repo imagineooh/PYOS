@@ -1,5 +1,7 @@
 from inode import Inode
 from filesystem import FileSystem
+from threading import Thread
+from time import sleep
 
 class Directory:
     def __init__(self,  ram, storage, inode):
@@ -9,6 +11,7 @@ class Directory:
         self.ram.add_user('F', 'pas')
         self.file_manager=FileSystem(ram, storage, self.inode_manager)
         self.pointers=[]
+        self.duplicates=[] #returns PID of duplicates in RAM
 
     class Folder:
         def __init__(self, number, name):
@@ -19,6 +22,9 @@ class Directory:
             self.children.append(child)
 
     def add_empty_folder(self, foldername: str, folderdata: list,  address:int) -> None:
+        if self.inode_manager.file_exists(foldername):
+            print("File already exists in directory")
+            return
         self.file_manager.construct_empty_folder(foldername, folderdata, address)
         self.update_PID()
 
@@ -26,6 +32,9 @@ class Directory:
         self.file_manager.construct_single_file(file_name,file_data, address)
 
     def add_folder(self, foldername: str, folderdata: list, address: int, firstfilename: str) -> None:
+        if self.inode_manager.file_exists(foldername):
+            print("File already exists in directory")
+            return
         self.file_manager.construct_folder(foldername,folderdata, address, firstfilename)
         self.update_PID()
 
@@ -85,3 +94,27 @@ class Directory:
         print(pointers)
         self.pointers=pointers
         return pointers
+
+    def check_for_duplicates_thread(self):
+        """
+        Is a threading.Thread type used for looking for duplicate files in RAM
+        Searches with object_name, not file data (would take too long)
+        :return: None (duplicates lives in shared duplicates array
+        """
+        while True:
+            self.duplicates=[]
+            checked=[]
+            for i in range(self.ram.len_RAM()):
+                if self.ram[i]!=0:
+                    object_name=self.ram[i][0][2]
+                    if object_name in checked:
+                        self.duplicates.append(self.ram[i][0][0])
+                        print(f"found duplicate with PID: {self.ram[i][0][0]} in RAM")
+                    else:
+                        checked.append(object_name)
+            sleep(2)
+
+    def check_for_duplicates(self):
+        duplicate_thread=Thread(target=self.check_for_duplicates_thread)
+        duplicate_thread.start()
+
