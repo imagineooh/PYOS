@@ -247,11 +247,11 @@ class Manager:
                             tfetcher.start()
                             sleep(0.1)
                             if self.system_monitor.thread_id["0x005"]!=0:
-                                t1_pause_event.clear()
-                                tfetcher_pause_event.clear()
-                            else:
-                                t1_pause_event.set()
+                                t1_pause_event.set() #set restarts the thread
                                 tfetcher_pause_event.set()
+                            else:
+                                t1_pause_event.clear() #clear pauses the thread because of the passed argument pause_event
+                                tfetcher_pause_event.clear()
                     else:
                         print("File not executable")
             if self.auto_migrate:
