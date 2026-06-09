@@ -1,3 +1,6 @@
+from fileinput import filename
+from threading import Thread
+
 from scheduler import Scheduler
 from PCB import PCB
 from pathlib import Path
@@ -7,14 +10,16 @@ import threading
 from time import sleep
 
 class Manager:
-    def __init__(self, ram, directory_manager, system):
+    def __init__(self, ram, directory_manager, system, storage):
         self.ram = ram
+        self.storage = storage
         self.start_signal = False
         self.directory_manager = directory_manager
         self.scheduler_manager = Scheduler(ram, directory_manager)
         self.pcb_manager = PCB(ram, directory_manager)
         self.auto_migrate=True
         self.system_monitor = system
+        self.running_processes = {}
 
     def start_scheduling(self):
         self.start_signal=True
@@ -226,6 +231,7 @@ class Manager:
                             t1.start()
                         else:
                             self.system_monitor.create_thread_id("0x005")
+                            self.running_processes[ProcessName]=[subfile_name, index_ram]
                             """
                             How a thread T works:
                             create thread t
@@ -263,3 +269,27 @@ class Manager:
                     self.directory_manager.store_value(ProcessName,disk_address)
                     self.directory_manager.delete_slots(index_ram)
             self.scheduler_manager.mark_as_active(index_ram)
+
+    def auto_update_file(self):
+        while True:
+            for foldername, values in self.running_processes.items():
+                sleep(1)
+                filename = values[0]
+                address=values[1]
+                processname = 'Notepad'
+                try:
+                    #self.directory_manager.migrate_storage_ram(foldername, address)
+                    self.migrate_host_ram(filename, ".txt", "setuptool", 0)
+                    print(self.ram)
+                    data=self.ram[0][1]["setuptool"][:2]
+                    self.storage[address][1][processname].append(data)
+                    self.directory_manager.replace_data(processname, address, data)
+                    self.directory_manager.delete_slots(0)
+                except:
+                    continue
+
+    def aut_update_thread(self):
+        self.system_monitor.create_thread_id("0x006")
+        tupdater=Thread(target=self.auto_update_file)
+        tupdater.start()
+

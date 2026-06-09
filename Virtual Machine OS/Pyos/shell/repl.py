@@ -31,13 +31,14 @@ class TameShell():
         self.inode=Inode(ram, storage)
         self.directory_manager=Directory(ram, storage, self.inode)
         self.system_manager = System(50)
-        self.process_manager = Manager(ram, self.directory_manager, self.system_manager)
+        self.process_manager = Manager(ram, self.directory_manager, self.system_manager, storage)
         self.pcb_manager = PCB(ram, self.directory_manager)
         self.process_manager.start_scheduling()
         if self.authenticated and self.context_manager.fetch_auth(self.username)==1:
             self.inode.signin()
         self.system_manager.run_diagnostic()
         self.directory_manager.check_for_duplicates()
+        #self.process_manager.aut_update_thread() #not yet ready for production
         self.commands_dict={
             "mkdir" : self.directory_manager.add_empty_folder,
             "mkfolder" : self.directory_manager.add_folder,
