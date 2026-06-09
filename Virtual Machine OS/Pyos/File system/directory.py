@@ -118,3 +118,6 @@ class Directory:
         duplicate_thread=Thread(target=self.check_for_duplicates_thread)
         duplicate_thread.start()
 
+    def replace_data(self, processname:str, address:int, new_data: any):
+        if self.ram[address]!=0:
+            self.ram[address][1][processname]=new_data
