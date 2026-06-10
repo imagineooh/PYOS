@@ -12,6 +12,7 @@ class Directory:
         self.file_manager=FileSystem(ram, storage, self.inode_manager)
         self.pointers=[]
         self.duplicates=[] #returns PID of duplicates in RAM
+        self.storage_pointers = {}
 
     class Folder:
         def __init__(self, number, name):
@@ -33,7 +34,7 @@ class Directory:
 
     def add_folder(self, foldername: str, folderdata: list, address: int, firstfilename: str) -> None:
         if self.inode_manager.file_exists(foldername):
-            print("File already exists in directory")
+            print(f"File {foldername} already exists in directory")
             return
         self.file_manager.construct_folder(foldername,folderdata, address, firstfilename)
         self.update_PID()
@@ -57,13 +58,20 @@ class Directory:
         return self.file_manager.return_all_used_slots()
 
     def delete_slots(self, address):
+        #foldername = self.ram[address][0][2]
+        #print(f'deleting {foldername}')
         self.file_manager.delete_slots(address)
+        #self.inode_manager.del_checker(foldername)
         self.update_PID()
 
     def store_value(self, foldername: str, storage_address: int):
         ram_address=self.file_manager.locate_object(foldername)
         to_store=self.file_manager.read_file(ram_address)
         self.file_manager.store_value(to_store, storage_address)
+        self.storage_pointers[foldername]=storage_address
+
+    def get_storage_address(self, foldername:str):
+        return self.storage_pointers[foldername]
 
     def free_disk_space(self): #TODO review possible 3ring failure here
         free_space=self.inode_manager.locate_free_disk()
@@ -121,3 +129,6 @@ class Directory:
     def replace_data(self, processname:str, address:int, new_data: any):
         if self.ram[address]!=0:
             self.ram[address][1][processname]=new_data
+
+    def file_exists(self, filename:str):
+        return self.inode_manager.file_exists(filename)

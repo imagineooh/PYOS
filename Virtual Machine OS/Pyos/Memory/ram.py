@@ -98,7 +98,8 @@ class RAM:
                     if not bypass:
                         print(f"Data adress already taken, try 'force_write' method (unsafe) or 'free_index' method first. ...//")
                     elif bypass:
-                        print("Bypassing restriction for folder allocation")
+                        #print("Bypassing restriction for folder allocation")
+                        pass
             else:
                 print(f"Data out of bounds for index {address}. " \
                       "If you wish to force write the value to RAM (unsafe), use 'force_writee' method.")

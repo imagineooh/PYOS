@@ -1,5 +1,6 @@
-from fileinput import filename
+
 from threading import Thread
+
 
 from scheduler import Scheduler
 from PCB import PCB
@@ -280,13 +281,17 @@ class Manager:
                 try:
                     #self.directory_manager.migrate_storage_ram(foldername, address)
                     self.migrate_host_ram(filename, ".txt", "setuptool", 0)
-                    print(self.ram)
-                    data=self.ram[0][1]["setuptool"][:2]
-                    self.storage[address][1][processname].append(data)
-                    self.directory_manager.replace_data(processname, address, data)
-                    self.directory_manager.delete_slots(0)
+                    #print(self.ram)
+                    data=self.ram[0][1][filename][:2]
+                    #print(data)
+                    storage_address=self.directory_manager.get_storage_address(foldername)
+                    self.storage[storage_address][1][filename]=[data, 0]
+                    #self.directory_manager.replace_data(processname, address, data)
                 except:
                     continue
+                finally:
+                    if self.directory_manager.file_exists("setuptool"):
+                        self.directory_manager.delete_slots(0)
 
     def aut_update_thread(self):
         self.system_monitor.create_thread_id("0x006")

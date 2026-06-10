@@ -113,3 +113,7 @@ class Inode:
         if filename in self.filename_index.keys():
             return True
         return False
+
+    def del_checker(self, filename):
+        del self.filename_index[filename]
+

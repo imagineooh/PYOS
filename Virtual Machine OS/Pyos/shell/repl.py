@@ -38,7 +38,7 @@ class TameShell():
             self.inode.signin()
         self.system_manager.run_diagnostic()
         self.directory_manager.check_for_duplicates()
-        #self.process_manager.aut_update_thread() #not yet ready for production
+        self.process_manager.aut_update_thread() #not yet ready for production
         self.commands_dict={
             "mkdir" : self.directory_manager.add_empty_folder,
             "mkfolder" : self.directory_manager.add_folder,
