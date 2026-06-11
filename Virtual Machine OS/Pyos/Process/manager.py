@@ -57,7 +57,7 @@ class Manager:
         return self.scheduler_manager.process_to_run()
 
     def execute_path(self, path:str, extension:str):
-        file_path = Path(f"C:/Users/pasca/Downloads/{path}{extension}")
+        file_path = Path.home() / "Downloads" / f"{path}{extension}"
         print(file_path)
         if file_path.exists():
             with open(file_path, 'r') as file:
@@ -124,11 +124,11 @@ class Manager:
     def migrate_host_ram(self, path:str, extension:str, filename:str, address:int, file_location:str = None):
         #file_path = next(Path("C:\\").rglob(f"{filename}{extension}"), None) #As of now this does not work yet... Too slow
         if file_location is None:
-            file_path = Path(f"C:/Users/pasca/Downloads/{path}{extension}")
+            file_path = Path.home() / "Downloads" / f"{path}{extension}"
         elif file_location=="stand":
             file_path=Path(f"C://Windows/{path}{extension}")
         else:
-            file_path = Path(f"C:/Users/pasca/{file_location}/{path}{extension}")
+            file_path = Path.home() / file_location / f"{path}{extension}"
         if file_path.exists():
             if extension=='.txt':
                 with open(file_path, 'r') as file:
