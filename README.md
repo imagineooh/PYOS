@@ -10,7 +10,7 @@ And, don’t forget, the project is just getting started.
 - Directory and FileSystem (working on Inode)
 - Context and REPL, with commands help function
 - ProcessControlBlock to track active and inactive slots (used for scheduling)
-- Process Manager working on precise data packaging to decrypt and encrypt data (works on Cpython concepts\
+- Process Manager working on precise data packaging to decrypt and encrypt data (works on Cpython concepts
 
 For a full list of all commands, simply type help after running either repl.py or main.py (repl safer for now, testing is based there)
 
