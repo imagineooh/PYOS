@@ -1,8 +1,8 @@
 class Context:
     def __init__(self):
         self.users={
-            "flav":["CACA", 1],
-        }
+            "user":["pass", 1],
+        } #for now ima keep it like this lol, its not ready for actual production yet so just call that user ig
         self.signed_in=False
 
     def fetch(self):
