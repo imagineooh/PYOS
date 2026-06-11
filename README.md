@@ -1,9 +1,17 @@
 # TameOS, the fully python virtual operating system
 
 
-This is, above all, a learning experience. I do not, and did not expect to make a fully optimised virtual OS software. The code is mainly a proof of concept, and is based on real systems and subsystems. The OS is fully written by hand after thorough research through pretty much any resource and technology I could find and harness to learn, which also helped me discover new optimisation techniques. 
+This is, above all, a learning experience. I do not, and did not expect to make a fully optimised virtual OS software. The code is mainly a proof of concept, and is based on real systems and subsystems. The OS is fully written and designed by hand after thorough research through pretty much any resource and technology I could find and harness to learn, which also helped me discover new optimisation techniques. 
 And, don’t forget, the project is just getting started.
 
+## Functionalities
+- Full Host OS (windows for now) TameOS communication, fully safe
+- FIFO scheduler (working to refactor on CPU-based scheduling)
+- Directory and FileSystem (working on Inode)
+- Context and REPL, with commands help function
+- ProcessControlBlock to track active and inactive slots (used for scheduling)
+- Process Manager working on precise data packaging to decrypt and encrypt data (works on Cpython concepts)
+For a full list of all commands, simply type help after running either repl.py or main.py (repl safer for now, testing is based there)
 
 ## How it works:
 TameOS functions on a working, fully custom-made shell (shell->repl.py, made with custom function inspection for faster metadata analysis and dispatch), custom made file system and directory, built on an Inode manager. The inode’s main job is to format the files in ram, so that the process manager (which runs files) maps exactly to the data it needs. 
