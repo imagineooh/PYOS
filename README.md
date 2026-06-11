@@ -11,7 +11,7 @@ And, don’t forget, the project is just getting started.
 - Context and REPL, with commands help function
 - ProcessControlBlock to track active and inactive slots (used for scheduling)
 - Process Manager working on precise data packaging to decrypt and encrypt data (works on Cpython concepts)
-For a full list of all commands, simply type help after running either repl.py or main.py (repl safer for now, testing is based there)
+\\For a full list of all commands, simply type help after running either repl.py or main.py (repl safer for now, testing is based there)
 
 ## How it works:
 TameOS functions on a working, fully custom-made shell (shell->repl.py, made with custom function inspection for faster metadata analysis and dispatch), custom made file system and directory, built on an Inode manager. The inode’s main job is to format the files in ram, so that the process manager (which runs files) maps exactly to the data it needs. 
