@@ -13,10 +13,20 @@ class Inode:
         self.ram.add_user('F', 'pas')
         self.pointers={}
         self.pointers_backup=[]
+        self.reserved_spots = []
+        self.authorized_processes = ["setuptool"]
+
+    def reserve_spaces(self):
+        self.reserved_spots = [0]
+
+    def append_reserved_spot(self, address:int):
+        self.reserved_spots.append(address)
 
     def signin(self):
         self.authorisation=True
     def add_inode(self, address: int, type_file:str, filename: str):
+        if address in self.reserved_spots and filename not in self.authorized_processes:
+            raise ReservedPointingError(f"Pointed to reserved address {address}")
         if type_file=='file' and self.ram[address]==0:
             if self.ram.write(address, [[address, type_file, filename], []], self.authorisation) != "Data adress already taken, try 'force_write' method (unsafe) or 'free_index' method first. ...//":
                 self.ram.write(address, [[address, type_file, filename], []], self.authorisation)
@@ -100,6 +110,18 @@ class Inode:
         second_str='.'*round((100-counter)/5)
         print(f"[{first_str}{second_str}]")
 
+    # I know I know, not my best copy-paste work from the function right above this one, but it works ok...
+    def percent_used_storage(self):
+        counter=0
+        for i in range(self.storage.storage_len()):
+            if self.storage[i]!=0:
+                counter+=1
+        percent_usage=(100*counter)/self.storage.storage_len()
+        print(f'Storage used at {percent_usage}% ({counter} slots used for {self.storage.storage_len()} slots)')
+        first_str='-'*round(percent_usage/5)
+        second_str='.'*round((100-counter)/5)
+        print(f"[{first_str}{second_str}]")
+
     def point_to_mutiple(self, pointer:list):
         if self.pointers:
             self.pointers_backup.append(list(self.pointers.values()))
@@ -117,3 +139,5 @@ class Inode:
     def del_checker(self, filename):
         del self.filename_index[filename]
 
+class ReservedPointingError(Exception):
+    pass

@@ -94,6 +94,9 @@ class Directory:
     def percent_used(self):
         self.inode_manager.percent_used()
 
+    def percent_used_disk(self):
+        self.inode_manager.percent_used_storage()
+
     def is_in(self):
         self.inode_manager.signin()
 

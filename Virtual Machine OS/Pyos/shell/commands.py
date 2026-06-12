@@ -8,6 +8,7 @@ def help(command:str=None):
         "write": "Stores value in disk",
         "ramstage": "Migrates objects in disk to ram",
         "df": "returns percentage use of ram",
+        "dfdisk":"returns percentage use of Disk (non-volatile storage)",
         "pidasync": "updates PID for all objects in ram",
         "idlescan": "Tracks inactive slots in RAM",
         "purge": "Deletes inactive slots in ram",

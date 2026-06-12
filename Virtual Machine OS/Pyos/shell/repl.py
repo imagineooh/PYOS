@@ -6,7 +6,7 @@ import inspect
 from commands import help
 from PCB import PCB
 from context import Context
-from inode import Inode
+from inode import Inode, ReservedPointingError
 from system import System, OverclockError
 import sys
 
@@ -29,6 +29,7 @@ class TameShell():
         self.storage = storage
         self.ram=ram
         self.inode=Inode(ram, storage)
+        self.inode.reserve_spaces()
         self.directory_manager=Directory(ram, storage, self.inode)
         self.system_manager = System(50)
         self.process_manager = Manager(ram, self.directory_manager, self.system_manager, storage)
@@ -49,6 +50,7 @@ class TameShell():
             "write": self.directory_manager.store_value,
             "ramstage":self.directory_manager.migrate_storage_ram,
             "df":self.directory_manager.percent_used,
+            "dfdisk": self.directory_manager.percent_used_disk,
             "pidasync":self.directory_manager.update_PID,
             "idlescan":self.pcb_manager.track_inactivity,
             "purge":self.process_manager.delete_inactive_slots,
@@ -123,6 +125,9 @@ class TameShell():
                 print(f"Cpu usage spiked and caused an overclock."
                       f"Current threads: {self.system_manager.running_threads}"
                       f"Current Cpu usage: {self.system_manager.cpu_usage}")
+                return None
+            except ReservedPointingError as e:
+                print(e)
                 return None
 
 
