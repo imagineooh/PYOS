@@ -5,7 +5,7 @@ This is not necessarlay computer RAM, but my project is to build a VIM for an OS
 """
 class RAM:
     def __init__(self,
-                 size: int,
+                 size: int = 1024,
                  backup_pointers_count = 0,
                  data=None,
                  backup=None,

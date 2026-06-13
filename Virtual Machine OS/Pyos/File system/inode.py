@@ -1,10 +1,11 @@
 from context import Context
 from storage import Storage
-
+import logging
 
 class Inode:
     def __init__(self, ram, storage):
         self.ram = ram
+        self.logger = logging.getLogger(f"{__name__}.{self.__class__.__name__}")
         self.counter = 0
         self.filename_index={}
         self.storage = storage

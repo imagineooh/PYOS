@@ -1,7 +1,7 @@
 class Storage:
     def __init__(self, ram):
         self.ram =ram
-        self.size = ram.return_size()**2
+        self.size = 4060 #ram.return_size()**2
         self.data = [0]*self.size
         self.location_index={}
         self.map_name_key = {}

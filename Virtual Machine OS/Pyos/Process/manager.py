@@ -1,4 +1,4 @@
-
+import logging
 from threading import Thread
 
 
@@ -14,6 +14,7 @@ class Manager:
     def __init__(self, ram, directory_manager, system, storage):
         self.ram = ram
         self.storage = storage
+        self.logger = logging.getLogger(f"{__name__}.{self.__class__.__name__}")
         self.start_signal = False
         self.directory_manager = directory_manager
         self.scheduler_manager = Scheduler(ram, directory_manager)
@@ -216,22 +217,26 @@ class Manager:
                 for j,k in enumerate(headers):
                     if extension==str(bin(0))[2:]:
                         self.system_monitor.create_thread_id("0x002")
+                        self.logger.info(f"Started thread 0x002 for decrypting txt files")
                         t1 = threading.Thread(target=self.exec_txt, args=(k,ProcessName))
                         t1.start()
                         sleep(0.1)
                     elif extension==str(bin(1))[2:]: #DONE
                         self.system_monitor.create_thread_id("0x003")
+                        self.logger.info(f"Started thread 0x003 for decrypting wav files")
                         t1 = threading.Thread(target=self.exec_wav, args=(k, ProcessName))
                         t1.start()
                         sleep(0.1)
                     elif extension==str(bin(2))[2:]: #DONE
                         if not subfile_name:
                             self.system_monitor.create_thread_id("0x004")
+                            self.logger.info(f"Started thread 0x004 for decrypting exe files without subfile name")
                             t1 = threading.Thread(target=self.exec_exe,
                                                   args=(list(self.ram[index_ram][1].values())[DictLen][-4], index_ram))
                             t1.start()
                         else:
                             self.system_monitor.create_thread_id("0x005")
+                            self.logger.info(f"Started thread 0x005 for decrypting exe files with subfile name")
                             self.running_processes[ProcessName]=[subfile_name, index_ram]
                             """
                             How a thread T works:
@@ -252,6 +257,7 @@ class Manager:
                             tfetcher = threading.Thread(target=fetcher, args=(subfile_name, index_ram, tfetcher_pause_event))
                             t1.start()
                             tfetcher.start()
+                            self.logger.info(f"Started thread tfecther (default) for decrypting exe files with subfile name")
                             sleep(0.1)
                             if self.system_monitor.thread_id["0x005"]!=0:
                                 t1_pause_event.set() #set restarts the thread
@@ -295,6 +301,7 @@ class Manager:
 
     def aut_update_thread(self):
         self.system_monitor.create_thread_id("0x006")
+        self.logger.info(f"Started thread 0x006 for actively fetching and migrating file names")
         tupdater=Thread(target=self.auto_update_file)
         tupdater.start()
 

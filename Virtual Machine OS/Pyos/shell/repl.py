@@ -9,9 +9,9 @@ from context import Context
 from inode import Inode, ReservedPointingError
 from system import System, OverclockError
 import sys
+import logging
 
-ram=RAM(16)
-storage=Storage(ram)
+
 class TameShell():
     intro = "Welcome to TameOS! Type help <command> to get help on a command.\n"
     print(intro)
@@ -26,6 +26,8 @@ class TameShell():
             self.authenticated = False
             return
         self.prompt = f"C://TameOS/user:{self.username}/terminal: "
+        self.logger = logging.getLogger(f"{__name__}.{self.__class__.__name__}")
+        self.logger.info(f"User {self.username} has successfully logged in")
         self.storage = storage
         self.ram=ram
         self.inode=Inode(ram, storage)
@@ -119,10 +121,10 @@ class TameShell():
                     KeyError,
                     ValueError,
                     AttributeError,) as e: #FIX HERE FOR RUNTIME ERRORS
-                print(f"Inputed Arg Error {e} after input '{''.join(args)}'")
+                self.logger.error(f"Inputed Arg Error {e} after input '{''.join(args)}'")
                 return None
             except OverclockError as e:
-                print(f"Cpu usage spiked and caused an overclock."
+                self.logger.error(f"Cpu usage spiked and caused an overclock."
                       f"Current threads: {self.system_manager.running_threads}"
                       f"Current Cpu usage: {self.system_manager.cpu_usage}")
                 return None
@@ -142,6 +144,5 @@ class TameShell():
             except EOFError:
                 break
 
-shell = TameShell(ram, storage)
-shell.loop()
+
 
