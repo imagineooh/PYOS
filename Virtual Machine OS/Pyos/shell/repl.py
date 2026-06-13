@@ -121,12 +121,12 @@ class TameShell():
                     KeyError,
                     ValueError,
                     AttributeError,) as e: #FIX HERE FOR RUNTIME ERRORS
-                self.logger.error(f"Inputed Arg Error {e} after input '{''.join(args)}'")
+                self.logger.error(f"Inputed Arg Error {e} after input '{''.join(args)}'", exc_info=True)
                 return None
             except OverclockError as e:
                 self.logger.error(f"Cpu usage spiked and caused an overclock."
                       f"Current threads: {self.system_manager.running_threads}"
-                      f"Current Cpu usage: {self.system_manager.cpu_usage}")
+                      f"Current Cpu usage: {self.system_manager.cpu_usage}", exc_info=True)
                 return None
             except ReservedPointingError as e:
                 print(e)
