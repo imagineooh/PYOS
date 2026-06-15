@@ -3,6 +3,9 @@ This code is intended to provide a RAM like structure that enables safe communic
 Progress is still underway.
 This is not necessarlay computer RAM, but my project is to build a VIM for an OS entierely in python.
 """
+import logging
+
+
 class RAM:
     def __init__(self,
                  size: int = 1024,
@@ -17,6 +20,11 @@ class RAM:
 
         self.size = size
         self.backup_pointers_count=backup_pointers_count
+        self.logger = logging.getLogger(f"{__name__}.{self.__class__.__name__}")
+        handler = logging.FileHandler("TameOSramlog.log", mode = 'w')
+        handler.setFormatter(logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s"))
+        self.logger.addHandler(handler)
+        self.logger.propagate = False
         self.data = data if data is not None else [0] * size
         self.backup = backup if backup is not None else [0] * size  # backup used to store data that is out of bounds of the RAM, making it hidden ram (or HRAM)
         self.freesd = freesd if freesd is not None else []  # freesd used to store data that is freed, making it free space (or FS)
@@ -40,6 +48,9 @@ class RAM:
                 self.data[address]=value
             else:
                 print("Data out of bounds")
+
+    def __len__(self):
+        return len(self.data)
 
 
 
@@ -83,9 +94,9 @@ class RAM:
                 if self.data[adress]==0:
                     self.data[adress] = bin(value)
                 else:
-                    print(f"Data adress already taken, try 'force_write' method (unsafe) or 'free_index' method first. ...//") #TODO: Fix for file case
+                    self.logger.info(f"Data adress already taken, try 'force_write' method (unsafe) or 'free_index' method first. ...//") #TODO: Fix for file case
             else:
-                print(f"Data out of bounds for index {adress}. " \
+                self.logger.info(f"Data out of bounds for index {adress}. " \
                       "If you wish to force write the value to RAM (unsafe), use 'force_writee' method.")
                 self.backup[int(adress - len(self.data))] = bin(value)
 
@@ -96,12 +107,12 @@ class RAM:
                     self.data[address] = value
                 else:
                     if not bypass:
-                        print(f"Data adress already taken, try 'force_write' method (unsafe) or 'free_index' method first. ...//")
+                        self.logger.info(f"Data adsress {address} already taken, try 'force_write' method (unsafe) or 'free_index' method first. ...//")
                     elif bypass:
-                        #print("Bypassing restriction for folder allocation")
+                        self.logger.info(f"Bypassing restriction for folder allocation at address {address}")
                         pass
             else:
-                print(f"Data out of bounds for index {address}. " \
+                self.logger.info(f"Data out of bounds for index {address}. " \
                       "If you wish to force write the value to RAM (unsafe), use 'force_writee' method.")
                 self.backup[address - self.size] = bin(value)
 

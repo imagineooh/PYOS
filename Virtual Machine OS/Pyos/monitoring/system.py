@@ -1,3 +1,5 @@
+import logging
+
 import psutil
 import threading
 import keyboard
@@ -41,4 +43,6 @@ class System:
 class OverclockError(Exception):
     def __init__(self, message):
         super().__init__(message)
+        self.logger = logging.getLogger(f"{__name__}.{self.__class__.__name__}")
+        self.logger.info("OverclockError occurred")
         time.sleep(1)
