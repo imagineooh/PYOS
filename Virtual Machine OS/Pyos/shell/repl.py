@@ -1,3 +1,5 @@
+from time import sleep
+
 from manager import Manager
 from ram import RAM
 from directory import Directory
@@ -35,6 +37,7 @@ class TameShell():
         self.directory_manager=Directory(ram, storage, self.inode)
         self.system_manager = System(50)
         self.process_manager = Manager(ram, self.directory_manager, self.system_manager, storage)
+        self.system_manager.process_manager=self.process_manager
         self.pcb_manager = PCB(ram, self.directory_manager)
         self.process_manager.start_scheduling()
         if self.authenticated and self.context_manager.fetch_auth(self.username)==1:
@@ -127,11 +130,13 @@ class TameShell():
                 self.logger.error(f"Cpu usage spiked and caused an overclock."
                       f"Current threads: {self.system_manager.running_threads}"
                       f"Current Cpu usage: {self.system_manager.cpu_usage}", exc_info=True)
+                sleep(0.4)
+                self.process_manager.aut_update_thread()
+                self.system_manager.run_diagnostic()
                 return None
             except ReservedPointingError as e:
                 print(e)
                 return None
-
 
     def loop(self):
         if not self.authenticated:

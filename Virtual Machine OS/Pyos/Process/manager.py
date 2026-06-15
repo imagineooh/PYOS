@@ -277,8 +277,8 @@ class Manager:
                     self.directory_manager.delete_slots(index_ram)
             self.scheduler_manager.mark_as_active(index_ram)
 
-    def auto_update_file(self):
-        while True:
+    def auto_update_file(self, runtime_arg:str):
+        while self.system_monitor.thread_id[runtime_arg]!=0:
             for foldername, values in self.running_processes.items():
                 sleep(1)
                 filename = values[0]
@@ -298,10 +298,12 @@ class Manager:
                 finally:
                     if self.directory_manager.file_exists("setuptool"):
                         self.directory_manager.delete_slots(0)
+        self.logger.info(f"Thread {runtime_arg} closed fully")
 
     def aut_update_thread(self):
+        self.system_monitor.delete_thread("0x006")
         self.system_monitor.create_thread_id("0x006")
         self.logger.info(f"Started thread 0x006 for actively fetching and migrating file names")
-        tupdater=Thread(target=self.auto_update_file)
+        tupdater=Thread(target=self.auto_update_file, args=("0x006", ))
         tupdater.start()
 
