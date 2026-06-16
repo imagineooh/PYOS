@@ -22,6 +22,8 @@ class Manager:
         self.auto_migrate=True
         self.system_monitor = system
         self.running_processes = {}
+        self.incase_migrator_names= {}
+        self.migrator_counter=0
 
     def start_scheduling(self):
         self.start_signal=True
@@ -278,21 +280,27 @@ class Manager:
             self.scheduler_manager.mark_as_active(index_ram)
 
     def auto_update_file(self, runtime_arg:str):
+        self.migrator_counter+=1
+        mig_name=f"0x001.{self.migrator_counter}"
         while self.system_monitor.thread_id[runtime_arg]!=0:
             for foldername, values in self.running_processes.items():
                 sleep(1)
                 filename = values[0]
                 address=values[1]
-                processname = 'Notepad'
                 try:
+                    storage_address = self.directory_manager.get_storage_address(foldername)
+                    """metadata = list(self.storage[address][1].values())
+                    processname = metadata[0]
+                    print(f"Process name is {processname}")"""
                     #self.directory_manager.migrate_storage_ram(foldername, address)
                     self.migrate_host_ram(filename, ".txt", "setuptool", 0)
                     #print(self.ram)
                     data=self.ram[0][1][filename][:2]
                     #print(data)
-                    storage_address=self.directory_manager.get_storage_address(foldername)
                     self.storage[storage_address][1][filename]=[data, 0]
                     #self.directory_manager.replace_data(processname, address, data)
+                except RuntimeError as e:
+                    self.logger.error("Runtime error in thread", exc_info=True)
                 except:
                     continue
                 finally:
