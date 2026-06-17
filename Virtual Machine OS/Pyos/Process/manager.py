@@ -153,6 +153,7 @@ class Manager:
                     packaging_info=content[:64]
                     raw_bytes=content[:64]
                 self.directory_manager.add_folder(filename, [file_path, packaging_info, raw_bytes, str(bin(2)[2:])], address, path)
+        self.scheduler_manager.mark_as_active(address)
     """
     PACKAGING TYPE FOR TXT/
     data, extension
@@ -315,3 +316,23 @@ class Manager:
         tupdater=Thread(target=self.auto_update_file, args=("0x006", ))
         tupdater.start()
 
+    def garbage_collection_filer(self):
+        while True: #TODO refactor similar to thread 0x006
+            try:
+                for i in range(self.ram.len_RAM()-1):
+                    v=self.ram[i]
+                    if v!=0 and self.scheduler_manager.is_active(i) and i!=0:
+                        self.logger.info(self.scheduler_manager.status)
+                        ProcessName = v[0][2]
+                        if self.auto_migrate:
+                            free_space: list[int] = self.directory_manager.free_disk_space()
+                            self.directory_manager.store_value(ProcessName, free_space[0])
+                            self.directory_manager.delete_slots(i)
+                        self.logger.info(f"Stored object {ProcessName} in disk after being market as inactive")
+            except KeyError:
+                continue
+    def garbage_collection_thread(self):
+        self.system_monitor.create_thread_id("0x007")
+        self.logger.info("Started thread 0x007 for RAM garbage collection")
+        gcthread = Thread(target=self.garbage_collection_filer)
+        gcthread.start()

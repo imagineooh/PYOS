@@ -43,3 +43,12 @@ class Scheduler:
 
     def mark_as_inactive(self, address:int):
         self.status[address]=[0]
+
+    def is_active(self, address:int):
+        if address==0: #TODO fix for default allocated process area (DAPA)
+            return True
+        if self.status[address]!=[1, -1]:
+            return False
+
+    def full_status_list(self):
+        return self.status
