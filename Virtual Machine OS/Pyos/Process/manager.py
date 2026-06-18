@@ -284,7 +284,12 @@ class Manager:
         self.migrator_counter+=1
         mig_name=f"0x001.{self.migrator_counter}"
         while self.system_monitor.thread_id[runtime_arg]!=0:
-            for foldername, values in self.running_processes.items():
+            runnin_process_copy = list(self.running_processes.items())
+            """
+            I created a shallow copy of the running_processes dict here as it 
+            was causing a runtime error
+            """
+            for foldername, values in runnin_process_copy:
                 sleep(1)
                 filename = values[0]
                 address=values[1]
@@ -331,6 +336,7 @@ class Manager:
                         self.logger.info(f"Stored object {ProcessName} in disk after being market as inactive")
             except KeyError:
                 continue
+
     def garbage_collection_thread(self):
         self.system_monitor.create_thread_id("0x007")
         self.logger.info("Started thread 0x007 for RAM garbage collection")

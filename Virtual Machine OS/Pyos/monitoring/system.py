@@ -32,6 +32,7 @@ class System:
                 self.logger.error(f"Cpu usage spiked and caused an overclock."
                       f"Current threads: {self.running_threads}"
                       f"Current Cpu usage: {self.cpu_usage}", exc_info=True)
+                time.sleep(0.5)
                 self.process_manager.aut_update_thread()
                 continue
 
