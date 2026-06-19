@@ -29,8 +29,17 @@ class Inode:
         else:
             self.authorized_processes.append(processname)
 
+    def get_smallest_reserved(self) -> int:
+        """
+        Getter function for getting the smallest possible
+        reserved ram address for custom processes
+        :return: Int, RAM address
+        """
+        return min(self.reserved_spots)
+
     def signin(self):
         self.authorisation=True
+
     def add_inode(self, address: int, type_file:str, filename: str):
         if address in self.reserved_spots and filename not in self.authorized_processes:
             raise ReservedPointingError(f"Pointed to reserved address {address}")

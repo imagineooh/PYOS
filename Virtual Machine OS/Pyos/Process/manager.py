@@ -295,6 +295,7 @@ class Manager:
                 address=values[1]
                 migratorname:str = f"setuptool{self.migrator_counter}"
                 self.directory_manager.add_auth_process(migratorname)
+                setup_address = self.directory_manager.smauthID
                 try:
                     storage_address = self.directory_manager.get_storage_address(foldername)
                     """metadata = list(self.storage[address][1].values())

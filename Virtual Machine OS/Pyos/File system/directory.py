@@ -138,3 +138,6 @@ class Directory:
 
     def add_auth_process(self, pname:str):
         self.inode_manager.add_authorized_process(pname)
+
+    def smauthID(self):
+        return self.inode_manager.get_smallest_reserved()
