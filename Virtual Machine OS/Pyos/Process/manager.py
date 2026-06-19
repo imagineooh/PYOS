@@ -282,7 +282,7 @@ class Manager:
 
     def auto_update_file(self, runtime_arg:str):
         self.migrator_counter+=1
-        mig_name=f"0x001.{self.migrator_counter}"
+        #mig_name=f"0x001.{self.migrator_counter}"
         while self.system_monitor.thread_id[runtime_arg]!=0:
             runnin_process_copy = list(self.running_processes.items())
             """
@@ -293,24 +293,22 @@ class Manager:
                 sleep(1)
                 filename = values[0]
                 address=values[1]
+                migratorname:str = f"setuptool{self.migrator_counter}"
+                self.directory_manager.add_auth_process(migratorname)
                 try:
                     storage_address = self.directory_manager.get_storage_address(foldername)
                     """metadata = list(self.storage[address][1].values())
                     processname = metadata[0]
                     print(f"Process name is {processname}")"""
-                    #self.directory_manager.migrate_storage_ram(foldername, address)
-                    self.migrate_host_ram(filename, ".txt", "setuptool", 0)
-                    #print(self.ram)
+                    self.migrate_host_ram(filename, ".txt", migratorname, 0)
                     data=self.ram[0][1][filename][:2]
-                    #print(data)
                     self.storage[storage_address][1][filename]=[data, 0]
-                    #self.directory_manager.replace_data(processname, address, data)
                 except RuntimeError as e:
                     self.logger.error("Runtime error in thread", exc_info=True)
                 except:
                     continue
                 finally:
-                    if self.directory_manager.file_exists("setuptool"):
+                    if self.directory_manager.file_exists(migratorname):
                         self.directory_manager.delete_slots(0)
         self.logger.info(f"Thread {runtime_arg} closed fully")
 

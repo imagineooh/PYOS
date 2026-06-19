@@ -35,7 +35,7 @@ class TameShell():
         self.inode=Inode(ram, storage)
         self.inode.reserve_spaces()
         self.directory_manager=Directory(ram, storage, self.inode)
-        self.system_manager = System(50)
+        self.system_manager = System(55)
         self.process_manager = Manager(ram, self.directory_manager, self.system_manager, storage)
         self.system_manager.process_manager=self.process_manager
         self.pcb_manager = PCB(ram, self.directory_manager)

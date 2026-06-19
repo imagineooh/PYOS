@@ -18,10 +18,16 @@ class Inode:
         self.authorized_processes = ["setuptool"]
 
     def reserve_spaces(self):
-        self.reserved_spots = [0]
+        self.reserved_spots = list(range(0,3))
 
     def append_reserved_spot(self, address:int):
         self.reserved_spots.append(address)
+
+    def add_authorized_process(self, processname:str):
+        if processname in self.authorized_processes:
+            pass
+        else:
+            self.authorized_processes.append(processname)
 
     def signin(self):
         self.authorisation=True

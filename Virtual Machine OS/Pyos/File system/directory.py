@@ -135,3 +135,6 @@ class Directory:
 
     def file_exists(self, filename:str):
         return self.inode_manager.file_exists(filename)
+
+    def add_auth_process(self, pname:str):
+        self.inode_manager.add_authorized_process(pname)
