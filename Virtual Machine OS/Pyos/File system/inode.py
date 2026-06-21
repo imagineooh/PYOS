@@ -35,7 +35,9 @@ class Inode:
         reserved ram address for custom processes
         :return: Int, RAM address
         """
-        return min(self.reserved_spots)
+        smallest_index=min(self.reserved_spots)
+        self.logger.warning(f"smallest index found for auth processes is {smallest_index}")
+        return smallest_index
 
     def signin(self):
         self.authorisation=True

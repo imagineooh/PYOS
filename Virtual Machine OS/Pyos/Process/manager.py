@@ -295,22 +295,24 @@ class Manager:
                 address=values[1]
                 migratorname:str = f"setuptool{self.migrator_counter}"
                 self.directory_manager.add_auth_process(migratorname)
-                setup_address = self.directory_manager.smauthID
+                setup_address = self.directory_manager.smauthID()
                 try:
                     storage_address = self.directory_manager.get_storage_address(foldername)
                     """metadata = list(self.storage[address][1].values())
                     processname = metadata[0]
                     print(f"Process name is {processname}")"""
-                    self.migrate_host_ram(filename, ".txt", migratorname, 0)
+                    self.migrate_host_ram(filename, ".txt", migratorname, setup_address)
                     data=self.ram[0][1][filename][:2]
                     self.storage[storage_address][1][filename]=[data, 0]
                 except RuntimeError as e:
                     self.logger.error("Runtime error in thread", exc_info=True)
+                except KeyError as e:
+                    self.logger.warning("Keyerror occured", exc_info=True)
                 except:
                     continue
                 finally:
                     if self.directory_manager.file_exists(migratorname):
-                        self.directory_manager.delete_slots(0)
+                        self.directory_manager.delete_slots(setup_address)
         self.logger.info(f"Thread {runtime_arg} closed fully")
 
     def aut_update_thread(self):
