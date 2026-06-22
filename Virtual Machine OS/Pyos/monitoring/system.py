@@ -22,6 +22,9 @@ class System:
             try:
                 self.cpu_usage=psutil.cpu_percent(interval=1)
                 if self.cpu_usage>self.max_power:
+                    time.sleep(2)
+                    if self.cpu_usage<self.max_power:
+                        self.thread_id = dict.fromkeys(self.thread_id, 1)
                     self.pause_all_threads()
                     self.thread_id['0x006']=0
                     raise OverclockError(f"CPU usage at {self.cpu_usage}% caused early backfire. Sleeping for one second...")
