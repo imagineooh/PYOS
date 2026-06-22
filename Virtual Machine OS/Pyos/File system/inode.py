@@ -1,11 +1,19 @@
+import time
+from threading import Thread
+
 from context import Context
 from storage import Storage
 import logging
 
 class Inode:
-    def __init__(self, ram, storage):
+    def __init__(self, ram, storage, system):
         self.ram = ram
+        self.system_manager = system
         self.logger = logging.getLogger(f"{__name__}.{self.__class__.__name__}")
+        self.ramlogger = logging.getLogger(f"{__name__}.{self.__class__.__name__}")
+        handler = logging.FileHandler("TameOSramlog.log", mode='w')
+        handler.setFormatter(logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s"))
+        self.ramlogger.addHandler(handler)
         self.counter = 0
         self.filename_index={}
         self.storage = storage
@@ -15,7 +23,9 @@ class Inode:
         self.pointers={}
         self.pointers_backup=[]
         self.reserved_spots = []
+        self.free_reserved_spots = []
         self.authorized_processes = ["setuptool"]
+        self.auth_checking_status : bool = True
 
     def reserve_spaces(self):
         self.reserved_spots = list(range(0,3))
@@ -29,15 +39,65 @@ class Inode:
         else:
             self.authorized_processes.append(processname)
 
+    def remove_free_spot(self, element: int) -> None: #void function
+        #note: self.free_reserved_spots : list[int]
+        try:
+            if element not in self.free_reserved_spots:
+                raise NonPresentAuthIDError("Non present authID in authorized processes")
+            self.free_reserved_spots.remove(element)
+        except ValueError:
+            pass
+        except NonPresentAuthIDError:
+            self.ramlogger.info(f"Could not find element {element} in prerequisite auth ID elements")
+
+    def add_free_spot(self, element:int):
+        try:
+            if element in self.free_reserved_spots:
+                raise AlreadyPresentAuthIDError("Already present authID in authorized processes")
+            self.free_reserved_spots.append(element)
+        except AlreadyPresentAuthIDError:
+            self.ramlogger.info(f"The element {element} which is a part of the prerequisite auth ID elements is already free")
+
+    def update_free_spots_thread(self):
+        local_thread_id = '0x008'
+        def update_return_base():
+            nonlocal local_thread_id
+            while True:
+                try:
+                    if self.auth_checking_status:
+                        for i in self.reserved_spots:
+                            if self.ram[i] !=0:
+                                self.remove_free_spot(i)
+                            else:
+                                self.add_free_spot(i)
+                        self.ramlogger.info(f"Thread{local_thread_id} updated free auth processes")
+                except RuntimeError:
+                    self.logger.error(exc_info=True)
+                    continue
+                finally:
+                    time.sleep(0.3)
+        self.system_manager.create_thread_id(local_thread_id)
+        t1 = Thread(target=update_return_base)
+        t1.start()
     def get_smallest_reserved(self) -> int:
         """
         Getter function for getting the smallest possible
         reserved ram address for custom processes
         :return: Int, RAM address
         """
-        smallest_index=min(self.reserved_spots)
-        self.logger.warning(f"smallest index found for auth processes is {smallest_index}")
-        return smallest_index
+        try:
+            self.auth_checking_status = False
+            smallest_index=min(self.free_reserved_spots)
+            self.auth_checking_status = True
+            self.logger.warning(f"smallest index found for auth processes is {smallest_index}")
+            return smallest_index
+        except ValueError:
+            self.logger.warning("List free_reserved_spots is empty, resetting")
+            self.init_auth()
+            return min(self.free_reserved_spots)
+
+    def init_auth(self):
+        self.free_reserved_spots = list(self.reserved_spots)
 
     def signin(self):
         self.authorisation=True
@@ -158,4 +218,10 @@ class Inode:
         del self.filename_index[filename]
 
 class ReservedPointingError(Exception):
+    pass
+
+class NonPresentAuthIDError(Exception):
+    pass
+
+class AlreadyPresentAuthIDError(Exception):
     pass
