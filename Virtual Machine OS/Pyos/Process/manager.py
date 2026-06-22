@@ -113,12 +113,12 @@ class Manager:
                 done = True
             chunk += chunk_offset
 
-    def exec_exe(self, file_path, address:int, pause_event = None, subfile_name:str=False):
+    def exec_exe(self, file_path, address:int, subfile_name:str=False):
         import subprocess  # TODO look into PATH
         self.scheduler_manager.mark_as_active(address)
         download_dir = Path.home() / "Downloads"
-        if pause_event:
-            pause_event.wait()
+        """if pause_event:
+            pause_event.wait()"""
         if subfile_name:
             subprocess.Popen([file_path, subfile_name], shell=False, cwd=str(download_dir))
         else:
@@ -248,26 +248,26 @@ class Manager:
                             set the event with.set
                             you can now pause, clear or whatever you want!
                             """
-                            t1_pause_event = threading.Event()
+                            """t1_pause_event = threading.Event()
                             t1_pause_event.set()
                             tfetcher_pause_event = threading.Event()
-                            tfetcher_pause_event.set()
-                            def fetcher(subfile_name, index_ram, pause_event):
-                                pause_event.wait()
+                            tfetcher_pause_event.set()"""
+                            def fetcher(subfile_name, index_ram):
+                                #pause_event.wait()
                                 self.migrate_host_ram(subfile_name, '.txt', 'opened_file', index_ram)
                             t1 = threading.Thread(target=self.exec_exe,
-                                                  args=(list(self.ram[index_ram][1].values())[DictLen][-4], index_ram, t1_pause_event, subfile_name))
-                            tfetcher = threading.Thread(target=fetcher, args=(subfile_name, index_ram, tfetcher_pause_event))
+                                                  args=(list(self.ram[index_ram][1].values())[DictLen][-4], index_ram, subfile_name))
+                            tfetcher = threading.Thread(target=fetcher, args=(subfile_name, index_ram))
                             t1.start()
                             tfetcher.start()
                             self.logger.info(f"Started thread tfecther (default) for decrypting exe files with subfile name")
                             sleep(0.1)
-                            if self.system_monitor.thread_id["0x005"]!=0:
+                            """if self.system_monitor.thread_id["0x005"]!=0:
                                 t1_pause_event.set() #set restarts the thread
                                 tfetcher_pause_event.set()
                             else:
                                 t1_pause_event.clear() #clear pauses the thread because of the passed argument pause_event
-                                tfetcher_pause_event.clear()
+                                tfetcher_pause_event.clear()"""
                     else:
                         print("File not executable")
             if self.auto_migrate:
