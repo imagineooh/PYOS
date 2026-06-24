@@ -24,10 +24,16 @@ class Manager:
         self.running_processes = {}
         self.incase_migrator_names= {}
         self.migrator_counter=0
-
+        self.enum_map_extensions = {
+            1: ".txt",
+            2:'.wav',
+            3:".exe"
+        }
+    #Only runs at repl __init__
     def start_scheduling(self):
         self.start_signal=True
 
+    #BELOW HERE IS SIMPLE ENDPOINT OF LOWER FILE PIPELINES
     def auto_migration_status(self, status:str):
         if status=='enable':
             self.auto_migrate=True
@@ -38,27 +44,49 @@ class Manager:
 
     def track_inactivity(self):
         self.pcb_manager.track_inactivity()
-        print(self.pcb_manager.track_inactivity())
+
 
     def update_inactivity(self):
         self.pcb_manager.update_inactivity()
-        print(self.pcb_manager.update_inactivity())
+
 
     def track_used(self):
         self.pcb_manager.track_used()
-        print(self.pcb_manager.track_used())
 
     def delete_inactive_slots(self):
         self.pcb_manager.delete_inactive_slots()
 
     def schedule_process_all(self):
-        print(self.scheduler_manager.schedule_process_all())
         return self.scheduler_manager.schedule_process_all()
 
     def process_to_run(self):
-        print(self.scheduler_manager.process_to_run())
         return self.scheduler_manager.process_to_run()
 
+    def get_extension(self, address:int) -> str | None:
+        """
+        Getter function for last file in folder extension
+        :param address:
+        :return: Extension (format=str)
+        """
+        if self.ram[address] == 0:
+            return
+        case_directory : dict = self.ram[address][1]
+        last_case = case_directory[list(case_directory)[-1]]
+        try:
+            uncrypt = int(last_case, 2) #with the last_case being in format str(bin(x))[2:]
+        except ValueError:
+            return None
+        match uncrypt:
+            case 0:
+                return ".txt"
+            case 1:
+                return ".wav"
+            case 2:
+                return ".exe"
+
+
+
+#LOGIC FOR EXECUTION BELOW HERE
     def execute_path(self, path:str, extension:str):
         file_path = Path.home() / "Downloads" / f"{path}{extension}"
         print(file_path)
@@ -68,6 +96,7 @@ class Manager:
                 print(content)
         else:
             print("Could not find path in host OS")
+
     def exec_txt(self, file_name, process_name):
         next_process_to_run = self.directory_manager.locate_object(process_name)
         decrypt = []
@@ -193,7 +222,6 @@ class Manager:
 
 
     def populate_status(self):
-        print(self.scheduler_manager.populate_status())
         return self.scheduler_manager.populate_status()
 
     def output_pop(self):
@@ -201,10 +229,9 @@ class Manager:
 
     def loop_status(self):
         while self.populate_status():
-            print("running")
             self.populate_status()
 
-
+#Thread management below here
     def exec_pointers(self, subfile_name:str = None, disk_address:int=None,):
         pointers=list(list(self.directory_manager.pointers.values()))
         print(pointers)
@@ -322,8 +349,8 @@ class Manager:
         tupdater=Thread(target=self.auto_update_file, args=("0x006", ))
         tupdater.start()
 
-    def garbage_collection_filer(self):
-        while True: #TODO refactor similar to thread 0x006
+    def garbage_collection_filer(self, runtime_arg:str = True):
+        while self.system_monitor.thread_id[runtime_arg] != 0: #TODO refactor similar to thread 0x006
             try:
                 for i in range(self.ram.len_RAM()-1):
                     v=self.ram[i]
@@ -341,5 +368,5 @@ class Manager:
     def garbage_collection_thread(self):
         self.system_monitor.create_thread_id("0x007")
         self.logger.info("Started thread 0x007 for RAM garbage collection")
-        gcthread = Thread(target=self.garbage_collection_filer)
+        gcthread = Thread(target=self.garbage_collection_filer, args=("0x007", ))
         gcthread.start()
