@@ -34,7 +34,7 @@ class Compiler:
                 self.lines:list = [line.strip() for line in file]
         else:
             #self.lines: list = ["OP 2*3-2", "OP 12*456-2", "OP ((237232/4544-2*5)+2)/4"]
-            self.lines: list = ["SET x=3*(12*4*(5-6))-(18*(4+2))/5"]
+            self.lines: list = ["SET x=3*(-12*4*(5- 6))-(18*(4+2))/5"]
         for i,value in enumerate(self.lines):
             keyword = value.split()[0]
             self.mapper[keyword](i, len(keyword))
@@ -58,8 +58,7 @@ class Compiler:
     def __do_op(self, line_number: str, keyword_len: int = 2):
         line = self.lines[line_number]
         body = line[keyword_len:]
-        print(body)
-        body = re.findall(r'\d+|[\+\-\*/\(\)]', body)
+        body = re.findall(r'-?\d+|[\+\-\*/\(\)]', body)
         operator_stack = []
         number_queue = []
         output_queue_ops=[]
@@ -90,9 +89,8 @@ class Compiler:
                                 operator_stack.pop(ctn)
                                 break
                             if obj!="(" and obj!=")":
-                                output_queue_ops.append(obj)
+                                output_queue_val.append(obj)
                             operator_stack.pop(ctn)
-                        continue
                     if v not in excluded:
                         if operator_stack[-1] in excluded:
                             operator_stack.append(v)
@@ -100,39 +98,30 @@ class Compiler:
                         if self.all_ops[v]>self.all_ops[operator_stack[-1]]:
                             operator_stack.append(v)
                         else:
-                            #output_queue_ops.append(v)
+                            #output_queue_val.append(v)
                             while operator_stack:
                                 if operator_stack[-1] in self.all_ops.keys():
-                                    output_queue_ops.append(operator_stack[-1])
+                                    output_queue_val.append(operator_stack[-1])
                                     operator_stack.pop(-1)
                                 else:
                                     break
                             operator_stack.append(v)
                 else:
                     operator_stack.append(v)
-
-        print('op stack before end', operator_stack)
         while len(operator_stack)>0:
-            output_queue_ops.append(operator_stack[-1])
+            output_queue_val.append(operator_stack[-1])
             operator_stack.pop(-1)
-        """final_output = list(output_queue_val)
-        for i in range(len(output_queue_ops)):
-            final_output.append(output_queue_ops[i])"""
-        ops_counter=0
-        final=0
+        stack1 =[]
+        for i,v in enumerate(output_queue_val):
+            if not v in self.all_ops.keys():
+                stack1.append(v)
+            else:
+                res=self.operating_functions[v](float(stack1[-2]), float(stack1[-1]))
+                stack1.pop(-1)
+                stack1.pop(-1)
+                stack1.append(res)
 
-        print(output_queue_val)
-        print(output_queue_ops)
-
-        """for i, v in enumerate(output_queue_val):
-            if i+1<len(output_queue_val):
-                final+=self.operating_functions[output_queue_ops[ops_counter]](float(v), float(output_queue_val[i+1]))
-                print(final)
-        print(final)"""
-        #print(number_queue, operator_stack, output_queue_ops)
-
-
-
+        return stack1[0]
 
     @staticmethod
     def __run_clause(body:list, spec:list):
