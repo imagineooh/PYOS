@@ -7,16 +7,22 @@ class Compiler:
         self.file = None
         self.lines = None
         self.operating_functions = {
-            "+": lambda x, y: [str(x+y)],
-            "-": lambda x, y: [str(x - y)],
-            "/": lambda x, y: [str(x / y)],
-            "*": lambda x, y: [str(x * y)]
+            "+": lambda x, y: float(x+y),
+            "-": lambda x, y: float(x - y),
+            "/": lambda x, y: float(x / y),
+            "*": lambda x, y: float(x * y)
         }
         self.mapper = {
             "SET":self.__do_set,
             "OP":self.__do_op,
         }
         self.variable_status={}
+        self.all_ops= {"+": 1,
+                       "-": 1,
+                       "*": 2,
+                       "/":2,
+                       }
+
 
     def compile(self, inputed_file: str = None):
         """
@@ -47,60 +53,86 @@ class Compiler:
         #self.directory_manager.add_empty_folder(variable_name, variable_value, 0)
         print(f"{variable_name} = {variable_value}")
 
-    def __do_op(self, line_number:str, keyword_len:int = 2):
-        line = self.lines[line_number]
-        print("evaluating line", line)
-        body = re.findall(r'\d+|[\+\-\*/\(\)]',line[keyword_len:])
-        special_charaters=['(',')']
 
-        true_len=len(body)
-        for k in range(true_len):
-            try:
-                for i, value in enumerate(body):
-                    if body[i-1] in special_charaters or body[i+1] in special_charaters:
-                        body = self.__run_clause(body, special_charaters)
-                        print(body)
+
+    def __do_op(self, line_number: str, keyword_len: int = 2):
+        line = self.lines[line_number]
+        body = line[keyword_len:]
+        print(body)
+        body = re.findall(r'\d+|[\+\-\*/\(\)]', body)
+        operator_stack = []
+        number_queue = []
+        output_queue_ops=[]
+        output_queue_val = []
+        excluded = ['(', ')']
+        for i, v in enumerate(body):
+            all_ops_list = list(self.all_ops.keys())
+            if i==0:
+                if v in self.all_ops:
+                    operator_stack.append(v)
+                elif v not in self.all_ops and v not in excluded:
+                    output_queue_val.append(v)
+            else:
+                if v not in all_ops_list and v not in excluded:
+                    output_queue_val.append(v)
+                    continue
+                if len(operator_stack)>0:
+                    if v == "(":
+                        operator_stack.append(v)
                         continue
-                    if value=='*' or value == "/":
-                        body[i-1:i+2] = self.operating_functions[value](float(body[i - 1]), float(body[i + 1]))
-                        print(body)
-                        break
-                for i, value in enumerate(body):
-                    if body[i-1] in special_charaters or body[i+1] in special_charaters:
-                        body = self.__run_clause(body, special_charaters)
-                        print(body)
+                    if v==")":
+                        ctn = -1
+                        for _ in range(len(operator_stack)):
+                            if not operator_stack:
+                                break
+                            obj = operator_stack[ctn]
+                            if obj == "(":
+                                operator_stack.pop(ctn)
+                                break
+                            if obj!="(" and obj!=")":
+                                output_queue_ops.append(obj)
+                            operator_stack.pop(ctn)
                         continue
-                    if value=='+' or value == "-":
-                        if i+2<len(body) and i-1>0:
-                            if body[i-2] == "*" or body[i+2]=="*":
-                                continue
-                            if body[i-2] == "/" or body[i+2]=="/":
-                                continue
+                    if v not in excluded:
+                        if operator_stack[-1] in excluded:
+                            operator_stack.append(v)
+                            continue
+                        if self.all_ops[v]>self.all_ops[operator_stack[-1]]:
+                            operator_stack.append(v)
                         else:
-                            if body[i-2] == "*":
-                                continue
-                            if body[i-2] == "/":
-                                continue
-                        body[i - 1:i + 2] = self.operating_functions[value](float(body[i - 1]), float(body[i + 1]))
-                        print(body)
-                        break
-            except ValueError:
-                if body[k] in special_charaters:
-                    body.pop(k)
-            except IndexError:
-                continue
-        body = [x for x in body if x not in special_charaters]
-        for _ in range(len(body)):
-            for i, value in enumerate(body):
-                if value == '*' or value == "/":
-                    body[i - 1:i + 2] = self.operating_functions[value](float(body[i - 1]), float(body[i + 1]))
-                    break
-            for i, value in enumerate(body):
-                if value == '+' or value == "-":
-                    body[i - 1:i + 2] = self.operating_functions[value](float(body[i - 1]), float(body[i + 1]))
-                    break
-        result = float(body[0])
-        return result
+                            #output_queue_ops.append(v)
+                            while operator_stack:
+                                if operator_stack[-1] in self.all_ops.keys():
+                                    output_queue_ops.append(operator_stack[-1])
+                                    operator_stack.pop(-1)
+                                else:
+                                    break
+                            operator_stack.append(v)
+                else:
+                    operator_stack.append(v)
+
+        print('op stack before end', operator_stack)
+        while len(operator_stack)>0:
+            output_queue_ops.append(operator_stack[-1])
+            operator_stack.pop(-1)
+        """final_output = list(output_queue_val)
+        for i in range(len(output_queue_ops)):
+            final_output.append(output_queue_ops[i])"""
+        ops_counter=0
+        final=0
+
+        print(output_queue_val)
+        print(output_queue_ops)
+
+        """for i, v in enumerate(output_queue_val):
+            if i+1<len(output_queue_val):
+                final+=self.operating_functions[output_queue_ops[ops_counter]](float(v), float(output_queue_val[i+1]))
+                print(final)
+        print(final)"""
+        #print(number_queue, operator_stack, output_queue_ops)
+
+
+
 
     @staticmethod
     def __run_clause(body:list, spec:list):
