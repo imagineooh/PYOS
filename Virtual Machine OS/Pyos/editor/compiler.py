@@ -58,92 +58,48 @@ class Compiler:
     def __do_op(self, line_number: str, keyword_len: int = 2):
         line = self.lines[line_number]
         body = line[keyword_len:]
-        body = re.findall(r'-?\d+|[\+\-\*/\(\)]', body)
-        operator_stack = []
-        number_queue = []
-        output_queue_ops=[]
-        output_queue_val = []
-        excluded = ['(', ')']
-        for i, v in enumerate(body):
-            all_ops_list = list(self.all_ops.keys())
-            if i==0:
-                if v in self.all_ops:
-                    operator_stack.append(v)
-                elif v not in self.all_ops and v not in excluded:
-                    output_queue_val.append(v)
-            else:
-                if v not in all_ops_list and v not in excluded:
-                    output_queue_val.append(v)
-                    continue
-                if len(operator_stack)>0:
-                    if v == "(":
-                        operator_stack.append(v)
-                        continue
-                    if v==")":
-                        ctn = -1
-                        for _ in range(len(operator_stack)):
-                            if not operator_stack:
-                                break
-                            obj = operator_stack[ctn]
-                            if obj == "(":
-                                operator_stack.pop(ctn)
-                                break
-                            if obj!="(" and obj!=")":
-                                output_queue_val.append(obj)
-                            operator_stack.pop(ctn)
-                    if v not in excluded:
-                        if operator_stack[-1] in excluded:
-                            operator_stack.append(v)
-                            continue
-                        if self.all_ops[v]>self.all_ops[operator_stack[-1]]:
-                            operator_stack.append(v)
-                        else:
-                            #output_queue_val.append(v)
-                            while operator_stack:
-                                if operator_stack[-1] in self.all_ops.keys():
-                                    output_queue_val.append(operator_stack[-1])
-                                    operator_stack.pop(-1)
-                                else:
-                                    break
-                            operator_stack.append(v)
-                else:
-                    operator_stack.append(v)
-        while len(operator_stack)>0:
-            output_queue_val.append(operator_stack[-1])
-            operator_stack.pop(-1)
-        stack1 =[]
-        for i,v in enumerate(output_queue_val):
-            if not v in self.all_ops.keys():
-                stack1.append(v)
-            else:
-                res=self.operating_functions[v](float(stack1[-2]), float(stack1[-1]))
-                stack1.pop(-1)
-                stack1.pop(-1)
-                stack1.append(res)
+        body = list(re.findall(r'-?\d+|[\+\-\*/\(\)]', body))
+        proc= self.all_ops
+        mapper = self.operating_functions
+        op = []
+        out = []
+        prev = 0
+        part = ["(", ")"]
+        for token in body:
+            if not token in proc.keys() and not token in part:
+                out.append(token)
+                continue
+            if token == ')':
+                while op and op[-1] != '(':
+                    out.append(op.pop())
+                if op:
+                    op.pop()
+                continue
+            if token == '(':
+                op.append(token)
+                continue
+            if proc[token] >= prev:
+                op.append(token)
+                prev = proc[token]
+                continue
+            elif proc[token] < prev:
+                while op and op[-1] in proc.keys():
+                    out.append(op.pop())
+                op.append(token)
+        if len(op)>0:
+            for _ in range(len(op)):
+                out.append(op.pop(-1))
+        stack = []
+        for i, v in enumerate(out):
+            if v not in proc.keys():
+                stack.append(v)
+                continue
+            result = mapper[v](float(stack[-2]), float(stack[-1]))
+            stack.pop()
+            stack.pop()
+            stack.append(result)
+        return stack[0]
 
-        return stack1[0]
-
-    @staticmethod
-    def __run_clause(body:list, spec:list):
-        new_body  = list(body)
-        for _ in range(len(body)):
-            for i, v in enumerate(new_body):
-                if not v in spec:
-
-                    break
-                if new_body[i+2] in spec and i+2<len(new_body):
-                    new_body.pop(i)
-                    real_len = len(new_body)
-
-                    break
-                elif new_body[i+2] in spec and new_body[i+2]!=v:
-                    new_body.pop(i)
-                    new_body.pop(i+2)
-                    real_len = len(new_body)
-
-                    break
-                
-        return new_body
 bas_comp = Compiler()
 bas_comp.compile()
 
