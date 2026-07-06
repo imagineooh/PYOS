@@ -89,7 +89,7 @@ class Inode:
             self.auth_checking_status = False
             smallest_index=min(self.free_reserved_spots)
             self.auth_checking_status = True
-            self.logger.warning(f"smallest index found for auth processes is {smallest_index}")
+            #self.logger.warning(f"smallest index found for auth processes is {smallest_index}")
             return smallest_index
         except ValueError:
             self.logger.warning("List free_reserved_spots is empty, resetting")
