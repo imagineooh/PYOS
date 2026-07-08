@@ -1,9 +1,23 @@
 import re
 
+
+class CustomExceptionHandler:
+    def __init__(self):
+        pass
+    @classmethod
+    def raiseerror(cls, message, line_number):
+        print(f"{cls.__name__} \n Error on line {line_number}: '{message}'")
+
+class ConstChangeError(CustomExceptionHandler):
+    def __init__(self):
+        super().__init__()
+
 class Compiler:
-    def __init__(self, ram = None, directory_manager= None, inputed_file:str=None):
+
+    def __init__(self, errhand, ram = None, directory_manager= None, inputed_file:str=None):
         self.ram = ram
         self.directory_manager = directory_manager
+        self.error_handler = errhand
         self.file = None
         self.lines = None
         self.operating_functions = {
@@ -47,7 +61,6 @@ class Compiler:
         Hidden setter method for adding variable in memory from compiler
         :param line_number: str, line read for setting
         :param keyword_len: len of the keyword arg
-        :param constarg: boolean for const status of var, True for const, False for simple var
         :return: None
         """
         line = self.lines[line_number]
@@ -56,6 +69,7 @@ class Compiler:
         variable_name = tokens[0].strip()
         if variable_name in self.variable_status.keys():
             if self.variable_status[variable_name]=="const":
+                ConstChangeError.raiseerror(message=body, line_number=line_number)
                 return
         keyword=line[:keyword_len]
         print(keyword)
@@ -115,6 +129,8 @@ class Compiler:
             stack.append(result)
         return stack[0]
 
-bas_comp = Compiler()
+bas_comp = Compiler(CustomExceptionHandler)
 bas_comp.compile()
+
+
 
