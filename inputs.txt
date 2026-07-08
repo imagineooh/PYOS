@@ -1,0 +1,13 @@
+user
+pass
+hostmig Notepad .exe file1 3 stand
+ptmany 3
+ptexec sfjhsjhfsjfhsjdfh
+
+---RUN AFTER---
+lsdisk
+df
+end
+
+
+the expected output from notepad: hsfjhfsjh
