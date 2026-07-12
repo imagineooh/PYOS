@@ -23,6 +23,12 @@ class FileSystem:
             self.inode_manager.add_inode(address, 'folder', folder_name)
             self.ram[address][1][first_file_name]=folder_data
 
+    def construct_variable(self, var_name:str, var_value:str, address:int):
+        if self.ram[address]!=0:
+            return
+        self.inode_manager.add_inode(address, 'variable', var_name)
+        self.ram[address][1].append(var_value)
+
     def locate_object(self, name):
         return self.inode_manager.locate_object(name)
 

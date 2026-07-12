@@ -39,6 +39,13 @@ class Directory:
         self.file_manager.construct_folder(foldername,folderdata, address, firstfilename)
         self.update_PID()
 
+    def add_variable(self, var_name:str, var_value:str, address:int):
+        if self.inode_manager.file_exists(var_name):
+            print(f"File {var_name} already exists in directory")
+            return
+        self.file_manager.construct_variable(var_name, var_value, address)
+        self.update_PID()
+
     def add_inode(self, address: int, type_file:str, filename: str):
         self.inode_manager.add_inode(address, type_file, filename)
 
