@@ -65,7 +65,7 @@ class Compiler:
         """
         line = self.lines[line_number]
         body = line[keyword_len:]
-        tokens = body.split("=", 1)
+        tokens = body.split("=")
         variable_name = tokens[0].strip()
         if variable_name in self.variable_status.keys():
             if self.variable_status[variable_name]=="const":
