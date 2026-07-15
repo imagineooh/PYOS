@@ -79,7 +79,7 @@ class Compiler:
             self.variable_status[variable_name] = "var"
         offset = keyword_len + len(variable_name)+2
         variable_value = self.__do_op(line_number, offset)
-        #self.directory_manager.add_empty_folder(variable_name, variable_value, 0)
+        self.directory_manager.add_variable(variable_name, variable_value, 0)
         print(f"{variable_name} = {variable_value}")
 
 

@@ -46,6 +46,13 @@ class Directory:
         self.file_manager.construct_variable(var_name, var_value, address)
         self.update_PID()
 
+    def vfree_spot(self, local:bool = False)->int:
+        """
+        Returns index for commiting the
+        :param local: Bool, False if global, True if local
+        :return:
+        """
+        pass
     def add_inode(self, address: int, type_file:str, filename: str):
         self.inode_manager.add_inode(address, type_file, filename)
 

@@ -12,7 +12,7 @@ from inode import Inode, ReservedPointingError
 from system import System, OverclockError
 import sys
 import logging
-
+from compiler import Compiler
 
 class TameShell():
     intro = "Welcome to TameOS! Type help <command> to get help on a command.\n"
