@@ -5,3 +5,4 @@ from PCB import PCB
 from storage import Storage
 from scheduler import Scheduler
 from manager import Manager
+from compiler import Compiler, CustomExceptionHandler

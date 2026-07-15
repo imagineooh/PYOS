@@ -25,7 +25,7 @@ class FileSystem:
 
     def construct_variable(self, var_name:str, var_value:str, address:int):
         if self.ram[address]!=0:
-            return
+            self.ram[address][1].pop()
         self.inode_manager.add_inode(address, 'variable', var_name)
         self.ram[address][1].append(var_value)
 

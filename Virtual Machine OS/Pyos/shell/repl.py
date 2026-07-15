@@ -12,7 +12,7 @@ from inode import Inode, ReservedPointingError
 from system import System, OverclockError
 import sys
 import logging
-from compiler import Compiler
+from compiler import Compiler, CustomExceptionHandler
 
 class TameShell():
     intro = "Welcome to TameOS! Type help <command> to get help on a command.\n"
@@ -48,6 +48,8 @@ class TameShell():
         self.directory_manager.check_for_duplicates()
         self.process_manager.aut_update_thread() #testing for safe production
         self.process_manager.garbage_collection_thread() #testing for safe production
+        bas_comp = Compiler(CustomExceptionHandler, self.ram, self.directory_manager)
+        bas_comp.compile()
         self.commands_dict={
             "mkdir" : self.directory_manager.add_empty_folder,
             "mkfolder" : self.directory_manager.add_folder,

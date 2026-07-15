@@ -14,7 +14,7 @@ class ConstChangeError(CustomExceptionHandler):
 
 class Compiler:
 
-    def __init__(self, errhand, ram = None, directory_manager= None, inputed_file:str=None):
+    def __init__(self, errhand, ram, directory_manager, inputed_file:str=None):
         self.ram = ram
         self.directory_manager = directory_manager
         self.error_handler = errhand
@@ -50,7 +50,8 @@ class Compiler:
         else:
             #self.lines: list = ["OP 2*3-2", "OP 12*456-2", "OP ((237232/4544-2*5)+2)/4"]
             self.lines: list = ["CONST x=3*(-12*4*(5- 6))-(18*(4+2))/5",
-                                "CONST x=5"]
+                                "CONST x=5",
+                                "SET y = 7"]
         for i,value in enumerate(self.lines):
             keyword = value.split()[0]
             self.mapper[keyword](i, len(keyword))
@@ -71,6 +72,10 @@ class Compiler:
             if self.variable_status[variable_name]=="const":
                 ConstChangeError.raiseerror(message=body, line_number=line_number)
                 return
+            else:
+                prevar_stat = "var"
+        else:
+            prevar_stat = "var"
         keyword=line[:keyword_len]
         print(keyword)
         if keyword=="CONST":
@@ -79,7 +84,8 @@ class Compiler:
             self.variable_status[variable_name] = "var"
         offset = keyword_len + len(variable_name)+2
         variable_value = self.__do_op(line_number, offset)
-        self.directory_manager.add_variable(variable_name, variable_value, 0)
+        commit_address = self.directory_manager.vfree_spot(local = False)
+        self.directory_manager.add_variable(variable_name, variable_value, commit_address, var_type = prevar_stat)
         print(f"{variable_name} = {variable_value}")
 
 
@@ -129,8 +135,8 @@ class Compiler:
             stack.append(result)
         return stack[0]
 
-bas_comp = Compiler(CustomExceptionHandler)
-bas_comp.compile()
+"""bas_comp = Compiler(CustomExceptionHandler)
+bas_comp.compile()"""
 
 
 

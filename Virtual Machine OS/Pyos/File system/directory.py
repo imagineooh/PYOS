@@ -13,6 +13,10 @@ class Directory:
         self.pointers=[]
         self.duplicates=[] #returns PID of duplicates in RAM
         self.storage_pointers = {}
+        self.base_var_spots = [i for i in range(10,110)]
+        self.var_heap = [i for i in range(110, 150)]
+        self.free_var_spots=list(self.base_var_spots)
+
 
     class Folder:
         def __init__(self, number, name):
@@ -39,9 +43,9 @@ class Directory:
         self.file_manager.construct_folder(foldername,folderdata, address, firstfilename)
         self.update_PID()
 
-    def add_variable(self, var_name:str, var_value:str, address:int):
-        if self.inode_manager.file_exists(var_name):
-            print(f"File {var_name} already exists in directory")
+    def add_variable(self, var_name:str, var_value:str, address:int, var_type:str | None = None):
+        if self.inode_manager.file_exists(var_name) and var_type=="const":
+            print(f"File {var_name} already exists in directory, spawned in DIR")
             return
         self.file_manager.construct_variable(var_name, var_value, address)
         self.update_PID()
@@ -50,9 +54,12 @@ class Directory:
         """
         Returns index for commiting the
         :param local: Bool, False if global, True if local
-        :return:
+        :return: index
         """
-        pass
+        if not local:
+            found_address = self.free_var_spots.pop(self.free_var_spots.index(min(self.free_var_spots)))
+            return found_address
+        return self.var_heap.pop(self.var_heap.index(min(self.var_heap)))
     def add_inode(self, address: int, type_file:str, filename: str):
         self.inode_manager.add_inode(address, type_file, filename)
 
