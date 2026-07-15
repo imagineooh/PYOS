@@ -60,6 +60,7 @@ class Directory:
             found_address = self.free_var_spots.pop(self.free_var_spots.index(min(self.free_var_spots)))
             return found_address
         return self.var_heap.pop(self.var_heap.index(min(self.var_heap)))
+
     def add_inode(self, address: int, type_file:str, filename: str):
         self.inode_manager.add_inode(address, type_file, filename)
 
@@ -141,7 +142,8 @@ class Directory:
                     object_name=self.ram[i][0][2]
                     if object_name in checked:
                         self.duplicates.append(self.ram[i][0][0])
-                        print(f"found duplicate with PID: {self.ram[i][0][0]} in RAM")
+                        #print(f"found duplicate with PID: {self.ram[i][0][0]} in RAM")
+                        self.delete_slots(i)
                     else:
                         checked.append(object_name)
             sleep(2)

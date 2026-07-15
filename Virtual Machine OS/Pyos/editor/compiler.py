@@ -30,6 +30,7 @@ class Compiler:
             "SET":self.__do_set,
             "CONST": self.__do_set,
             "OP":self.__do_op,
+            "VOID": self.__set_local,
         }
         self.variable_status={}
         self.all_ops= {"+": 1,
@@ -37,6 +38,7 @@ class Compiler:
                        "*": 2,
                        "/":2,
                        }
+        self.local_setting:bool = False
 
 
     def compile(self, inputed_file: str = None):
@@ -51,13 +53,27 @@ class Compiler:
             #self.lines: list = ["OP 2*3-2", "OP 12*456-2", "OP ((237232/4544-2*5)+2)/4"]
             self.lines: list = ["CONST x=3*(-12*4*(5- 6))-(18*(4+2))/5",
                                 "CONST x=5",
-                                "SET y = 7"]
+                                "SET y = 7",
+                                "VOID {",
+                                "SET z = 8"
+                                "}"]
         for i,value in enumerate(self.lines):
             keyword = value.split()[0]
             self.mapper[keyword](i, len(keyword))
 
+    def __set_local(self, line_number:int, keyword_len:int = 4):
+        print(f"FOUND LINE NUMBER{line_number}")
+        local_lines = self.lines[line_number+1:]
+        self.local_setting = True
+        for i, v in enumerate(local_lines):
+            if v == "}":
+                self.local_setting = False
+                break
+            keyword = v.split()[0]
+            print("doing op on line", i+line_number+1)
+            self.mapper[keyword](i+line_number+1, len(keyword))
 
-    def __do_set(self, line_number:str, keyword_len:int = 3) ->None:
+    def __do_set(self, line_number:int, keyword_len:int = 3) ->None:
         """
         Hidden setter method for adding variable in memory from compiler
         :param line_number: str, line read for setting
@@ -84,8 +100,12 @@ class Compiler:
             self.variable_status[variable_name] = "var"
         offset = keyword_len + len(variable_name)+2
         variable_value = self.__do_op(line_number, offset)
-        commit_address = self.directory_manager.vfree_spot(local = False)
+        if self.local_setting:
+            commit_address = self.directory_manager.vfree_spot(local = True)
+        else:
+            commit_address = self.directory_manager.vfree_spot(local = False)
         self.directory_manager.add_variable(variable_name, variable_value, commit_address, var_type = prevar_stat)
+        print(f"added var {variable_name} to {commit_address}")
         print(f"{variable_name} = {variable_value}")
 
 
@@ -94,6 +114,8 @@ class Compiler:
         line = self.lines[line_number]
         body = line[keyword_len:]
         body = list(re.findall(r'-?\d+|[\+\-\*/\(\)]', body))
+        """if len(body)==1:
+            return body[0]"""
         proc= self.all_ops
         mapper = self.operating_functions
         op = []
@@ -133,6 +155,7 @@ class Compiler:
             stack.pop()
             stack.pop()
             stack.append(result)
+        print(stack)
         return stack[0]
 
 """bas_comp = Compiler(CustomExceptionHandler)
