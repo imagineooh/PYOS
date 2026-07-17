@@ -39,6 +39,7 @@ class Compiler:
                        "/":2,
                        }
         self.local_setting:bool = False
+        self.checked=[]
 
 
     def compile(self, inputed_file: str = None):
@@ -55,22 +56,29 @@ class Compiler:
                                 "CONST x=5",
                                 "SET y = 7",
                                 "VOID {",
-                                "SET z = 8"
-                                "}"]
+                                "SET z = 8",
+                                "SET j = hello",
+                                "}",
+                                "SET y=10"]
         for i,value in enumerate(self.lines):
+            if i in self.checked:
+                continue
             keyword = value.split()[0]
+            if keyword not in self.mapper.keys():
+                continue
             self.mapper[keyword](i, len(keyword))
+            self.checked.append(i)
 
     def __set_local(self, line_number:int, keyword_len:int = 4):
         print(f"FOUND LINE NUMBER{line_number}")
         local_lines = self.lines[line_number+1:]
         self.local_setting = True
         for i, v in enumerate(local_lines):
+            self.checked.append(i+line_number+1)
             if v == "}":
                 self.local_setting = False
                 break
             keyword = v.split()[0]
-            print("doing op on line", i+line_number+1)
             self.mapper[keyword](i+line_number+1, len(keyword))
 
     def __do_set(self, line_number:int, keyword_len:int = 3) ->None:
@@ -83,6 +91,10 @@ class Compiler:
         line = self.lines[line_number]
         body = line[keyword_len:]
         tokens = body.split("=")
+        """try:
+            tester = int(tokens[1])
+        except TypeError:
+            return tokens[1]"""
         variable_name = tokens[0].strip()
         if variable_name in self.variable_status.keys():
             if self.variable_status[variable_name]=="const":
@@ -93,7 +105,6 @@ class Compiler:
         else:
             prevar_stat = "var"
         keyword=line[:keyword_len]
-        print(keyword)
         if keyword=="CONST":
             self.variable_status[variable_name] = "const"
         else:
@@ -105,15 +116,16 @@ class Compiler:
         else:
             commit_address = self.directory_manager.vfree_spot(local = False)
         self.directory_manager.add_variable(variable_name, variable_value, commit_address, var_type = prevar_stat)
-        print(f"added var {variable_name} to {commit_address}")
-        print(f"{variable_name} = {variable_value}")
+
 
 
 
     def __do_op(self, line_number: str, keyword_len: int = 2):
         line = self.lines[line_number]
-        body = line[keyword_len:]
-        body = list(re.findall(r'-?\d+|[\+\-\*/\(\)]', body))
+        body_first = line[keyword_len:]
+        body = list(re.findall(r'-?\d+|[\+\-\*/\(\)]', body_first))
+        if len(body)==0:
+            return body_first.split("=")[1].strip()
         """if len(body)==1:
             return body[0]"""
         proc= self.all_ops
@@ -155,8 +167,12 @@ class Compiler:
             stack.pop()
             stack.pop()
             stack.append(result)
-        print(stack)
-        return stack[0]
+        try:
+            return float(stack[0])
+        except ValueError:
+            return stack[0]
+        except IndexError:
+            return body[0]
 
 """bas_comp = Compiler(CustomExceptionHandler)
 bas_comp.compile()"""
