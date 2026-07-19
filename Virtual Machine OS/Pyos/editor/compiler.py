@@ -77,6 +77,7 @@ class Compiler:
             self.checked.append(i+line_number+1)
             if v == "}":
                 self.local_setting = False
+                self.directory_manager.free_heap()
                 break
             keyword = v.split()[0]
             self.mapper[keyword](i+line_number+1, len(keyword))

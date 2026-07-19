@@ -282,6 +282,7 @@ class Manager:
                             def fetcher(subfile_name, index_ram):
                                 #pause_event.wait()
                                 self.migrate_host_ram(subfile_name, '.txt', 'opened_file', index_ram)
+                            self.scheduler_manager.mark_as_active(index_ram)
                             t1 = threading.Thread(target=self.exec_exe,
                                                   args=(list(self.ram[index_ram][1].values())[DictLen][-4], index_ram, subfile_name))
                             tfetcher = threading.Thread(target=fetcher, args=(subfile_name, index_ram))

@@ -62,6 +62,12 @@ class Directory:
             return found_address
         return self.free_var_heap.pop(self.free_var_heap.index(min(self.free_var_heap)))
 
+    def free_heap(self):
+        for i, v in enumerate(self.var_heap):
+            if self.ram[v]==0:
+                continue
+            self.ram[v]=0
+
     def add_inode(self, address: int, type_file:str, filename: str):
         self.inode_manager.add_inode(address, type_file, filename)
 
