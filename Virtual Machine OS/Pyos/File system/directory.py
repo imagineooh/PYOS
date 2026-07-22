@@ -1,12 +1,13 @@
-from inode import Inode
+from inode import Inode, NonPresentAuthIDError
 from filesystem import FileSystem
 from threading import Thread
 from time import sleep
 
 class Directory:
-    def __init__(self,  ram, storage, inode):
+    def __init__(self,  ram, storage, inode, username):
         self.ram = ram
         self.inode_manager=inode
+        self.username=username
         self.ram.sign_in('F', 'pas')
         self.ram.add_user('F', 'pas')
         self.file_manager=FileSystem(ram, storage, self.inode_manager)
@@ -17,7 +18,10 @@ class Directory:
         self.var_heap = [i for i in range(110, 150)]
         self.free_var_spots=list(self.base_var_spots)
         self.free_var_heap = list(self.var_heap)
-
+        self.base_prompt = f"C://TameOS/user:{self.username}/terminal"
+        self.current_working_dir=f"{self.base_prompt}"
+        self.last_directory = None
+        self.cur_prompt=f"{self.current_working_dir}: "
 
     class Folder:
         def __init__(self, number, name):
@@ -135,6 +139,28 @@ class Directory:
         self.pointers=pointers
         return pointers
 
+    def change_directory(self, directory_name:str):
+        if directory_name == "reset":
+            self.last_directory = None
+            self.current_working_dir = self.base_prompt
+        try:
+            if self.last_directory is None:
+                print('we are in true rn')
+                directory_address = self.locate_object(directory_name)
+                self.current_working_dir=f"{self.current_working_dir}/{directory_name}"
+                self.cur_prompt = f"{self.current_working_dir}: "
+                self.pointermult([directory_address])
+                self.last_directory = directory_name
+            else:
+                last_address=self.locate_object(self.last_directory)
+                if directory_name not in self.ram[last_address][1].keys():
+                    raise KeyError()
+                self.current_working_dir=f"{self.current_working_dir}/{directory_name}"
+                self.cur_prompt = f"{self.current_working_dir}: "
+                self.last_directory = directory_name
+        except KeyError:
+            print(f"Could not find subdirectory {directory_name} in {self.last_directory}")
+
     def check_for_duplicates_thread(self):
         """
         Is a threading.Thread type used for looking for duplicate files in RAM
@@ -171,3 +197,6 @@ class Directory:
 
     def smauthID(self):
         return self.inode_manager.get_smallest_reserved()
+
+class NonPresentSubDirError(Exception):
+    pass

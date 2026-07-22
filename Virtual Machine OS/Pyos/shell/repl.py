@@ -27,7 +27,7 @@ class TameShell():
             print('Invalid credentials')
             self.authenticated = False
             return
-        self.prompt = f"C://TameOS/user:{self.username}/terminal: "
+        #self.prompt = f"C://TameOS/user:{self.username}/terminal: "
         self.logger = logging.getLogger(f"{__name__}.{self.__class__.__name__}")
         self.logger.info(f"User {self.username} has successfully logged in")
         self.storage = storage
@@ -37,7 +37,7 @@ class TameShell():
         self.inode.reserve_spaces()
         self.inode.init_auth()
         self.inode.update_free_spots_thread()
-        self.directory_manager=Directory(ram, storage, self.inode)
+        self.directory_manager=Directory(ram, storage, self.inode, self.username)
         self.process_manager = Manager(ram, self.directory_manager, self.system_manager, storage)
         self.system_manager.process_manager=self.process_manager
         self.pcb_manager = PCB(ram, self.directory_manager)
@@ -76,7 +76,8 @@ class TameShell():
             "refpopstat":self.process_manager.populate_status,
             "popstat": self.process_manager.output_pop,
             "ptmany":self.directory_manager.pointermult,
-            "ptexec":self.process_manager.exec_pointers
+            "ptexec":self.process_manager.exec_pointers,
+            "cd":self.directory_manager.change_directory
         }
         self.conversion_table={
             str:lambda x:str(x),
@@ -148,7 +149,7 @@ class TameShell():
             return
         while True:
             try:
-                arg = input(self.prompt)
+                arg = input(self.directory_manager.cur_prompt)
                 if self.default(arg)==-1:
                     break
             except EOFError:
