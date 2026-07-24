@@ -282,6 +282,8 @@ class Manager:
                             def fetcher(subfile_name, index_ram):
                                 #pause_event.wait()
                                 self.migrate_host_ram(subfile_name, '.txt', 'opened_file', index_ram)
+                            #under here you have to explicitly mark the slot as inactive, and hope that the GC doesn't
+                            #check the slot during an operation, or stuff could happen. to be fixed ASAP
                             self.scheduler_manager.mark_as_inactive(index_ram)
                             t1 = threading.Thread(target=self.exec_exe,
                                                   args=(list(self.ram[index_ram][1].values())[DictLen][-4], index_ram, subfile_name))
