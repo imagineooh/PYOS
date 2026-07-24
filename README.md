@@ -23,7 +23,7 @@ And, don’t forget, the project is just getting started.
     In this case, the packaging info is the information of the audio sequence that the user migrated from the host OS, but not the data itself. The data has to be a bytearray, as stream.write can only handle bytelike objects.
   - The aut_update_file function:
     ```py
-    ef auto_update_file(self, runtime_arg:str):
+    def auto_update_file(self, runtime_arg:str):
         self.migrator_counter+=1
         #mig_name=f"0x001.{self.migrator_counter}"
         while self.system_monitor.thread_id[runtime_arg]!=0:
@@ -53,14 +53,15 @@ And, don’t forget, the project is just getting started.
     ```
     This function (which runs in a thread) activelly migrates the create file with ptexec (which adds the value to running_processes), and is considered the most CPU taking function, so it is the first to stop in case of the custom OverclockError.
     
-
-For a full list of all commands, simply type help after running either repl.py or main.py (repl safer for now, testing is based there)
+There are many more interesting function, which I will not mention here, as they would pollute the README, including the custom garbage collector and others.
+For a full list of all commands, simply type help after running main.py.
 
 ## How it works:
 TameOS functions on a working, fully custom-made shell (shell->repl.py, made with custom function inspection for faster metadata analysis and dispatch), custom made file system and directory, built on an Inode manager. The inode’s main job is to format the files in ram, so that the process manager (which runs files) maps exactly to the data it needs. 
 The process manager is the central piece of the computing unit: it dispatches the different multi pointers to threads, which run .txt, .wav and most importantly .exe files from the host OS. Once the files are migrated, TameOS takes full responsibility of file security and memory management for those files, as they do not require the user to fetch directly from the OS (TameOS does that on a separate thread automatically). There is a custom pager for inter-memory communication that was put in place, and handles migration between disk (non volatile memory) and RAM (volatile memory), and some portions of RAM are allocated to internal systems that ensure the proper functioning of the processing and filing. 
 For thread and CPU security, a custom made system monitor (with thread ID tracker) tracks cpu usage vs expected max usage, and has custom made exceptions to halt processes and save CPU performance. 
 
+To check out the system logs, there are two main .log files: TameOSlog for general logs and some memory, TameOSramlog for anything memory related.
 ## Struggles:
 The main struggles were getting the opening of executable files and and saving to local TameOS memory, as you will be able to see in the commit log history. 
 Dependency injection was also a struggle, as inter-communicating three separate systems with internal subsystems was a mess, and the use of OOP for this very struggle was mandatory.
@@ -68,11 +69,15 @@ Dependency injection was also a struggle, as inter-communicating three separate 
 ## GIT history:
 I recommend taking a look into the commit history for this project, as well as comments, as you can see my journey in learning this project.
 
+## In the making
+
+I am currently working on a custom compiler working on the Virtual OS, check it out in shell->compiler.
 
 ## Final note:
 
 This project took A LOT of my time, and I hope you will find it as exciting as me to discover the magical world of Virtual Operating System sandboxes. I am always free to contact on the issue or discussion if you want to contribute to this adventure, or simply as a question! 
 
 Thank you,
+
 Imagineooh
 
