@@ -14,6 +14,8 @@ class PCB:
 
     def update_inactivity(self):
         for address in self.directory_manager.return_all_used_slots():
+            if self.ram[address]==0:
+                continue
             if self.ram[address][1] == 0:
                 self.inactive_slots.append(address)
 
