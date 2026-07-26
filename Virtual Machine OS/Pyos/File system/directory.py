@@ -4,9 +4,10 @@ from threading import Thread
 from time import sleep
 
 class Directory:
-    def __init__(self,  ram, storage, inode, username):
+    def __init__(self,  ram, storage, inode, username, process_manager = None):
         self.ram = ram
         self.inode_manager=inode
+        self.process_manager = process_manager
         self.username=username
         self.ram.sign_in('F', 'pas')
         self.ram.add_user('F', 'pas')
@@ -161,6 +162,17 @@ class Directory:
         except KeyError:
             print(f"Could not find subdirectory {directory_name} in {self.last_directory}")
 
+    def nexec_files(self, subfile_name: str= None):
+        """
+        Short for normal execute of a file, optional argument for a subfile name in case of cd to
+        full directory instead of normal file
+        :param subfile_name: Optional, must be a valid file
+        :return: None
+        """
+        if subfile_name is not None:
+            self.process_manager.exec_pointers(subfile_name)
+        else:
+            self.process_manager.exec_pointers()
     def check_for_duplicates_thread(self):
         """
         Is a threading.Thread type used for looking for duplicate files in RAM

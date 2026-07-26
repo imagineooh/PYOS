@@ -37,8 +37,9 @@ class TameShell():
         self.inode.reserve_spaces()
         self.inode.init_auth()
         self.inode.update_free_spots_thread()
-        self.directory_manager=Directory(ram, storage, self.inode, self.username)
+        self.directory_manager = Directory(ram, storage, self.inode, self.username)
         self.process_manager = Manager(ram, self.directory_manager, self.system_manager, storage)
+        self.directory_manager.process_manager = self.process_manager
         self.system_manager.process_manager=self.process_manager
         self.pcb_manager = PCB(ram, self.directory_manager)
         self.process_manager.start_scheduling()
@@ -77,7 +78,8 @@ class TameShell():
             "popstat": self.process_manager.output_pop,
             "ptmany":self.directory_manager.pointermult,
             "ptexec":self.process_manager.exec_pointers,
-            "cd":self.directory_manager.change_directory
+            "cd":self.directory_manager.change_directory,
+            "cat":self.directory_manager.nexec_files
         }
         self.conversion_table={
             str:lambda x:str(x),

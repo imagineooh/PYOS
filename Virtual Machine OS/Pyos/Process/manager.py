@@ -97,10 +97,12 @@ class Manager:
         else:
             print("Could not find path in host OS")
 
-    def exec_txt(self, file_name, process_name):
-        next_process_to_run = self.directory_manager.locate_object(process_name)
+    def exec_txt(self, file_name, next_process_to_run, subfile_name=None):
         decrypt = []
-        data = list(self.ram[next_process_to_run][1][file_name][0])
+        if subfile_name:
+            data = list(self.ram[next_process_to_run][1][subfile_name][0])
+        else:
+            data = list(self.ram[next_process_to_run][1][file_name][0])
         for i in range(len(data)):
             decrypt.append(chr(int(data[i], 2)))
         self.scheduler_manager.mark_as_active(next_process_to_run)
@@ -248,7 +250,10 @@ class Manager:
                     if extension==str(bin(0))[2:]:
                         self.system_monitor.create_thread_id("0x002")
                         self.logger.info(f"Started thread 0x002 for decrypting txt files")
-                        t1 = threading.Thread(target=self.exec_txt, args=(k,ProcessName))
+                        if subfile_name is not None:
+                            t1 = threading.Thread(target=self.exec_txt, args=(k, index_ram,subfile_name))
+                        else:
+                            t1 = threading.Thread(target=self.exec_txt, args=(k,index_ram))
                         t1.start()
                         sleep(0.1)
                     elif extension==str(bin(1))[2:]: #DONE
@@ -333,7 +338,7 @@ class Manager:
                     print(f"Process name is {processname}")"""
                     self.migrate_host_ram(filename, ".txt", migratorname, setup_address)
                     data=self.ram[0][1][filename][:2]
-                    self.storage[storage_address][1][filename]=[data, 0]
+                    self.storage[storage_address][1][filename]=data  #[data, 0]
                 except RuntimeError as e:
                     self.logger.error("Runtime error in thread", exc_info=True)
                 except KeyError as e:
