@@ -23,7 +23,9 @@ def help(command:str=None):
         "comem":"Enables or Disables auto communication between RAM and Disk, if enabled, finished ram processes will automatically be written to Disk",
         "refpopstat":"refreshes the population status of ram",
         "popstat":'outputs population status of ram',
-        "ptmany":"point to one or many slots in ram"
+        "ptmany":"point to one or many slots in ram",
+        "cd" : "change directory to directory 'cd <directory>'",
+        "cat" : "execute file from highest dir"
     }
     if command is not None:
         if command in commands_help:
