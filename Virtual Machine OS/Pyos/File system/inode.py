@@ -56,7 +56,8 @@ class Inode:
                 raise AlreadyPresentAuthIDError("Already present authID in authorized processes")
             self.free_reserved_spots.append(element)
         except AlreadyPresentAuthIDError:
-            self.ramlogger.info(f"The element {element} which is a part of the prerequisite auth ID elements is already free")
+            pass
+            #self.ramlogger.info(f"The element {element} which is a part of the prerequisite auth ID elements is already free")
 
     def update_free_spots_thread(self):
         local_thread_id = '0x008'
