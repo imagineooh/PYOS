@@ -11,3 +11,24 @@ end
 
 
 the expected output from notepad: hsfjhfsjh
+
+
+---SECONDARY INPUTS TEST---
+user
+pass
+hostmig Notepad .exe file1 3 stand
+ptmany 3
+ptexec sfjhsjhfsjfhsjdfh
+ramstage file1 3
+
+NEXT
+
+cd file3
+cd sfjhsjhfsjfhsjdfh
+cat
+
+
+---GC RELATED THINGS---
+mkdir file1 1,2,2 3
+write file1 6
+filestat

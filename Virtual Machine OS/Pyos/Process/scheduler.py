@@ -51,4 +51,6 @@ class Scheduler:
             return False
 
     def full_status_list(self):
+        print(self.status)
         return self.status
+

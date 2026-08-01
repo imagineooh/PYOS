@@ -45,10 +45,15 @@ class Manager:
     def track_inactivity(self):
         self.pcb_manager.track_inactivity()
 
+    def return_file_stat(self):
+        self.scheduler_manager.full_status_list()
 
     def update_inactivity(self):
         self.pcb_manager.update_inactivity()
 
+
+    def pMark_as_inactive(self, address: int):
+        self.scheduler_manager.mark_as_active(address)
 
     def track_used(self):
         self.pcb_manager.track_used()
@@ -98,17 +103,21 @@ class Manager:
             print("Could not find path in host OS")
 
     def exec_txt(self, file_name, next_process_to_run, subfile_name=None):
-        decrypt = []
-        if subfile_name:
-            data = list(self.ram[next_process_to_run][1][subfile_name][0])
-        else:
-            data = list(self.ram[next_process_to_run][1][file_name][0])
-        for i in range(len(data)):
-            decrypt.append(chr(int(data[i], 2)))
-        self.scheduler_manager.mark_as_active(next_process_to_run)
-        print("".join(x for x in decrypt))
-        print()
-        self.scheduler_manager.mark_as_inactive(next_process_to_run)
+        try:
+            decrypt = []
+            if subfile_name:
+                data = list(self.ram[next_process_to_run][1][subfile_name][0])
+            else:
+                data = list(self.ram[next_process_to_run][1][file_name][0])
+            for i in range(len(data)):
+                decrypt.append(chr(int(data[i], 2)))
+            self.scheduler_manager.mark_as_active(next_process_to_run)
+            print("".join(x for x in decrypt))
+            print()
+            self.scheduler_manager.mark_as_inactive(next_process_to_run)
+        except TypeError as err:
+            self.logger.warning(err)
+
 
     def exec_wav(self, file_name, process_name):
         next_process_to_run = self.directory_manager.locate_object(process_name)
@@ -362,7 +371,7 @@ class Manager:
             try:
                 for i in range(self.ram.len_RAM()-1):
                     v=self.ram[i]
-                    if v!=0 and self.scheduler_manager.is_active(i) and i!=0:
+                    if v!=0 and not self.scheduler_manager.is_active(i) and i!=0:
                         self.logger.info(self.scheduler_manager.status)
                         ProcessName = v[0][2]
                         if self.auto_migrate:

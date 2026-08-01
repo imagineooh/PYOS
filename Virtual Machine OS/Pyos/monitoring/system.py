@@ -50,10 +50,10 @@ class System:
 
     def delete_thread(self, id:str):
         self.thread_id.pop(id, None)
-        print(self.thread_id)
+        self.logger.info(self.thread_id)
     def create_thread_id(self, threader:str):
         self.thread_id[threader]=1
-        print(self.thread_id)
+        self.logger.info(self.thread_id)
 
     def pause_threads(self, threader:str):
         self.thread_id[threader]=0

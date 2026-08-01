@@ -103,6 +103,7 @@ class Directory:
         to_store=self.file_manager.read_file(ram_address)
         self.file_manager.store_value(to_store, storage_address)
         self.storage_pointers[foldername]=storage_address
+        self.process_manager.pMark_as_inactive(ram_address)
 
     def get_storage_address(self, foldername:str):
         return self.storage_pointers[foldername]

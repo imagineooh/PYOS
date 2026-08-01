@@ -79,7 +79,8 @@ class TameShell():
             "ptmany":self.directory_manager.pointermult,
             "ptexec":self.process_manager.exec_pointers,
             "cd":self.directory_manager.change_directory,
-            "cat":self.directory_manager.nexec_files
+            "cat":self.directory_manager.nexec_files,
+            "filestat": lambda:  print(self.process_manager.return_file_stat())
         }
         self.conversion_table={
             str:lambda x:str(x),
