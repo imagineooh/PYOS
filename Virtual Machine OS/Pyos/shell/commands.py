@@ -25,7 +25,8 @@ def help(command:str=None):
         "popstat":'outputs population status of ram',
         "ptmany":"point to one or many slots in ram",
         "cd" : "change directory to directory 'cd <directory>'",
-        "cat" : "execute file from highest dir"
+        "cat" : "execute file from highest dir",
+        "filestat": "returns all the statuses of files inside of ram."
     }
     if command is not None:
         if command in commands_help:
