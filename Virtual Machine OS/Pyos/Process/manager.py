@@ -17,10 +17,12 @@ class Manager:
         self.logger = logging.getLogger(f"{__name__}.{self.__class__.__name__}")
         self.start_signal = False
         self.directory_manager = directory_manager
-        self.scheduler_manager = Scheduler(ram, directory_manager)
-        self.pcb_manager = PCB(ram, directory_manager)
-        self.auto_migrate=True
         self.system_monitor = system
+        self.scheduler_manager = Scheduler(ram, directory_manager, self.system_monitor)
+        self.pcb_manager = PCB(ram, directory_manager)
+        self.scheduler_manager.track_files_timestamp()
+        self.logger.info(f"Started thread {0x009} for setting and updating time stamps on running processes in RAM")
+        self.auto_migrate=True
         self.running_processes = {}
         self.incase_migrator_names= {}
         self.migrator_counter=0
@@ -53,7 +55,7 @@ class Manager:
 
 
     def pMark_as_inactive(self, address: int):
-        self.scheduler_manager.mark_as_active(address)
+        self.scheduler_manager.mark_as_inactive(address)
 
     def track_used(self):
         self.pcb_manager.track_used()
@@ -298,10 +300,11 @@ class Manager:
                                 self.migrate_host_ram(subfile_name, '.txt', 'opened_file', index_ram)
                             #under here you have to explicitly mark the slot as inactive, and hope that the GC doesn't
                             #check the slot during an operation, or stuff could happen. to be fixed ASAP
-                            self.scheduler_manager.mark_as_inactive(index_ram)
+                            #self.scheduler_manager.mark_as_inactive(index_ram)
                             t1 = threading.Thread(target=self.exec_exe,
                                                   args=(list(self.ram[index_ram][1].values())[DictLen][-4], index_ram, subfile_name))
                             tfetcher = threading.Thread(target=fetcher, args=(subfile_name, index_ram))
+                            self.scheduler_manager.mark_as_active(index_ram)
                             t1.start()
                             tfetcher.start()
                             self.logger.info(f"Started thread tfecther (default) for decrypting exe files with subfile name")
@@ -371,7 +374,7 @@ class Manager:
             try:
                 for i in range(self.ram.len_RAM()-1):
                     v=self.ram[i]
-                    if v!=0 and not self.scheduler_manager.is_active(i) and i!=0:
+                    if (v!=0) and (not self.scheduler_manager.is_active(i)) and (i!=0):
                         self.logger.info(self.scheduler_manager.status)
                         ProcessName = v[0][2]
                         if self.auto_migrate:

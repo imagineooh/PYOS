@@ -1,6 +1,7 @@
 user
 pass
 hostmig Notepad .exe file1 3 stand
+ramstage file1 3
 ptmany 3
 ptexec sfjhsjhfsjfhsjdfh
 

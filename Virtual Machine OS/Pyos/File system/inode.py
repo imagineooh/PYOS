@@ -14,6 +14,7 @@ class Inode:
         handler = logging.FileHandler("TameOSramlog.log", mode='w')
         handler.setFormatter(logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s"))
         self.ramlogger.addHandler(handler)
+        self.ramlogger.propagate=False
         self.counter = 0
         self.filename_index={}
         self.storage = storage
