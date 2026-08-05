@@ -300,7 +300,7 @@ class Manager:
                                 self.migrate_host_ram(subfile_name, '.txt', 'opened_file', index_ram)
                             #under here you have to explicitly mark the slot as inactive, and hope that the GC doesn't
                             #check the slot during an operation, or stuff could happen. to be fixed ASAP
-                            #self.scheduler_manager.mark_as_inactive(index_ram)
+                            self.scheduler_manager.mark_as_inactive(index_ram)
                             t1 = threading.Thread(target=self.exec_exe,
                                                   args=(list(self.ram[index_ram][1].values())[DictLen][-4], index_ram, subfile_name))
                             tfetcher = threading.Thread(target=fetcher, args=(subfile_name, index_ram))
@@ -374,14 +374,18 @@ class Manager:
             try:
                 for i in range(self.ram.len_RAM()-1):
                     v=self.ram[i]
-                    if (v!=0) and (not self.scheduler_manager.is_active(i)) and (i!=0):
+                    if i==0:
+                        continue
+                    if self.scheduler_manager.is_active(i):
+                        continue
+                    if v!=0:
                         self.logger.info(self.scheduler_manager.status)
                         ProcessName = v[0][2]
                         if self.auto_migrate:
                             free_space: list[int] = self.directory_manager.free_disk_space()
                             self.directory_manager.store_value(ProcessName, free_space[0])
                             self.directory_manager.delete_slots(i)
-                        self.logger.info(f"Stored object {ProcessName} in disk after being market as inactive")
+                            self.logger.info(f"Stored object {ProcessName} in disk after being market as inactive")
             except KeyError:
                 continue
 
