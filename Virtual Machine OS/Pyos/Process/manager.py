@@ -370,15 +370,14 @@ class Manager:
         tupdater.start()
 
     def garbage_collection_filer(self, runtime_arg:str = True):
-        while self.system_monitor.thread_id[runtime_arg] != 0: #TODO refactor similar to thread 0x006
+        while True: #TODO refactor similar to thread 0x006 self.system_monitor.thread_id[runtime_arg] != 0
             try:
-                for i in range(self.ram.len_RAM()-1):
+                status_keys=list(self.scheduler_manager.status.keys())
+                for k, i in enumerate(status_keys):
                     v=self.ram[i]
-                    if i==0:
-                        continue
-                    if self.scheduler_manager.is_active(i):
-                        continue
-                    if v!=0:
+                    if self.scheduler_manager.status[i]==[0]:
+                        if v==0:
+                            continue
                         self.logger.info(self.scheduler_manager.status)
                         ProcessName = v[0][2]
                         if self.auto_migrate:
@@ -386,6 +385,35 @@ class Manager:
                             self.directory_manager.store_value(ProcessName, free_space[0])
                             self.directory_manager.delete_slots(i)
                             self.logger.info(f"Stored object {ProcessName} in disk after being market as inactive")
+
+                """slots = list(self.directory_manager.return_all_used_slots())
+                #print("slots", slots)
+                for k, i in enumerate(slots):
+                    v=self.ram[i]
+                    if v==0:
+                        continue
+                    #i = self.ram[f][0][0]
+                    if not self.scheduler_manager.is_active(f):
+                        ProcessName=v[0][2]
+                        if self.auto_migrate:
+                            free_space: list[int] = self.directory_manager.free_disk_space()
+                            self.directory_manager.store_value(ProcessName, free_space[0])
+                            self.directory_manager.delete_slots(f)
+                            self.logger.info(f"Stored object {ProcessName} in disk after being market as inactive")
+                    if i==0:
+                        self.scheduler_manager.mark_as_active(i)
+                        continue
+                    if self.scheduler_manager.is_active(i):
+                        continue
+                    if v!=0:
+                        print(f"fileindex {i} is inactive")
+                        self.logger.info(self.scheduler_manager.status)
+                        ProcessName = v[0][2]
+                        if self.auto_migrate:
+                            free_space: list[int] = self.directory_manager.free_disk_space()
+                            self.directory_manager.store_value(ProcessName, free_space[0])
+                            self.directory_manager.delete_slots(i)
+                            self.logger.info(f"Stored object {ProcessName} in disk after being market as inactive")"""
             except KeyError:
                 continue
 

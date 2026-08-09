@@ -88,6 +88,11 @@ class Scheduler:
                     self.file_timestamp[i]={}
                     self.file_timestamp[i]['start_time']=time.time()
                 self.file_timestamp[i]['current_time']=time.time()
+                self.file_timestamp[i]["alive_time"]=self.file_timestamp[i]['current_time']-self.file_timestamp[i]['start_time']
+                if self.file_timestamp[i]['alive_time']>5:
+                    #print(f"market file {i} as inactive")
+                    self.mark_as_inactive(i)
+                    #print(self.is_active(i))
             self.schedlog.info(self.file_timestamp)
             time.sleep(1)
     def track_files_timestamp(self):
