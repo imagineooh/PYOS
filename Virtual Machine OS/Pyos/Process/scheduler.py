@@ -57,6 +57,20 @@ class Scheduler:
     def mark_as_inactive(self, address:int):
         self.status[address]=[0]
 
+    def update_status_thread(self):
+        while True:
+            present_status=list(self.status.keys())
+            for i, v in enumerate(present_status):
+                if self.ram[v]==0:
+                    self.status.pop(v)
+            time.sleep(1)
+
+
+    def update_status(self):
+        t1 = threading.Thread(target=self.update_status_thread)
+        t1.start()
+
+
     def is_active(self, address:int):
         if address==0: #TODO fix for default allocated process area (DAPA)
             return True

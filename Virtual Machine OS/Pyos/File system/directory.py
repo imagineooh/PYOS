@@ -12,6 +12,7 @@ class Directory:
         self.ram.sign_in('F', 'pas')
         self.ram.add_user('F', 'pas')
         self.file_manager=FileSystem(ram, storage, self.inode_manager)
+        self.inode_manager.get_filename_index()
         self.pointers=[]
         self.duplicates=[] #returns PID of duplicates in RAM
         self.storage_pointers = {}
@@ -50,9 +51,11 @@ class Directory:
         self.update_PID()
 
     def add_variable(self, var_name:str, var_value:str, address:int, var_type:str | None = None):
-        if self.inode_manager.file_exists(var_name) and var_type=="const":
+        if var_type=="const":
             print(f"File {var_name} already exists in directory, spawned in DIR")
-            return
+        if self.inode_manager.file_exists(var_name):
+            ram_address=self.locate_object(var_name)
+            self.delete_slots(ram_address)
         self.file_manager.construct_variable(var_name, var_value, address)
         self.update_PID()
 

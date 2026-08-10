@@ -121,6 +121,14 @@ class Inode:
                 self.filename_index[filename]=address
         self.counter+=1
 
+    def get_filename_index_thread(self):
+        while True:
+            self.logger.info(self.filename_index)
+            time.sleep(0.5)
+    def get_filename_index(self):
+        t1 = Thread(target=self.get_filename_index_thread)
+        t1.start()
+
     def locate_object(self, name: str):
         return self.filename_index[name]
 

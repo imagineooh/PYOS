@@ -21,6 +21,7 @@ class Manager:
         self.scheduler_manager = Scheduler(ram, directory_manager, self.system_monitor)
         self.pcb_manager = PCB(ram, directory_manager)
         self.scheduler_manager.track_files_timestamp()
+        self.scheduler_manager.update_status()
         self.logger.info(f"Started thread {0x009} for setting and updating time stamps on running processes in RAM")
         self.auto_migrate=True
         self.running_processes = {}
@@ -380,43 +381,16 @@ class Manager:
                             continue
                         self.logger.info(self.scheduler_manager.status)
                         ProcessName = v[0][2]
+                        self.scheduler_manager.status.pop(i)
                         if self.auto_migrate:
                             free_space: list[int] = self.directory_manager.free_disk_space()
                             self.directory_manager.store_value(ProcessName, free_space[0])
                             self.directory_manager.delete_slots(i)
                             self.logger.info(f"Stored object {ProcessName} in disk after being market as inactive")
-
-                """slots = list(self.directory_manager.return_all_used_slots())
-                #print("slots", slots)
-                for k, i in enumerate(slots):
-                    v=self.ram[i]
-                    if v==0:
-                        continue
-                    #i = self.ram[f][0][0]
-                    if not self.scheduler_manager.is_active(f):
-                        ProcessName=v[0][2]
-                        if self.auto_migrate:
-                            free_space: list[int] = self.directory_manager.free_disk_space()
-                            self.directory_manager.store_value(ProcessName, free_space[0])
-                            self.directory_manager.delete_slots(f)
-                            self.logger.info(f"Stored object {ProcessName} in disk after being market as inactive")
-                    if i==0:
-                        self.scheduler_manager.mark_as_active(i)
-                        continue
-                    if self.scheduler_manager.is_active(i):
-                        continue
-                    if v!=0:
-                        print(f"fileindex {i} is inactive")
-                        self.logger.info(self.scheduler_manager.status)
-                        ProcessName = v[0][2]
-                        if self.auto_migrate:
-                            free_space: list[int] = self.directory_manager.free_disk_space()
-                            self.directory_manager.store_value(ProcessName, free_space[0])
-                            self.directory_manager.delete_slots(i)
-                            self.logger.info(f"Stored object {ProcessName} in disk after being market as inactive")"""
-            except KeyError:
+                        break
+                sleep(1)
+            except ValueError:
                 continue
-
     def garbage_collection_thread(self):
         self.system_monitor.create_thread_id("0x007")
         self.logger.info("Started thread 0x007 for RAM garbage collection")
