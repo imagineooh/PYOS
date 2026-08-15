@@ -390,7 +390,18 @@ class Manager:
                         break
                 sleep(1)
             except ValueError:
-                continue
+                if v is not None and v==0:
+                    continue
+                if ProcessName is None:
+                    continue
+                if i is None:
+                    continue
+                if self.auto_migrate:
+                    free_space: list[int] = self.directory_manager.free_disk_space()
+                    self.directory_manager.store_value(ProcessName, free_space[0])
+                    self.directory_manager.delete_slots(i)
+                    self.logger.info(f"Stored object {ProcessName} in disk after being market as inactive")
+
     def garbage_collection_thread(self):
         self.system_monitor.create_thread_id("0x007")
         self.logger.info("Started thread 0x007 for RAM garbage collection")
