@@ -40,16 +40,23 @@ class Scheduler:
         self.ready_queue.pop(0)
 
     def populate_status(self):
-        scheduled=self.schedule_process_all()
-        for i in range(self.ram.len_RAM()):
-            if self.ram[i]!=0:
-                index = self.ram[i][0][0]
-                if self.ram[i][1]!=0:
-                    self.status[index]=[0]
-                    self.status[index].append(scheduled.index(index))
-                else:
-                    self.status[index]=[-1]
-        return self.status
+        try:
+            scheduled=self.schedule_process_all()
+            index: int|None =None
+            for i in range(self.ram.len_RAM()):
+                if self.ram[i]!=0:
+                    index = self.ram[i][0][0]
+                    if self.ram[i][1]!=0:
+                        self.status[index]=[0]
+                        self.status[index].append(scheduled.index(index))
+                    else:
+                        self.status[index]=[-1]
+            return self.status
+        except ValueError as err:
+            if index is None:
+                self.schedlog.warning("Cannot populate status, as index is None")
+                return self.status
+            self.logger.error(f"could not find index {index} in status, possible data leak")
 
     def mark_as_active(self, address:int):
         self.status[address]=[1,-1]
