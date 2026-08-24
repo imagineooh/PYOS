@@ -47,6 +47,7 @@ class Compiler:
             "CONST": self.__do_set,
             "OP":self.__do_op,
             "VOID": self.__set_local,
+            "JMP":self.__jump
         }
         self.variable_status={}
         self.all_ops= {"+": 1,
@@ -74,20 +75,21 @@ class Compiler:
                                 "CONST x=5",
                                 "SET y = 7",
                                 "VOID {",
-                                "SET z = 8",
+                                "SET z = 546",
                                 "SET j = hello",
                                 "}",
-                                "SET y=10"]
+                                "SET y = x + 5",
+                                ]
         self.current=0
         while self.active:
             value=self.lines[self.current]
-            if self.current in self.checked:
-                continue
+            """if self.current in self.checked:
+                continue"""
             keyword = value.split()[0]
             if keyword not in self.mapper.keys():
                 continue
             self.mapper[keyword](self.current, len(keyword))
-            self.checked.append(self.current)
+            #self.checked.append(self.current)
             if self.current==len(self.lines)-1:
                 self.active = False
             self.current+=1
@@ -111,8 +113,12 @@ class Compiler:
             self.current += 1
             self.mapper[keyword](self.current, len(keyword))
 
-    def __jump(self, line, conditional):
-        pass
+    def __jump(self, curline:int, lk):
+        jmpat = int(self.lines[curline][lk:].strip())
+        self.current=jmpat-1
+        """for i in range(self.current, len(self.checked)):
+            self.checked.pop(i)"""
+
     def __do_set(self, line_number:int, keyword_len:int = 3) ->None:
         """
         Hidden setter method for adding variable in memory from compiler
@@ -142,12 +148,18 @@ class Compiler:
         else:
             self.variable_status[variable_name] = "var"
         offset = keyword_len + len(variable_name)+2
-        variable_value = self.__do_op(line_number, offset)
+        if self.directory_manager.file_exists(tokens[1].strip()):
+            token_address = self.directory_manager.locate_object(tokens[1].strip())
+            variable_value = self.ram[token_address][1]["value"]
+        else:
+            variable_value = self.__do_op(line_number, offset)
         if self.local_setting:
             commit_address = self.directory_manager.vfree_spot(local = True)
         else:
             commit_address = self.directory_manager.vfree_spot(local = False)
         var_hash = hash(variable_value)
+        print(variable_name)
+        print(variable_value)
         self.directory_manager.add_variable(variable_name, variable_value, commit_address, hash_value=var_hash, var_type = prevar_stat)
 
 
@@ -156,7 +168,11 @@ class Compiler:
     def __do_op(self, line_number: str, keyword_len: int = 2):
         line = self.lines[line_number]
         body_first = line[keyword_len:]
-        body = list(re.findall(r'-?\d+|[\+\-\*/\(\)]', body_first))
+        body = list(re.findall(r'-?\d+|[a-zA-Z]+|[\+\-\*/\(\)]', body_first))
+        for i, token in enumerate(body):
+            if self.directory_manager.file_exists(token):
+                token_address = self.directory_manager.locate_object(token)
+                body[i] = self.ram[token_address][1]["value"]
         if len(body)==0:
             return body_first.split("=")[1].strip()
         """if len(body)==1:
@@ -171,9 +187,6 @@ class Compiler:
             if not token in proc.keys() and not token in part:
                 out.append(token)
                 continue
-            if self.directory_manager.file_exists(token):
-                token_address=self.directory_manager.locate_object(token)
-                token=self.ram[token_address][1]["value"]
             if token == ')':
                 while op and op[-1] != '(':
                     out.append(op.pop())
