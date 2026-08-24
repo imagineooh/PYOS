@@ -4,6 +4,11 @@ hostmig Notepad .exe file1 3 stand
 ptmany 3
 ptexec sfjhsjhfsjfhsjdfh
 
+
+hostmig Notepad .exe file2 4 stand
+ptmany 4
+ptexec ksdfkjk
+
 ---RUN AFTER---
 lsdisk
 df

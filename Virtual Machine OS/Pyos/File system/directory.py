@@ -50,13 +50,13 @@ class Directory:
         self.file_manager.construct_folder(foldername,folderdata, address, firstfilename)
         self.update_PID()
 
-    def add_variable(self, var_name:str, var_value:str, address:int, var_type:str | None = None):
+    def add_variable(self, var_name:str, var_value:str, address:int, hash_value:int, var_type:str | None = None):
         if var_type=="const":
             print(f"File {var_name} already exists in directory, spawned in DIR")
         if self.inode_manager.file_exists(var_name):
             ram_address=self.locate_object(var_name)
             self.delete_slots(ram_address)
-        self.file_manager.construct_variable(var_name, var_value, address)
+        self.file_manager.construct_variable(var_name, var_value, address, hash_value)
         self.update_PID()
 
     def vfree_spot(self, local:bool = False)->int:

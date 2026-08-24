@@ -1,3 +1,18 @@
+"""
+Lowest level language that TameOS can understand, called TameScript (or TASM), this is the
+equivalent of an assembly language for a regular OS.
+
+Is higher level than most ASM, as scope is directly taken care of without the user needing to manually add to stack.
+For functions or loops, jumps and conditionals are still required.
+
+For any inquiries, or if someone wants to make a higher level language that compiles to TameOS, please start
+a discussion on the discussion tab.
+
+I am working on a simple way to add addon languages to compile to TameScript.
+"""
+
+
+
 import re
 
 
@@ -15,6 +30,7 @@ class ConstChangeError(CustomExceptionHandler):
 class Compiler:
 
     def __init__(self, errhand, ram, directory_manager, inputed_file:str=None):
+        self.current = 0
         self.ram = ram
         self.directory_manager = directory_manager
         self.error_handler = errhand
@@ -40,6 +56,8 @@ class Compiler:
                        }
         self.local_setting:bool = False
         self.checked=[]
+        self.active = True
+        self.injump = False
 
 
     def compile(self, inputed_file: str = None):
@@ -60,17 +78,24 @@ class Compiler:
                                 "SET j = hello",
                                 "}",
                                 "SET y=10"]
-        for i,value in enumerate(self.lines):
-            if i in self.checked:
+        self.current=0
+        while self.active:
+            value=self.lines[self.current]
+            if self.current in self.checked:
                 continue
             keyword = value.split()[0]
             if keyword not in self.mapper.keys():
                 continue
-            self.mapper[keyword](i, len(keyword))
-            self.checked.append(i)
+            self.mapper[keyword](self.current, len(keyword))
+            self.checked.append(self.current)
+            if self.current==len(self.lines)-1:
+                self.active = False
+            self.current+=1
+
+
 
     def __set_local(self, line_number:int, keyword_len:int = 4):
-        print(f"FOUND LINE NUMBER{line_number}")
+        #print(f"FOUND LINE NUMBER{line_number}")
         local_lines = self.lines[line_number+1:]
         self.local_setting = True
         for i, v in enumerate(local_lines):
@@ -78,10 +103,16 @@ class Compiler:
             if v == "}":
                 self.local_setting = False
                 self.directory_manager.free_heap()
+                self.current+=1
+                break
+            if not self.local_setting:
                 break
             keyword = v.split()[0]
-            self.mapper[keyword](i+line_number+1, len(keyword))
+            self.current += 1
+            self.mapper[keyword](self.current, len(keyword))
 
+    def __jump(self, line, conditional):
+        pass
     def __do_set(self, line_number:int, keyword_len:int = 3) ->None:
         """
         Hidden setter method for adding variable in memory from compiler
@@ -116,7 +147,8 @@ class Compiler:
             commit_address = self.directory_manager.vfree_spot(local = True)
         else:
             commit_address = self.directory_manager.vfree_spot(local = False)
-        self.directory_manager.add_variable(variable_name, variable_value, commit_address, var_type = prevar_stat)
+        var_hash = hash(variable_value)
+        self.directory_manager.add_variable(variable_name, variable_value, commit_address, hash_value=var_hash, var_type = prevar_stat)
 
 
 
@@ -139,6 +171,9 @@ class Compiler:
             if not token in proc.keys() and not token in part:
                 out.append(token)
                 continue
+            if self.directory_manager.file_exists(token):
+                token_address=self.directory_manager.locate_object(token)
+                token=self.ram[token_address][1]["value"]
             if token == ')':
                 while op and op[-1] != '(':
                     out.append(op.pop())

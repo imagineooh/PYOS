@@ -116,8 +116,8 @@ class Inode:
                 self.ram.write(address, [[address, type_file, filename], {}], self.authorisation)
                 self.filename_index[filename]=address
         elif type_file == 'variable' and self.ram[address]==0:
-            if self.ram.write(address, [[address, type_file, filename], []], self.authorisation)  != "Data adress already taken, try 'force_write' method (unsafe) or 'free_index' method first. ...//":
-                self.ram.write(address, [[address, type_file, filename], []], self.authorisation)
+            if self.ram.write(address, [[address, type_file, filename], {}], self.authorisation)  != "Data adress already taken, try 'force_write' method (unsafe) or 'free_index' method first. ...//":
+                self.ram.write(address, [[address, type_file, filename], {}], self.authorisation)
                 self.filename_index[filename]=address
         self.counter+=1
 
