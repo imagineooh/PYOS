@@ -27,6 +27,10 @@ class ConstChangeError(CustomExceptionHandler):
     def __init__(self):
         super().__init__()
 
+class NonExistentError(CustomExceptionHandler):
+    def __init__(self):
+        super().__init__()
+
 class Compiler:
 
     def __init__(self, errhand, ram, directory_manager, inputed_file:str=None):
@@ -47,7 +51,8 @@ class Compiler:
             "CONST": self.__do_set,
             "OP":self.__do_op,
             "VOID": self.__set_local,
-            "JMP":self.__jump
+            "JMP":self.__jump,
+            "JPU": self.__jumpu
         }
         self.variable_status={}
         self.all_ops= {"+": 1,
@@ -72,8 +77,11 @@ class Compiler:
         else:
             #self.lines: list = ["OP 2*3-2", "OP 12*456-2", "OP ((237232/4544-2*5)+2)/4"]
             self.lines: list = ["CONST x=3*(-12*4*(5- 6))-(18*(4+2))/5",
+                                "SET i=0",
                                 "CONST x=5",
                                 "SET y = 7",
+                                "SET i = i+1",
+                                "JPU 2 i 6",
                                 "VOID {",
                                 "SET z = 546",
                                 "SET j = hello",
@@ -119,6 +127,26 @@ class Compiler:
         """for i in range(self.current, len(self.checked)):
             self.checked.pop(i)"""
 
+    def __jumpu(self, curline:int, lk):
+        """
+        Jump when a variable is under a value
+        :param curline: Current working line
+        :param lk: keyword length
+        :return: line number
+        """
+        bodysplit = self.lines[curline][lk:].split()
+        jumpat=int(bodysplit[0])
+        token = bodysplit[1]
+        if self.directory_manager.file_exists(token):
+            token_address = self.directory_manager.locate_object(token)
+            var_conditional = int(self.ram[token_address][1]["value"])
+        upper_limit = int(bodysplit[2])
+        if var_conditional is None:
+            NonExistentError.raiseerror(f"Conditional variable {token} does not exist", curline)
+            return None
+        if var_conditional<upper_limit:
+            self.current=jumpat-1
+
     def __do_set(self, line_number:int, keyword_len:int = 3) ->None:
         """
         Hidden setter method for adding variable in memory from compiler
@@ -158,8 +186,8 @@ class Compiler:
         else:
             commit_address = self.directory_manager.vfree_spot(local = False)
         var_hash = hash(variable_value)
-        print(variable_name)
-        print(variable_value)
+        """print(variable_name)
+        print(variable_value)"""
         self.directory_manager.add_variable(variable_name, variable_value, commit_address, hash_value=var_hash, var_type = prevar_stat)
 
 
