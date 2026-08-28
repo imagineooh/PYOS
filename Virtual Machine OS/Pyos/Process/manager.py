@@ -231,6 +231,10 @@ class Manager:
 
     def allocate_area(self, start: int, end: int, area_name: str):
         area_list = []      #acts like set but is mutable to start (TODO: implement exclusion cases for set)
+        if end>self.ram.len_RAM():
+            print(f"end line {end} is bigger than RAM size")
+            self.logger.error(f"refused entry for malloc name {area_name} start: {start}, end:{end}")
+            return None
         for i in range(start, end+1):
             area_list.append(i)
         self.pcb_manager.area_allocation(set(area_list), area_name)
