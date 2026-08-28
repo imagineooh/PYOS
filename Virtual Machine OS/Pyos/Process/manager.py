@@ -21,6 +21,7 @@ class Manager:
         self.scheduler_manager = Scheduler(ram, directory_manager, self.system_monitor)
         self.pcb_manager = PCB(ram, directory_manager)
         self.scheduler_manager.track_files_timestamp()
+        self.ram_lock = threading.Lock()
         self.scheduler_manager.update_status()
         self.logger.info(f"Started thread {0x009} for setting and updating time stamps on running processes in RAM")
         self.auto_migrate=True

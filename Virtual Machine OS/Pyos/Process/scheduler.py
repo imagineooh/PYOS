@@ -1,6 +1,16 @@
 import time
 import threading
 import logging
+from functools import wraps
+
+
+def locked_status(func):
+    @wraps(func)
+    def inner(self, *args, **kwargs):
+        with self.status_lock:
+            return func(self, *args, **kwargs)
+    return inner
+
 
 class Scheduler:
     def __init__(self, ram, directory_manager, system_manager=None):
@@ -17,6 +27,8 @@ class Scheduler:
         self.schedule_processes = []
         self.ready_queue = []
         self.waiting_queue = []
+        self.file_timestamp_lock = threading.Lock()
+        self.status_lock = threading.RLock()
         self.status={}
         self.file_timestamp:dict[int, dict[str, float]]={}
 
@@ -41,35 +53,40 @@ class Scheduler:
 
     def populate_status(self):
         try:
-            scheduled=self.schedule_process_all()
-            index: int|None =None
-            for i in range(self.ram.len_RAM()):
-                if self.ram[i]!=0:
-                    index = self.ram[i][0][0]
-                    if self.ram[i][1]!=0:
-                        self.status[index]=[0]
-                        self.status[index].append(scheduled.index(index))
-                    else:
-                        self.status[index]=[-1]
-            return self.status
+            with self.status_lock:
+                scheduled=self.schedule_process_all()
+                index: int|None =None
+                for i in range(self.ram.len_RAM()):
+                    if self.ram[i]!=0:
+                        index = self.ram[i][0][0]
+                        if self.ram[i][1]!=0:
+                            self.status[index]=[0]
+                            self.status[index].append(scheduled.index(index))
+                        else:
+                            self.status[index]=[-1]
+                return self.status
         except ValueError as err:
             if index is None:
-                self.schedlog.warning("Cannot populate status, as index is None")
-                return self.status
+                with self.status_lock:
+                    self.schedlog.warning("Cannot populate status, as index is None")
+                    return self.status
             self.logger.error(f"could not find index {index} in status, possible data leak")
 
+    @locked_status
     def mark_as_active(self, address:int):
         self.status[address]=[1,-1]
 
+    @locked_status
     def mark_as_inactive(self, address:int):
         self.status[address]=[0]
 
     def update_status_thread(self):
         while True:
-            present_status=list(self.status.keys())
-            for i, v in enumerate(present_status):
-                if self.ram[v]==0:
-                    self.status.pop(v)
+            with self.status_lock:
+                present_status=list(self.status.keys())
+                for i, v in enumerate(present_status):
+                    if self.ram[v]==0:
+                        self.status.pop(v)
             time.sleep(1)
 
 
@@ -77,13 +94,14 @@ class Scheduler:
         t1 = threading.Thread(target=self.update_status_thread)
         t1.start()
 
-
+    @locked_status
     def is_active(self, address:int):
         if address==0: #TODO fix for default allocated process area (DAPA)
             return True
         if self.status[address]==[0]:
             return False
 
+    @locked_status
     def full_status_list(self):
         print(self.status)
         return self.status
@@ -96,24 +114,27 @@ class Scheduler:
         """
         while True:
             if not self.system_manager.thread_id[thread_code]==1:
+                time.sleep(0.5)
                 continue
             for i in range(len(self.ram)):
+                is_expired=False
                 v = self.ram[i]
                 if i==1024:
                     continue #Code seems to break if I don't do this... oh well let's hope slot 1024 doesn't magically appear at some point
-                if v==0:
-                    if i in self.file_timestamp.keys():
-                        self.file_timestamp.pop(i)
-                    continue
-                if i not in self.file_timestamp.keys():
-                    self.file_timestamp[i]={}
-                    self.file_timestamp[i]['start_time']=time.time()
-                self.file_timestamp[i]['current_time']=time.time()
-                self.file_timestamp[i]["alive_time"]=self.file_timestamp[i]['current_time']-self.file_timestamp[i]['start_time']
-                if self.file_timestamp[i]['alive_time']>5:
-                    #print(f"market file {i} as inactive")
+                with self.file_timestamp_lock:
+                    if v==0:
+                        if i in self.file_timestamp.keys():
+                            self.file_timestamp.pop(i)
+                        continue
+                    if i not in self.file_timestamp.keys():
+                        self.file_timestamp[i]={}
+                        self.file_timestamp[i]['start_time']=time.time()
+                    self.file_timestamp[i]['current_time']=time.time()
+                    self.file_timestamp[i]["alive_time"]=self.file_timestamp[i]['current_time']-self.file_timestamp[i]['start_time']
+                    if self.file_timestamp[i]['alive_time']>5:
+                        is_expired = True
+                if is_expired:
                     self.mark_as_inactive(i)
-                    #print(self.is_active(i))
             self.schedlog.info(self.file_timestamp)
             time.sleep(1)
     def track_files_timestamp(self):
