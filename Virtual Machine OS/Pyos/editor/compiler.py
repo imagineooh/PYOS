@@ -14,14 +14,21 @@ I am working on a simple way to add addon languages to compile to TameScript.
 
 
 import re
-
+import logging
 
 class CustomExceptionHandler:
+    logger = logging.getLogger(f"{__name__}.compiler")
+    handler = logging.FileHandler("CompilerOutput.log", mode='w')
+    handler.setFormatter(logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s"))
+    logger.addHandler(handler)
+    new_handler = logging.FileHandler("CompilerOutput.txt", mode='w')
+    logger.addHandler(new_handler)
+    logger.propagate = False
     def __init__(self):
         pass
     @classmethod
     def raiseerror(cls, message, line_number):
-        print(f"{cls.__name__} \n Error on line {line_number}: '{message}'")
+        cls.logger.info(f"{cls.__name__} \n Error on line {line_number}: '{message}'")
 
 class ConstChangeError(CustomExceptionHandler):
     def __init__(self):
@@ -32,12 +39,14 @@ class NonExistentError(CustomExceptionHandler):
         super().__init__()
 
 class Compiler:
-
     def __init__(self, errhand, ram, directory_manager, inputed_file:str=None):
         self.current = 0
         self.ram = ram
         self.directory_manager = directory_manager
         self.error_handler = errhand
+        self.logger = logger = logging.getLogger(f"{__name__}.compiler")
+        new_handler = logging.FileHandler("CompilerOutput.txt", mode='a')
+        self.logger.addHandler(new_handler)
         self.file = None
         self.lines = None
         self.operating_functions = {
@@ -52,7 +61,8 @@ class Compiler:
             "OP":self.__do_op,
             "VOID": self.__set_local,
             "JMP":self.__jump,
-            "JPU": self.__jumpu
+            "JPU": self.__jumpu,
+            "STDOUT": self.__stdout
         }
         self.variable_status={}
         self.all_ops= {"+": 1,
@@ -76,9 +86,9 @@ class Compiler:
                 self.lines:list = [line.strip() for line in file]
         else:
             #self.lines: list = ["OP 2*3-2", "OP 12*456-2", "OP ((237232/4544-2*5)+2)/4"]
-            self.lines: list = ["CONST x=3*(-12*4*(5- 6))-(18*(4+2))/5",
+            self.lines: list = ["SET x=3*(-12*4*(5- 6))-(18*(4+2))/5",
                                 "SET i=0",
-                                "CONST x=5",
+                                "SET x=5",
                                 "SET y = 7",
                                 "SET i = i+1",
                                 "JPU 2 i 6",
@@ -87,6 +97,7 @@ class Compiler:
                                 "SET j = hello",
                                 "}",
                                 "SET y = x + 5",
+                                "STDOUT y" #TODO review why this prints twice (probably because of the while loop underneath)
                                 ]
         self.current=0
         while self.active:
@@ -103,6 +114,14 @@ class Compiler:
             self.current+=1
 
 
+    def __stdout(self, line_number, keyword_len):
+        token = self.lines[line_number][keyword_len:].strip()
+        if self.directory_manager.locate_object(token):
+            address = self.directory_manager.locate_object(token)
+            body = self.ram[address][1]['value']
+            self.logger.info(body)
+        else:
+            NonExistentError.raiseerror(f"Variable {token} does not exist")
 
     def __set_local(self, line_number:int, keyword_len:int = 4):
         #print(f"FOUND LINE NUMBER{line_number}")
@@ -251,8 +270,6 @@ class Compiler:
         except IndexError:
             return body[0]
 
-"""bas_comp = Compiler(CustomExceptionHandler)
-bas_comp.compile()"""
 
 
 
