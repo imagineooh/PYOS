@@ -33,6 +33,9 @@ class Directory:
         def add_child(self, child):
             self.children.append(child)
 
+    def protect_slot(self, address):
+        self.process_manager.protect_slot(address)
+
     def add_empty_folder(self, foldername: str, folderdata: list,  address:int) -> None:
         if self.inode_manager.file_exists(foldername):
             print("File already exists in directory")

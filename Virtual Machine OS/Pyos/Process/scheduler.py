@@ -29,8 +29,10 @@ class Scheduler:
         self.waiting_queue = []
         self.file_timestamp_lock = threading.Lock()
         self.status_lock = threading.RLock()
+        self.protected_lock=threading.RLock()
         self.status={}
         self.file_timestamp:dict[int, dict[str, float]]={}
+        self.protected_slots=[]
 
     def schedule_process_all(self):
         processes = list(self.directory_manager.give_filename_index())
@@ -106,6 +108,10 @@ class Scheduler:
         print(self.status)
         return self.status
 
+    def protect_slot(self, address:int):
+        with self.protected_lock:
+            self.protected_slots.append(address)
+
     def track_files_timestamp_thread(self, thread_code: str) ->None:
         """
         threading.Thread target function, tracking file longevity across the board.
@@ -116,12 +122,10 @@ class Scheduler:
             if not self.system_manager.thread_id[thread_code]==1:
                 time.sleep(0.5)
                 continue
-            for i in range(len(self.ram)):
+            for i in range(len(self.ram)-1):
                 is_expired=False
                 v = self.ram[i]
-                if i==1024:
-                    continue #Code seems to break if I don't do this... oh well let's hope slot 1024 doesn't magically appear at some point
-                with self.file_timestamp_lock:
+                with self.file_timestamp_lock, self.protected_lock:
                     if v==0:
                         if i in self.file_timestamp.keys():
                             self.file_timestamp.pop(i)
@@ -132,7 +136,8 @@ class Scheduler:
                     self.file_timestamp[i]['current_time']=time.time()
                     self.file_timestamp[i]["alive_time"]=self.file_timestamp[i]['current_time']-self.file_timestamp[i]['start_time']
                     if self.file_timestamp[i]['alive_time']>5:
-                        is_expired = True
+                        if i not in self.protected_slots:
+                            is_expired = True
                 if is_expired:
                     self.mark_as_inactive(i)
             self.schedlog.info(self.file_timestamp)

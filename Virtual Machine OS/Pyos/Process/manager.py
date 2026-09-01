@@ -239,6 +239,8 @@ class Manager:
             area_list.append(i)
         self.pcb_manager.area_allocation(set(area_list), area_name)
 
+    def protect_slot(self, address:int):
+        self.scheduler_manager.protect_slot(address)
 
     def populate_status(self):
         return self.scheduler_manager.populate_status()

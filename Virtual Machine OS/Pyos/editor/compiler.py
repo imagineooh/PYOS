@@ -207,6 +207,7 @@ class Compiler:
         var_hash = hash(variable_value)
         """print(variable_name)
         print(variable_value)"""
+        self.directory_manager.protect_slot(commit_address)
         self.directory_manager.add_variable(variable_name, variable_value, commit_address, hash_value=var_hash, var_type = prevar_stat)
 
 
