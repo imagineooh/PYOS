@@ -45,8 +45,9 @@ class Compiler:
         self.directory_manager = directory_manager
         self.error_handler = errhand
         self.logger = logger = logging.getLogger(f"{__name__}.compiler")
-        new_handler = logging.FileHandler("CompilerOutput.txt", mode='a')
+        new_handler = logging.FileHandler("CompilerOutput.txt", mode='w')
         self.logger.addHandler(new_handler)
+        self.logger.propagate = False
         self.file = None
         self.lines = None
         self.operating_functions = {
@@ -97,7 +98,7 @@ class Compiler:
                                 "SET j = hello",
                                 "}",
                                 "SET y = x + 5",
-                                "STDOUT y" #TODO review why this prints twice (probably because of the while loop underneath)
+                                "STDOUT y"
                                 ]
         self.current=0
         while self.active:
@@ -111,6 +112,7 @@ class Compiler:
             #self.checked.append(self.current)
             if self.current==len(self.lines)-1:
                 self.active = False
+                break
             self.current+=1
 
 
